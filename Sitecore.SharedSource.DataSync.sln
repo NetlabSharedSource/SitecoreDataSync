@@ -7,6 +7,8 @@ Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.DataS
 EndProject
 Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.DataSync.Master", "Sitecore.SharedSource.DataSync.Master\Sitecore.SharedSource.DataSync.Master.scproj", "{02A9D508-9F67-498A-9810-B50A376B2BB9}"
 EndProject
+Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.DataSync.Examples.Master", "Sitecore.SharedSource.DataSync.Examples.Master\Sitecore.SharedSource.DataSync.Examples.Master.scproj", "{3A6BD25B-165B-415E-9E93-8389B7212FD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,12 @@ Global
 		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
