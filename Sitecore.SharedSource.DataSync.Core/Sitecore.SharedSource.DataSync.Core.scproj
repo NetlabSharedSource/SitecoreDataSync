@@ -36,12 +36,10 @@
     <SitecoreWebUrl>http://standalonemodules</SitecoreWebUrl>
     <SitecoreAccessGuid>570c0424-0241-443f-9a84-f0904dbf2817</SitecoreAccessGuid>
     <InstallSitecoreConnector>True</InstallSitecoreConnector>
-    <PackageAuthor>Netlab</PackageAuthor>
-    <PackagePublisher>Netlab</PackagePublisher>
-    <PackageVersion>
-    </PackageVersion>
-    <PackageReadme>
-    </PackageReadme>
+    <PackageAuthor>Netlab AS</PackageAuthor>
+    <PackagePublisher>Netlab AS</PackagePublisher>
+    <PackageVersion>1.4.0</PackageVersion>
+    <PackageReadme>See installation instructions for *.Master package.</PackageReadme>
     <SitecoreAssemblyPath>../../../Website/bin</SitecoreAssemblyPath>
     <GeneratePackage>True</GeneratePackage>
     <SeperateFilesAndItems>False</SeperateFilesAndItems>
