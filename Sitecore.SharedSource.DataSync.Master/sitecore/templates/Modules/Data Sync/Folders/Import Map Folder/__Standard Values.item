@@ -1,0 +1,65 @@
+----item----
+version: 1
+id: {6FF6F319-C2AA-4D22-A9FD-BC46B71F8917}
+database: master
+path: /sitecore/templates/Modules/Data Sync/Folders/Import Map Folder/__Standard Values
+parent: {2CD71221-DD6C-41AD-A242-524024465D56}
+name: __Standard Values
+master: {00000000-0000-0000-0000-000000000000}
+template: {2CD71221-DD6C-41AD-A242-524024465D56}
+templatekey: Import Map Folder
+
+----field----
+field: {1172F251-DAD4-4EFB-A329-0C63500E4F1E}
+name: __Masters
+key: __masters
+content-length: 155
+
+{2CD71221-DD6C-41AD-A242-524024465D56}|{F78941D5-7372-4C47-90E6-0741A56C01C5}|{CBE57691-8445-45FE-B630-9FBF740CBD95}|{16B6C395-6A67-4CF2-8480-067398B960F5}
+----version----
+language: en
+version: 1
+revision: b99d0d50-047e-4045-99a8-a63dc1d88f9d
+
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 14
+
+sitecore\admin
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20091104T111836
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+b99d0d50-047e-4045-99a8-a63dc1d88f9d
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20131209T092307:635221777870401893
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 20
+
+sitecore\netlabadmin

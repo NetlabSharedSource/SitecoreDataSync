@@ -1,0 +1,58 @@
+----item----
+version: 1
+id: {89634535-3C26-444A-AE65-73FAD1B29BCB}
+database: master
+path: /sitecore/templates/Modules/Data Sync/Mappings/Properties/UrlToText/__Standard Values
+parent: {0642B552-069E-47B4-B2A5-BE30FB02D72C}
+name: __Standard Values
+master: {00000000-0000-0000-0000-000000000000}
+template: {0642B552-069E-47B4-B2A5-BE30FB02D72C}
+templatekey: UrlToText
+
+----field----
+field: {A60FFA21-D63F-4BCF-83A8-F484BF8A9715}
+name: Handler Class
+key: handler class
+content-length: 60
+
+Sitecore.SharedSource.DataSync.Mappings.Properties.UrlToText
+----version----
+language: en
+version: 1
+revision: b2c62111-c304-4434-9d25-dc0b5ca20df7
+
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20110704T104513
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+b2c62111-c304-4434-9d25-dc0b5ca20df7
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20130920T092515:635152659159606200
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 20
+
+sitecore\netlabadmin
+----field----
+field: {001DD393-96C5-490B-924A-B0F25CD9EFD8}
+name: __Lock
+key: __lock
+content-length: 5
+
+<r />

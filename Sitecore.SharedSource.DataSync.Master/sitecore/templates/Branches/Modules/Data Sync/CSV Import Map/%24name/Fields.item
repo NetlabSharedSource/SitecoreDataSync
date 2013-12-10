@@ -1,0 +1,44 @@
+----item----
+version: 1
+id: {12BECFF3-0455-4BDD-BD01-F9CB04C652BF}
+database: master
+path: /sitecore/templates/Branches/Modules/Data Sync/CSV Import Map/$name/Fields
+parent: {DCABF6D0-A230-4624-B1DF-E52CCAB84803}
+name: Fields
+master: {00000000-0000-0000-0000-000000000000}
+template: {82FFCB7F-36C9-4D41-9A08-A8C73B604BD0}
+templatekey: Field Folder
+
+----version----
+language: en
+version: 1
+revision: e2890418-15bc-40f1-8f98-2c46799c06b7
+
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20110704T113327
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+e2890418-15bc-40f1-8f98-2c46799c06b7
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20130916T231338:635149700183604415
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 20
+
+sitecore\netlabadmin

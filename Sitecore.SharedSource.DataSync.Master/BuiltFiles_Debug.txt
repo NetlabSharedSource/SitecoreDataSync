@@ -1,0 +1,10 @@
+.\Debug\images\Modules\DataSync\recycle.png
+.\Debug\images\Modules\DataSync\refresh.png
+.\Debug\sitecore modules\DataSync\Shell\css\global.css
+.\Debug\sitecore modules\DataSync\Shell\DataSyncEditor.aspx
+.\Debug\sitecore modules\DataSync\Shell\Wizards\FileUpload\UploadFile.aspx
+.\Debug\sitecore modules\DataSync\Shell\Wizards\FromFileDataSyncWizard.xml
+.\Debug\sitecore modules\DataSync\Shell\Wizards\DataSyncWizard.xml
+.\Debug\App_Config\include\Sitecore.SharedSource.DataSync.config
+.\Debug\bin\Sitecore.SharedSource.DataSync.dll
+.\Debug\bin\Sitecore.SharedSource.DataSync.pdb

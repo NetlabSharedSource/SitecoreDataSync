@@ -1,0 +1,93 @@
+----item----
+version: 1
+id: {B4ED8324-A689-4A31-8570-E831B3719C8C}
+database: master
+path: /sitecore/templates/Modules/Data Sync/Mappings/Base Mapping/__Standard Values
+parent: {E77D1202-F816-49A4-A10F-0835E7E8E633}
+name: __Standard Values
+master: {00000000-0000-0000-0000-000000000000}
+template: {E77D1202-F816-49A4-A10F-0835E7E8E633}
+templatekey: Base Mapping
+
+----field----
+field: {A60FFA21-D63F-4BCF-83A8-F484BF8A9715}
+name: Handler Class
+key: handler class
+content-length: 0
+
+
+----field----
+field: {7F4DF09B-961B-46F4-9E05-5423841D1F6A}
+name: Handler Assembly
+key: handler assembly
+content-length: 30
+
+Sitecore.SharedSource.DataSync
+----field----
+field: {A17B5437-28A0-4666-864C-569EE37B3A2D}
+name: To What Field
+key: to what field
+content-length: 5
+
+$name
+----field----
+field: {BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}
+name: __Sortorder
+key: __sortorder
+content-length: 3
+
+100
+----version----
+language: en
+version: 1
+revision: 93396025-c4a2-47a3-9b29-2162630539aa
+
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 14
+
+sitecore\admin
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20091010T183826
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+93396025-c4a2-47a3-9b29-2162630539aa
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20130919T122145:635151901059512937
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 20
+
+sitecore\netlabadmin
+----field----
+field: {001DD393-96C5-490B-924A-B0F25CD9EFD8}
+name: __Lock
+key: __lock
+content-length: 5
+
+<r />
