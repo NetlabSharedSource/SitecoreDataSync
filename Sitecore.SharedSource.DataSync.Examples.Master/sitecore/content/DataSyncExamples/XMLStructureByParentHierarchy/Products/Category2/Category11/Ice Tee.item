@@ -1,0 +1,79 @@
+----item----
+version: 1
+id: {21DBB22D-749A-4089-BE87-8530830DA3A0}
+database: master
+path: /sitecore/content/DataSyncExamples/XMLStructureByParentHierarchy/Products/Category2/Category11/Ice Tee
+parent: {078318C6-B1D1-4DD4-9DC5-E331BE3116F1}
+name: Ice Tee
+master: {00000000-0000-0000-0000-000000000000}
+template: {FA9D6F59-B4DC-418C-827C-9235B5E61020}
+templatekey: ProductA
+
+----field----
+field: {9FF8E104-E07F-471C-8479-BF9501E609DA}
+name: Product Code
+key: product code
+content-length: 2
+
+10
+----version----
+language: en
+version: 1
+revision: ad574992-e29a-4dbb-abca-7388bb872a90
+
+----field----
+field: {9798EB30-6E46-4699-8A78-AC476DFDE586}
+name: Title
+key: title
+content-length: 7
+
+Ice Tee
+----field----
+field: {6AA35E8F-3455-4651-9CB7-111BA1BE687F}
+name: Group
+key: group
+content-length: 38
+
+{6E510C9B-388C-41DE-AA63-A9AB0210C0BE}
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 18
+
+sitecore\Anonymous
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20131209T225643
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 18
+
+sitecore\Anonymous
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+ad574992-e29a-4dbb-abca-7388bb872a90
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20131210T001645:635222314058980125
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 18
+
+sitecore\Anonymous

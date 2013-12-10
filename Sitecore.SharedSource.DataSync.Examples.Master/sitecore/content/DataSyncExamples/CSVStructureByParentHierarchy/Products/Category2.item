@@ -1,0 +1,72 @@
+----item----
+version: 1
+id: {4B132ADA-3662-4952-966E-CDC60C861260}
+database: master
+path: /sitecore/content/DataSyncExamples/CSVStructureByParentHierarchy/Products/Category2
+parent: {B562C86F-DDC0-4F1B-878C-543C87A1F799}
+name: Category2
+master: {00000000-0000-0000-0000-000000000000}
+template: {AACC72AD-48D3-42A0-B1F6-841128692C67}
+templatekey: Category
+
+----field----
+field: {BBE335E9-9D00-4A34-8425-6096C1490D95}
+name: Code
+key: code
+content-length: 1
+
+2
+----version----
+language: en
+version: 1
+revision: 7368c7d8-eacc-4471-a037-cf809f8d33e1
+
+----field----
+field: {AE09D785-2802-4539-98B1-A0F2DD6652E3}
+name: Title
+key: title
+content-length: 9
+
+Category2
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 14
+
+sitecore\admin
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20131210T003333
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+7368c7d8-eacc-4471-a037-cf809f8d33e1
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20131210T003333:635222324131926265
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin
