@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<control xmlns:def="Definition" xmlns="http://schemas.sitecore.net/Visual-Studio-Intellisense">
+  <FromFileDataSyncWizard>
+    <WizardForm CodeBeside="Sitecore.SharedSource.DataSync.Shell.Wizards.FromFileDataSyncWizard, Sitecore.SharedSource.DataSync">
+
+      <WizardFormFirstPage ID="FirstPage" Icon="Applications/32x32/folder_refresh.png">
+        <Border Class="scWizardWelcomeTitle">
+          <Literal ID="Welcome" Text="Welcome to DataSync Wizard."/>
+        </Border>
+        <Literal Text="This wizard helps you:"/>
+        <ul>
+          <li class="scWizardBullet">
+            <Literal Text="Sync data to your Sitecore installation."/>
+          </li>
+          <li class="scWizardBullet">
+            <Literal Text="See the sync result"/>
+          </li>
+        </ul>
+      </WizardFormFirstPage>
+      
+      <WizardFormPage ID="SelectFile" Header="File to Import" Text="Select the XML file that contains the data information that you want to import. This file must be in .xml format." Icon="Applications/32x32/folder_refresh.png">
+        <WizardFormPadding>
+          <GridPanel Width="100%" VAlign="top" Cellspacing="4" >
+
+            <Label Header="File Name:" GridPanel.VAlign="top" />
+
+            <GridPanel GridPanel.VAlign="top" Columns="3" Width="100%">
+              <Edit ID="Filename" GridPanel.Width="100%" Width="100%" ReadOnly="true" />
+              <Space Width="6px" />
+
+              <Border Width="75px" GridPanel.Width="75px">
+                <Border Style="position: relative;">
+                  <Frame ID="UploadFileFrame" Height="26px" Style="position: relative; -moz-opacity:0; filter:alpha(opacity: 0);	opacity: 0;	z-index: 2;" SourceUri="/sitecore modules/DataSync/Shell/Wizards/FileUpload/UploadFile.aspx"/>
+                  <button class="scButton" type="button" Style="position: absolute; top: 1px; left: 0px; z-index: 1;">
+                    <Literal Text="Browse" />
+                  </button>
+                </Border>
+              </Border>
+            </GridPanel>
+              
+          </GridPanel>
+        </WizardFormPadding>
+      </WizardFormPage>
+
+      <WizardFormPage ID="Importing" Header="Sync Data Items" Text="Please wait while syncing..." Icon="Applications/32x32/folder_refresh.png">
+        <GridPanel Width="100%">
+          <Space Height="64"/>
+
+          <ThemedImage Src="Applications/48x48/import1.png" Width="48" Height="48" GridPanel.Align="center"/>
+
+          <Space Height="16"/>
+
+          <Border Align="center">
+            <ThemedImage Src="Images/progress.gif" Width="94" Height="17"/>
+          </Border>
+
+          <Space Height="16"/>
+
+          <Border ID="ImportText" Align="center" GridPanel.Align="center" GridPanel.Style="font-weight:bold">
+            <Literal ID="ImportStatusText" Text=""/>
+          </Border>
+          <Space Height="16"/>
+          <Border ID="FailedText" Align="center" GridPanel.Align="center" GridPanel.Style="font-weight:bold">
+            <Literal ID="FailedStatusText" Text=""/>
+          </Border>
+          <Space Height="16"/>
+          <Border ID="NotPresentText" Align="center" GridPanel.Align="center" GridPanel.Style="font-weight:bold">
+            <Literal ID="NotPresentStatusText" Text=""/>
+          </Border>
+          <Space Height="16"/>
+        </GridPanel>
+      </WizardFormPage>
+
+      <WizardFormPage ID="Retry" Header="An error occurred" Text="An error occurred while syncing." Icon="Applications/32x32/folder_refresh.png">
+        <WizardFormPadding>
+          <Memo ID="ErrorText" ReadOnly="true" Width="100%" Height="100%"/>
+        </WizardFormPadding>
+      </WizardFormPage>
+
+      <WizardFormLastPage ID="LastPage" Icon="Applications/32x32/Import1.png">
+        <GridPanel Cellpadding="2" Width="100%" Height="100%" Fixed="true">
+
+          <Border GridPanel.Style="padding:0px 0px 16px 0px; font-weight:bold">
+            <Literal Text="The wizard has completed. Click Finish to close the wizard."/>
+          </Border>
+
+          <Border GridPanel.Style="padding:0px 0px 2px 0px">
+            <Literal ID="Status"/>
+          </Border>
+          
+          <Border ID="ResultLabel" GridPanel.Style="padding:8px 0px 2px 0px">
+            <Literal Text="Result:"/>
+          </Border>
+
+          <Memo ID="ResultText" ReadOnly="true" Width="100%" Height="100%" GridPanel.Height="100%"/>
+
+        </GridPanel>
+      </WizardFormLastPage>
+
+    </WizardForm>
+  </FromFileDataSyncWizard>
+</control>

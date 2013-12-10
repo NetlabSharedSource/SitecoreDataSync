@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<control xmlns:def="Definition" xmlns="http://schemas.sitecore.net/Visual-Studio-Intellisense">
+  <DataSyncWizard>
+    <WizardForm CodeBeside="Sitecore.SharedSource.DataSync.Shell.Wizards.DataSyncWizard, Sitecore.SharedSource.DataSync">
+
+      <WizardFormFirstPage ID="FirstPage" Icon="Applications/32x32/import1.png">
+        <Border Class="scWizardWelcomeTitle">
+          <Literal ID="Welcome" Text="Welcome to DataSync Wizard."/>
+        </Border>
+        <Literal Text="This wizard helps you:"/>
+        <ul>
+          <li class="scWizardBullet">
+            <Literal Text="Sync data to your Sitecore installation."/>
+          </li>
+          <li class="scWizardBullet">
+            <Literal Text="See the sync result"/>
+          </li>
+        </ul>
+      </WizardFormFirstPage>
+
+      <WizardFormPage ID="StartImport" Header="Sync Data Items" Text="Press 'Next' to start the syncing of data." Icon="Applications/32x32/Import1.png">
+        <GridPanel Cellpadding="2" Width="100%" Height="100%" Fixed="true">
+        </GridPanel>
+      </WizardFormPage>
+
+      <WizardFormPage ID="Importing" Header="Sync Data Items" Text="Please wait while syncing..." Icon="Applications/32x32/Import1.png">
+        <GridPanel Width="100%">
+          <Space Height="64"/>
+
+          <ThemedImage Src="Applications/48x48/import1.png" Width="48" Height="48" GridPanel.Align="center"/>
+
+          <Space Height="16"/>
+
+          <Border Align="center">
+            <ThemedImage Src="Images/progress.gif" Width="94" Height="17"/>
+          </Border>
+
+          <Space Height="16"/>
+
+          <Border ID="ImportText" Align="center" GridPanel.Align="center" GridPanel.Style="font-weight:bold">
+            <Literal ID="ImportStatusText" Text=""/>
+          </Border>
+          <Space Height="16"/>
+          <Border ID="FailedText" Align="center" GridPanel.Align="center" GridPanel.Style="font-weight:bold">
+            <Literal ID="FailedStatusText" Text=""/>
+          </Border>
+          <Space Height="16"/>
+          <Border ID="NotPresentText" Align="center" GridPanel.Align="center" GridPanel.Style="font-weight:bold">
+            <Literal ID="NotPresentStatusText" Text=""/>
+          </Border>
+          <Space Height="16"/>
+        </GridPanel>
+      </WizardFormPage>
+
+      <WizardFormPage ID="Retry" Header="An error occurred" Text="An error occurred while syncing." Icon="Applications/32x32/import1.png">
+        <WizardFormPadding>
+          <Memo ID="ErrorText" ReadOnly="true" Width="100%" Height="100%"/>
+        </WizardFormPadding>
+      </WizardFormPage>
+
+      <WizardFormLastPage ID="LastPage" Icon="Applications/32x32/Import1.png">
+        <GridPanel Cellpadding="2" Width="100%" Height="100%" Fixed="true">
+
+          <Border GridPanel.Style="padding:0px 0px 16px 0px; font-weight:bold">
+            <Literal Text="The wizard has completed. Click Finish to close the wizard."/>
+          </Border>
+
+          <Border GridPanel.Style="padding:0px 0px 2px 0px">
+            <Literal ID="Status"/>
+          </Border>
+
+          <Border ID="ResultLabel" GridPanel.Style="padding:8px 0px 2px 0px">
+            <Literal Text="Result:"/>
+          </Border>
+
+          <Memo ID="ResultText" ReadOnly="true" Width="100%" Height="100%" GridPanel.Height="100%"/>
+
+        </GridPanel>
+      </WizardFormLastPage>
+
+    </WizardForm>
+  </DataSyncWizard>
+</control>
