@@ -32,7 +32,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>.\Debug\</OutputPath>
     <RecursiveDeployAction>Ignore</RecursiveDeployAction>
-    <SitecoreDeployFolder>../../Website</SitecoreDeployFolder>
+    <SitecoreDeployFolder>../../../Website</SitecoreDeployFolder>
     <SitecoreWebUrl>http://standalonemodules</SitecoreWebUrl>
     <SitecoreAccessGuid>570c0424-0241-443f-9a84-f0904dbf2817</SitecoreAccessGuid>
     <InstallSitecoreConnector>True</InstallSitecoreConnector>
@@ -42,7 +42,7 @@
     </PackageVersion>
     <PackageReadme>
     </PackageReadme>
-    <SitecoreAssemblyPath>../../Website/bin</SitecoreAssemblyPath>
+    <SitecoreAssemblyPath>../../../Website/bin</SitecoreAssemblyPath>
     <GeneratePackage>True</GeneratePackage>
     <SeperateFilesAndItems>False</SeperateFilesAndItems>
     <AddDateTimeToPackageName>False</AddDateTimeToPackageName>
