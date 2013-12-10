@@ -1,0 +1,91 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.SharedSource.DataSync", "Sitecore.SharedSource.DataSync\Sitecore.SharedSource.DataSync.csproj", "{9A1BAE6C-3CE3-4BD6-BB65-0F6DC6DA8F2D}"
+EndProject
+Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.DataSync.Core", "Sitecore.SharedSource.DataSync.Core\Sitecore.SharedSource.DataSync.Core.scproj", "{5DB5C53A-1844-469B-A951-77CC54512F16}"
+EndProject
+Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.DataSync.Master", "Sitecore.SharedSource.DataSync.Master\Sitecore.SharedSource.DataSync.Master.scproj", "{02A9D508-9F67-498A-9810-B50A376B2BB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gosh.DataSync", "Gosh.DataSync\Gosh.DataSync.csproj", "{83410933-5CA7-4515-8367-EAB6A8CDE565}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodtBrod.DataSync", "GodtBrod.DataSync\GodtBrod.DataSync.csproj", "{9CA1A695-E7AE-4FC2-A467-806FB4118245}"
+EndProject
+Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Gosh.DataSync.Master", "Gosh.DataSync.Master\Gosh.DataSync.Master.scproj", "{892470D8-C765-4F7F-9A7B-8B123C56AD2C}"
+EndProject
+Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "GodtBrod.DataSync.Master", "GodtBrod.DataSync.Master\GodtBrod.DataSync.Master.scproj", "{E737A022-9AB7-4C32-9868-EDC77D36FDAC}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://192.168.1.60:8080/tfs/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Sitecore.SharedSource.DataSync.Core\\Sitecore.SharedSource.DataSync.Core.scproj
+		SccProjectName1 = Sitecore.SharedSource.DataSync.Core
+		SccLocalPath1 = Sitecore.SharedSource.DataSync.Core
+		SccProjectUniqueName2 = Sitecore.SharedSource.DataSync.Master\\Sitecore.SharedSource.DataSync.Master.scproj
+		SccProjectName2 = Sitecore.SharedSource.DataSync.Master
+		SccLocalPath2 = Sitecore.SharedSource.DataSync.Master
+		SccProjectUniqueName3 = Sitecore.SharedSource.DataSync\\Sitecore.SharedSource.DataSync.csproj
+		SccProjectName3 = Sitecore.SharedSource.DataSync
+		SccLocalPath3 = Sitecore.SharedSource.DataSync
+		SccProjectUniqueName4 = Gosh.DataSync\\Gosh.DataSync.csproj
+		SccProjectName4 = Gosh.DataSync
+		SccLocalPath4 = Gosh.DataSync
+		SccProjectUniqueName5 = GodtBrod.DataSync\\GodtBrod.DataSync.csproj
+		SccProjectName5 = GodtBrod.DataSync
+		SccLocalPath5 = GodtBrod.DataSync
+		SccProjectUniqueName6 = Gosh.DataSync.Master\\Gosh.DataSync.Master.scproj
+		SccProjectName6 = Gosh.DataSync.Master
+		SccLocalPath6 = Gosh.DataSync.Master
+		SccProjectUniqueName7 = GodtBrod.DataSync.Master\\GodtBrod.DataSync.Master.scproj
+		SccProjectName7 = GodtBrod.DataSync.Master
+		SccLocalPath7 = GodtBrod.DataSync.Master
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A1BAE6C-3CE3-4BD6-BB65-0F6DC6DA8F2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A1BAE6C-3CE3-4BD6-BB65-0F6DC6DA8F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A1BAE6C-3CE3-4BD6-BB65-0F6DC6DA8F2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A1BAE6C-3CE3-4BD6-BB65-0F6DC6DA8F2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB5C53A-1844-469B-A951-77CC54512F16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB5C53A-1844-469B-A951-77CC54512F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB5C53A-1844-469B-A951-77CC54512F16}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5DB5C53A-1844-469B-A951-77CC54512F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB5C53A-1844-469B-A951-77CC54512F16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB5C53A-1844-469B-A951-77CC54512F16}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02A9D508-9F67-498A-9810-B50A376B2BB9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{83410933-5CA7-4515-8367-EAB6A8CDE565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83410933-5CA7-4515-8367-EAB6A8CDE565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83410933-5CA7-4515-8367-EAB6A8CDE565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83410933-5CA7-4515-8367-EAB6A8CDE565}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CA1A695-E7AE-4FC2-A467-806FB4118245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CA1A695-E7AE-4FC2-A467-806FB4118245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CA1A695-E7AE-4FC2-A467-806FB4118245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CA1A695-E7AE-4FC2-A467-806FB4118245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{892470D8-C765-4F7F-9A7B-8B123C56AD2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{892470D8-C765-4F7F-9A7B-8B123C56AD2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{892470D8-C765-4F7F-9A7B-8B123C56AD2C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{892470D8-C765-4F7F-9A7B-8B123C56AD2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{892470D8-C765-4F7F-9A7B-8B123C56AD2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{892470D8-C765-4F7F-9A7B-8B123C56AD2C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E737A022-9AB7-4C32-9868-EDC77D36FDAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E737A022-9AB7-4C32-9868-EDC77D36FDAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E737A022-9AB7-4C32-9868-EDC77D36FDAC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E737A022-9AB7-4C32-9868-EDC77D36FDAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E737A022-9AB7-4C32-9868-EDC77D36FDAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E737A022-9AB7-4C32-9868-EDC77D36FDAC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
