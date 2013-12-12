@@ -1,0 +1,244 @@
+----item----
+version: 1
+id: {CF3404C6-B2BA-4039-950B-8BB8C0CF0838}
+database: master
+path: /sitecore/system/Modules/Data Sync/Examples/CSV Structure By Date/Products
+parent: {380D3782-2631-4327-B02A-0650731F93A7}
+name: Products
+master: {0D3DF532-F846-4B5B-A4B5-2CD8F5BC0EA1}
+template: {9FAA5C4F-B9F3-4567-BACE-89C45D58344F}
+templatekey: CSV Import Map
+
+----field----
+field: {C5A133C1-3C70-4A38-82D0-9AC6B0577C4F}
+name: Data
+key: data
+content-length: 614
+
+code;title;category;group;type;date
+1;Apple;10;GRO;A;2000-02-02
+2;Orange;10;GRO;A;2000-02-02
+3;Grape;10;GRO;B;2000-02-02
+4;Banana;9;GRO;B;2000-02-02
+5;Tee;9;GRA;A;2000-02-02
+6;Coffee;11;GRO;A;2000-02-02
+7;Milkshake;11;GRA;A;2013-02-02
+8;Asparges;11;GRA;A;2013-02-02
+9;Grapefruit;11;GRA;A;2013-02-02
+10;Ice Tee;11;GRO;A;2013-02-02
+11;Living;11;GRO;A;2013-02-02
+12;Watermelon;3;GRA;A;2013-02-02
+13;Fruit;4;GRO;B;2013-02-02
+14;Guava;4;GRO;B;2013-02-02
+15;Avocado;4;GRI;B;2013-02-02
+16;Grape;10;GRO;A;2013-02-02
+17;Banana;9;GRO;A;2013-02-02
+18;Wrong product template - should fail;10;GRO;B;2013-02-02
+----field----
+field: {753BA1C5-523C-478A-BED1-4FFE2F6818BB}
+name: Query
+key: query
+content-length: 0
+
+
+----field----
+field: {AA1E7EE6-47D5-4163-BAE2-E5077F7595A0}
+name: Data Source
+key: data source
+content-length: 0
+
+
+----field----
+field: {B68CB5FC-8A2A-4F45-A2D4-55DCB43A20B4}
+name: Import To Where
+key: import to where
+content-length: 38
+
+{61AC5421-2F3B-45FC-9770-D33825FE462B}
+----field----
+field: {242C7FE6-D68B-45D6-95B8-023E7C8E4CE9}
+name: Import to Language Version
+key: import to language version
+content-length: 38
+
+{AF584191-45C9-4201-8740-5409F4CF8BDD}
+----field----
+field: {38D37516-156F-483F-841D-4C98857DFE67}
+name: Pull Item Type from What Field
+key: pull item type from what field
+content-length: 4
+
+type
+----field----
+field: {FCEC8D02-C7CD-4B9E-856A-5196AB24710E}
+name: Folder By Parent Hierarchy
+key: folder by parent hierarchy
+content-length: 0
+
+
+----field----
+field: {4CD6F41A-EA84-441D-83DD-7DE50577BC61}
+name: Identify Parent By What Field On Import Row
+key: identify parent by what field on import row
+content-length: 0
+
+
+----field----
+field: {EF486C2E-1934-4933-A76D-9D6FA94A19DD}
+name: Identify Parent By What Field On Parent
+key: identify parent by what field on parent
+content-length: 0
+
+
+----field----
+field: {622306BD-5A95-4A7F-B917-5E88AC7999D6}
+name: Identify Root Level Folders By What Value
+key: identify root level folders by what value
+content-length: 0
+
+
+----field----
+field: {495EF9FB-5001-4007-9682-374853E7D5AE}
+name: Folder By Date
+key: folder by date
+content-length: 1
+
+1
+----field----
+field: {7E77A680-5781-4A58-B701-16BE6E78492F}
+name: Date Field
+key: date field
+content-length: 4
+
+date
+----field----
+field: {B6F09595-16C9-42B2-A0AE-F0E5C687ED25}
+name: Folder By Name
+key: folder by name
+content-length: 0
+
+
+----field----
+field: {9F92F1F0-7B0B-42FC-806C-137643B05148}
+name: Sync Folder By Updating Already Existing Items
+key: sync folder by updating already existing items
+content-length: 1
+
+1
+----field----
+field: {2C69D4B6-E450-4B2B-B243-B070DDAE34AF}
+name: Identify The Same Items By Field
+key: identify the same items by field
+content-length: 38
+
+{376E8087-280A-47DF-9963-3FBE9B9E2AC9}
+----field----
+field: {F19AE7D1-8A76-45B1-914C-A288C0234B34}
+name: Pull Item Name from What Fields
+key: pull item name from what fields
+content-length: 5
+
+title
+----field----
+field: {3D356B30-9531-4E24-8BC8-4564F1BA6DE5}
+name: Update Item Name
+key: update item name
+content-length: 1
+
+1
+----field----
+field: {BFC7FF4C-8512-47BE-A833-12D9BF2B0158}
+name: On Duplicate Item Names Generate Postfix Number
+key: on duplicate item names generate postfix number
+content-length: 1
+
+1
+----field----
+field: {788C9D3C-9E8A-476F-AF8C-CEAF243FCC6E}
+name: Validate If Item Key Is Unique
+key: validate if item key is unique
+content-length: 1
+
+1
+----field----
+field: {2C5E3ACF-1921-4E37-901C-E99DA1CAAB31}
+name: Disable Items Not Present In Import
+key: disable items not present in import
+content-length: 1
+
+1
+----field----
+field: {23804A7B-C6C8-4D76-AE4F-38EF1EDCC8D2}
+name: Disable Items Folder
+key: disable items folder
+content-length: 38
+
+{81B9C634-0470-4460-B671-C3AF6A26CDEC}
+----field----
+field: {015C517D-778B-4F80-B4F4-E6313401E402}
+name: Do Not Send Mail On Success
+key: do not send mail on success
+content-length: 1
+
+1
+----field----
+field: {AE26870B-FD06-4703-AD42-3B18256C1C3F}
+name: Mail Recipients
+key: mail recipients
+content-length: 0
+
+
+----field----
+field: {9B488450-C6B5-4E04-9062-BB672B400C4D}
+name: Do Not Log Progress Status Messages In Sitecore Log
+key: do not log progress status messages in sitecore log
+content-length: 1
+
+1
+----field----
+field: {F6D8A61C-2F84-4401-BD24-52D2068172BC}
+name: __Originator
+key: __originator
+content-length: 0
+
+
+----version----
+language: en
+version: 1
+revision: f60f62d7-0160-4816-96bd-3d1920bbac15
+
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20131209T220527
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+f60f62d7-0160-4816-96bd-3d1920bbac15
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20131212T134407:635224526471292109
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin
