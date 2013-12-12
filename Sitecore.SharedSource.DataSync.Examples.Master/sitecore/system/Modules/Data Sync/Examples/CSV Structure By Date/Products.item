@@ -13,7 +13,7 @@ templatekey: CSV Import Map
 field: {C5A133C1-3C70-4A38-82D0-9AC6B0577C4F}
 name: Data
 key: data
-content-length: 770
+content-length: 614
 
 code;title;category;group;type;date
 1;Apple;10;GRO;A;2000-02-02
@@ -33,9 +33,7 @@ code;title;category;group;type;date
 15;Avocado;4;GRI;B;2013-02-02
 16;Grape;10;GRO;A;2013-02-02
 17;Banana;9;GRO;A;2013-02-02
-18;Wrong product template - should fail;10;GRO;C;2013-02-02
-;The code attribute is lacking - should fail;10;GRO;C;2013-02-02
-20;The product belongs to a category that do not exist - should fail;20;GRO;C;2013-02-02
+18;Wrong product template - should fail;10;GRO;B;2013-02-02
 ----field----
 field: {753BA1C5-523C-478A-BED1-4FFE2F6818BB}
 name: Query
@@ -175,14 +173,21 @@ name: Disable Items Folder
 key: disable items folder
 content-length: 38
 
-{3CC0985C-A11A-48EE-AB85-BA183DBACA82}
+{81B9C634-0470-4460-B671-C3AF6A26CDEC}
+----field----
+field: {015C517D-778B-4F80-B4F4-E6313401E402}
+name: Do Not Send Mail On Success
+key: do not send mail on success
+content-length: 1
+
+1
 ----field----
 field: {AE26870B-FD06-4703-AD42-3B18256C1C3F}
 name: Mail Recipients
 key: mail recipients
-content-length: 16
+content-length: 0
 
-kasper@netlab.no
+
 ----field----
 field: {9B488450-C6B5-4E04-9062-BB672B400C4D}
 name: Do Not Log Progress Status Messages In Sitecore Log
@@ -200,7 +205,7 @@ content-length: 0
 ----version----
 language: en
 version: 1
-revision: 00b1ad59-1326-4fa6-ba2b-ff7ab96d75a9
+revision: f60f62d7-0160-4816-96bd-3d1920bbac15
 
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
@@ -222,14 +227,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-00b1ad59-1326-4fa6-ba2b-ff7ab96d75a9
+f60f62d7-0160-4816-96bd-3d1920bbac15
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20131210T010457:635222342972573888
+20131212T134407:635224526471292109
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

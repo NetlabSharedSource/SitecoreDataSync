@@ -151,14 +151,21 @@ name: Disable Items Folder
 key: disable items folder
 content-length: 38
 
-{607F77A0-2F8C-40BD-80B8-DBB5B7484463}
+{B657DFB1-AB06-41F7-A287-A3220FC96159}
+----field----
+field: {015C517D-778B-4F80-B4F4-E6313401E402}
+name: Do Not Send Mail On Success
+key: do not send mail on success
+content-length: 1
+
+1
 ----field----
 field: {AE26870B-FD06-4703-AD42-3B18256C1C3F}
 name: Mail Recipients
 key: mail recipients
-content-length: 16
+content-length: 0
 
-kasper@netlab.no
+
 ----field----
 field: {9B488450-C6B5-4E04-9062-BB672B400C4D}
 name: Do Not Log Progress Status Messages In Sitecore Log
@@ -176,7 +183,7 @@ content-length: 0
 ----version----
 language: en
 version: 1
-revision: 5f80caaf-b3af-4dd7-8488-508d7c2b8a87
+revision: 008e382e-67d8-47bb-a921-d50923f25305
 
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
@@ -198,14 +205,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-5f80caaf-b3af-4dd7-8488-508d7c2b8a87
+008e382e-67d8-47bb-a921-d50923f25305
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20131210T003325:635222324052321712
+20131212T134414:635224526549086559
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
