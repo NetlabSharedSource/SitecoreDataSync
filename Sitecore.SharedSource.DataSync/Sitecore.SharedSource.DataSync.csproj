@@ -70,6 +70,8 @@
     <Compile Include="AppCode\Managers\DataSyncManager.cs" />
     <Compile Include="AppCode\Mail\SendMail.cs" />
     <Compile Include="AppCode\Providers\CSVDataMap.cs" />
+    <Compile Include="AppCode\Providers\IBaseDataMap.cs" />
+    <Compile Include="AppCode\Providers\IBaseDataMaps.cs" />
     <Compile Include="AppCode\Shell\Commands\FromFileDataSyncWizardCommand.cs" />
     <Compile Include="AppCode\Shell\Commands\DataSyncWizardCommand.cs" />
     <Compile Include="AppCode\Shell\Wizards\FromFileDataSyncWizard.cs" />

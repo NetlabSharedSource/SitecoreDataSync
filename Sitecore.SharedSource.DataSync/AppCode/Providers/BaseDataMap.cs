@@ -1519,6 +1519,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     LogBuilder.FailureItems += 1;
                     return false;
                 }
+                // Create mot provider
                 if (!ToWhatTemplates.Any())
                 {
                     LogBuilder.Log("Error",
@@ -1538,6 +1539,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     LogBuilder.FailureItems += 1;
                     return false;
                 }
+                // Create mot provider
 
                 if (toWhatTemplate == null)
                 {
@@ -1830,7 +1832,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return false;
         }
 
-        public string GetConcatenatedItemNameFromImport(object importRow, ref string errorMessage)
+        public virtual string GetConcatenatedItemNameFromImport(object importRow, ref string errorMessage)
         {
             StringBuilder strItemName = new StringBuilder();
             foreach (string nameField in NameFields) 
@@ -1868,7 +1870,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
         /// <summary>
         /// creates an item name based on the name field values in the importRow
         /// </summary>
-        public string GetItemName(object importRow, ref string errorMessage)
+        public virtual string GetItemName(object importRow, ref string errorMessage)
         {
             try
             {
