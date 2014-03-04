@@ -28,6 +28,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
         private const int DefaultMinimumNumberOfRowsRequiredToStartImport = 10;
         private const int DefaultNumberOfRowsToProcessBeforeLogStatus = 10;
         private const int DefaultSleepPeriodToRerunSqlExceptionInGetItemsByKey = 2000;
+        private bool useFastQuery = true;
 
 		#region Properties
 
@@ -40,6 +41,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
         {
             get { return _Data; }
             set { _Data = value; }
+        }
+
+        public bool UseFastQuery
+        {
+            get { return useFastQuery; }
+            set { useFastQuery = value; }
         }
 
         /// <summary>
@@ -980,12 +987,13 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return (x.Any()) ? x.First() : null;
         }
         
-        public List<Item> GetItemsByKey(Item parent, string keyFieldName, string key, ref string errorMessage)
+        public virtual List<Item> GetItemsByKey(Item parent, string keyFieldName, string key, ref string errorMessage)
         {
             using (new LanguageSwitcher(ImportToLanguageVersion))
             {
                 var replacedKey = key.Replace("'", "_");
-                const string pattern = "fast:{0}//*[@{1}='{2}']";
+                string pattern = "{0}//*[@{1}='{2}']";
+                pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern; 
                 var query = string.Format(pattern, parent.Paths.FullPath, keyFieldName, replacedKey);
                 try
                 {
@@ -1061,9 +1069,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
         }
 
-        protected List<Item> GetItemsByTemplate(Item parent, List<TemplateItem> templates, ref string errorMessage)
+        protected virtual List<Item> GetItemsByTemplate(Item parent, List<TemplateItem> templates, ref string errorMessage)
         {
-           const string pattern = "fast:{0}//*[{1}]";
+           string pattern = "{0}//*[{1}]";
+           pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern; 
            const string tidpattern = "@@templateid='{0}'";
             string tempPattern = string.Empty;
             for (int i = 0; i < templates.Count; i++)
@@ -1091,7 +1100,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return new List<Item>();
         }
 
-        public List<Item> GetItemsByKeyAndTemplate(Item parent, string itemKey, List<TemplateItem> templates, ref string errorMessage)
+        public virtual List<Item> GetItemsByKeyAndTemplate(Item parent, string itemKey, List<TemplateItem> templates, ref string errorMessage)
         {
             using (new LanguageSwitcher(ImportToLanguageVersion))
             {
@@ -1105,7 +1114,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         tempPattern += " or ";
                 }
 
-                const string pattern = "fast:{0}//*[@@key='{1}' and ({2})]";
+                string pattern = "{0}//*[@@key='{1}' and ({2})]";
+                pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern; 
                 var query = string.Format(pattern, parent.Paths.FullPath, itemKey, tempPattern);
                 try
                 {
@@ -1281,7 +1291,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         LogBuilder.FailureItems += 1;
                         return false;
                     }
-                    var items = GetItemsByKey(Parent, toWhatField, keyValue, ref errorMessage);
+                    var items = GetExistingItemsToSyncByKey(Parent, parent, toWhatField, keyValue, ref errorMessage);
                     if (!String.IsNullOrEmpty(errorMessage) || items == null)
                     {
                         LogBuilder.Log("Error",
@@ -1355,6 +1365,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 return false;
             }
             return true;
+        }
+
+        public virtual List<Item> GetExistingItemsToSyncByKey(Item rootItem, Item currentParent, string toWhatField, string keyValue, ref string errorMessage)
+        {
+            var items = GetItemsByKey(rootItem, toWhatField, keyValue, ref errorMessage);
+            return items;
         }
 
         protected virtual int GetMinimumNumberOfRowsRequiredToStartImport()
