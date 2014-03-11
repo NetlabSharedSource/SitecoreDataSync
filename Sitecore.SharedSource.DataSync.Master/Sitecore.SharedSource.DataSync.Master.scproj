@@ -439,64 +439,51 @@ Have fun!</PackageReadme>
       <Icon>/temp/IconCache/Software/32x32/element_down.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\__Standard Values.item">
       <Icon>/temp/IconCache/Software/32x32/element_down.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\Droplink Mapping.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\Lookup Mapping.item">
       <Icon>/temp/IconCache/software/32x32/element_down.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\Droplink Mapping\Do Not Require Value Match.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\Lookup Mapping\Do Not Require Value Match.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\Droplink Mapping\Source List.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\Lookup Mapping\MultiList Delimiter.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\Lookup Mapping\Source List.item">
+      <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnField.item">
       <Icon>/temp/IconCache/Software/32x32/element_down.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnField\__Standard Values.item">
       <Icon>/temp/IconCache/Software/32x32/element_down.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnField\Droplink Mapping.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnField\Lookup Mapping.item">
       <Icon>/temp/IconCache/software/32x32/element_down.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnField\Droplink Mapping\Match On FieldName.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnField\Lookup Mapping\Match On FieldName.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ExcludeItemFrom>
-      </ExcludeItemFrom>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToDate.item">
       <Icon>/temp/IconCache/Software/32x32/element_time.png</Icon>
@@ -511,6 +498,76 @@ Have fun!</PackageReadme>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromFile.item">
+      <Icon>/temp/IconCache/Applications/16x16/photo_scenery.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromFile\__Standard Values.item">
+      <Icon>/temp/IconCache/Applications/16x16/photo_scenery.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromFile\Media Settings.item">
+      <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromFile\Media Settings\ImageFilesToImportAbsolutePath.item">
+      <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromFile\Media Settings\SearchTopDirectoryOnly.item">
+      <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromImgTag.item">
+      <Icon>/temp/IconCache/Applications/16x16/photo_scenery.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromImgTag\__Standard Values.item">
+      <Icon>/temp/IconCache/Applications/16x16/photo_scenery.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromUrl.item">
+      <Icon>/temp/IconCache/Applications/16x16/photo_scenery.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromUrl\__Standard Values.item">
+      <Icon>/temp/IconCache/Applications/16x16/photo_scenery.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromUrl\Media Settings.item">
+      <Icon>/temp/IconCache/software/32x32/element_into.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromUrl\Media Settings\GetFileNameFromWhatField.item">
+      <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromUrl\Media Settings\GetImageAltTextIfNotProvidedFromWhatField.item">
+      <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromUrl\Media Settings\MediaLibraryPath.item">
+      <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromUrl\Media Settings\ReplaceIfExist.item">
+      <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToStaticValue.item">
       <Icon>/temp/IconCache/software/32x32/element_into_input.png</Icon>

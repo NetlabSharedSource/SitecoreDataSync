@@ -60,7 +60,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
             }
             if (String.IsNullOrEmpty(errorMessage))
-            {
+            {   
                 base.ValidateImportData(importData, ref errorMessage);
             }
         }

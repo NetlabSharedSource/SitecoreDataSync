@@ -53,7 +53,7 @@ namespace Sitecore.SharedSource.DataSync.Shell.Wizards
         {
             get
             {
-                return StringUtil.GetString(ServerProperties[TextJobHandle]);
+                return Sitecore.StringUtil.GetString(ServerProperties[TextJobHandle]);
             }
             set
             {
