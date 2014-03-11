@@ -1155,7 +1155,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
         /// <summary>
         /// processes each field against the data provided by subclasses
         /// </summary>
-        public Logging Process()
+        public virtual Logging Process()
         {
             string importIdentifier = String.Format("{0} - {1}", String.Format(DateTime.Now.ToLongDateString(), "dd-MMM-yyyy") + " " + String.Format(DateTime.Now.ToLongTimeString(), "hh:mm:ss"), ImportItem.Name);
             Diagnostics.Log.Info(String.Format("DataSync job started - {0}.", importIdentifier), typeof(BaseDataMap));

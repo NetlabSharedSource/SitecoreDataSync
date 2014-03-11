@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -16,8 +17,9 @@ using Sitecore.SharedSource.DataSync.Log;
 namespace Sitecore.SharedSource.DataSync.Providers
 {
 	public class XmlDataMap : BaseDataMap {
+	    private const string Dot = ".";
 
-		#region Properties
+	    #region Properties
 
 	    private readonly int DebugImportRowXmlCharacterLength = 50;
 
@@ -119,6 +121,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             errorMessage += String.Format("The GetFieldValue method failed in executing the ExecuteXPathQueryOnXElement method. ErrorMessage: {0}.", errorMessage);
                         }
                         string fieldValue;
+                        if (result is string)
+                        {
+                            return result as string;
+                        }
                         var enumerable = result as IList<object> ?? result.Cast<object>().ToList();
                         if (TryParseAttribute(enumerable, out fieldValue, ref errorMessage))
                         {
@@ -212,6 +218,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
             {
                 try
                 {
+                    if (query == Dot)
+                    {
+                        return GetInnerXml(xElement);
+                    }
                     return xElement.XPathEvaluate(query) as IEnumerable;
                 }
                 catch (Exception ex)
@@ -223,7 +233,13 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return null;
         }
 
-        protected IList<object> ExecuteXPathQuery(XDocument xDocument)
+	    private static IEnumerable GetInnerXml(XElement xElement)
+	    {
+	        var innerXml = xElement.GetInnerXml();
+	        return innerXml;
+	    }
+
+	    protected IList<object> ExecuteXPathQuery(XDocument xDocument)
         {
             if (xDocument != null)
             {
