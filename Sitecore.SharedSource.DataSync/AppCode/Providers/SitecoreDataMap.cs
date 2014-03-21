@@ -86,7 +86,18 @@ namespace Sitecore.SharedSource.DataSync.Providers
         {
             using (new LanguageSwitcher(ImportToLanguageVersion))
             {
-                return SitecoreDB.SelectItems(StringUtility.CleanXPath(Query));
+                if (String.IsNullOrEmpty(DataSourceString))
+                {
+                    LogBuilder.Log("Error", "The DataSourceString was null or empty. Please provide a connectionstring for the Sitecore database.");
+                    return null;
+                }
+                var database = Configuration.Factory.GetDatabase(DataSourceString);
+                if (database == null)
+                {
+                    LogBuilder.Log("Error", string.Format("The retrieved database from connectionstring: '{0}' was not found. Please verify the database connection", DataSourceString));
+                    return null;
+                }
+                return database.SelectItems(StringUtility.CleanXPath(Query));
             }
         }
 
