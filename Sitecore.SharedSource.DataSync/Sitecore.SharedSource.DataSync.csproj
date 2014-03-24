@@ -75,8 +75,6 @@
     <Compile Include="AppCode\Mappings\Fields\ToImageFromImgTag.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToImageFromUrl.cs" />
     <Compile Include="AppCode\Providers\CSVDataMap.cs" />
-    <Compile Include="AppCode\Providers\IBaseDataMap.cs" />
-    <Compile Include="AppCode\Providers\IBaseDataMaps.cs" />
     <Compile Include="AppCode\Shell\Commands\FromFileDataSyncWizardCommand.cs" />
     <Compile Include="AppCode\Shell\Commands\DataSyncWizardCommand.cs" />
     <Compile Include="AppCode\Shell\Wizards\FromFileDataSyncWizard.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Sitecore.Globalization;
 using Sitecore.SharedSource.DataSync.Log;
 using Sitecore.SharedSource.DataSync.Extensions;
@@ -109,30 +110,46 @@ namespace Sitecore.SharedSource.DataSync.Providers
         public override bool ProcessCustomData(ref Item newItem, object importRow, out bool processedCustomData)
         {
             processedCustomData = false;
-            Item row = importRow as Item;
+            Item importRowItem = importRow as Item;
             //add in the property mappings
             foreach (IBaseProperty d in this.PropertyDefinitions)
-                d.FillField(this, ref newItem, row);
+                d.FillField(this, ref newItem, importRowItem);
             return true;
         }
-        
-        /// <summary>
-        /// gets a field value from an item
-        /// </summary>
-        /// <param name="importRow"></param>
-        /// <param name="fieldName"></param>
-        /// <returns></returns>
-        public override string GetFieldValue(object importRow, string fieldName, ref string errorMessage)
+
+	    /// <summary>
+	    /// gets a field value from an item
+	    /// </summary>
+	    /// <param name="importRow"></param>
+	    /// <param name="fieldName"></param>
+	    /// <param name="errorMessage"></param>
+	    /// <returns></returns>
+	    public override string GetFieldValue(object importRow, string fieldName, ref string errorMessage)
         {
-            Item item = importRow as Item;
-            if (item != null)
+            Item importRowItem = importRow as Item;
+            if (importRowItem != null)
             {
                 if (!String.IsNullOrEmpty(fieldName))
                 {
-                    Field f = item.Fields[fieldName];
-                    if (f != null)
+                    switch (fieldName.ToLower())
                     {
-                        return item[fieldName];
+                        case ("@key"):
+                            return importRowItem.Key;
+                        case ("@name"):
+                            return importRowItem.Name;
+                        case ("@displayname"):
+                            return importRowItem.DisplayName;
+                        case ("@id"):
+                            return importRowItem.ID.ToShortID().ToString();
+                        case ("@parentid"):
+                            return importRowItem.Parent != null
+                                       ? importRowItem.ParentID.ToShortID().ToString()
+                                       : string.Empty;
+                    }
+                    var field = importRowItem.Fields[fieldName];
+                    if (field != null)
+                    {
+                        return importRowItem[fieldName];
                     }
                     errorMessage += String.Format("The GetFieldValue method failed because the the 'fieldName' didn't result in any field on the item. ImportRow: {0}.", GetImportRowDebugInfo(importRow));
                 }
@@ -152,10 +169,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
 	    public override string GetImportRowDebugInfo(object importRow)
 	    {
-            Item item = importRow as Item;
-	        if (item != null)
+            Item importRowItem = importRow as Item;
+	        if (importRowItem != null)
 	        {
-	            return item.ID.ToString();
+	            return importRowItem.ID.ToString();
 	        }
 	        return importRow.ToString();
 	    }
