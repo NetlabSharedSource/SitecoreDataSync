@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -1187,6 +1187,12 @@ Have fun!</PackageReadme>
     <ExcludedAssemblies Include="Stimulsoft.%2a.dll" />
     <ExcludedAssemblies Include="Telerik.%2a.dll" />
     <ExcludedAssemblies Include="Telerik.Web.UI.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sitecore.SharedSource.DataSync\Sitecore.SharedSource.DataSync.csproj">
+      <Project>{9a1bae6c-3ce3-4bd6-bb65-0f6dc6da8f2d}</Project>
+      <Name>Sitecore.SharedSource.DataSync</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\HedgehogDevelopment\SitecoreProject\v9.0\HedgehogDevelopment.SitecoreProject.targets" />
 </Project>

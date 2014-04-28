@@ -1202,8 +1202,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     if (LogBuilder.ProcessedItems%minimumNumberOfRowsRequiredToStartImport == 0)
                     {
                         Diagnostics.Log.Info(
-                            String.Format("DataSync job - {0} - processed. \r\n{1}", importIdentifier,
-                                          LogBuilder.GetStatusText()), typeof (BaseDataMap));
+                            String.Format("DataSync job - {0} - Total {1} rows. \r\n{2}", importIdentifier,
+                                          numberOfRows, LogBuilder.GetStatusText()), typeof(BaseDataMap));
                     }
                 }
                 LogBuilder.ProcessedItems += 1;
