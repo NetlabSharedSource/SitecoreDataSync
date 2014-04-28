@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using Sitecore.Data;
@@ -31,7 +32,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
         public CSVDataMap(Database db, Item importItem, Logging logging)
             : base(db, importItem, logging)
         {
+            
             Data = importItem["Data"];
+            
             HeaderColumns = new Dictionary<string, int>();
             ImportData = new List<object>();
             InitializeColumnDelimiterCharacter(importItem);
@@ -98,7 +101,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
             try
             {
-                var csvData = Data;
+                var csvData = !String.IsNullOrEmpty(Data)
+                                  ? Data
+                                  : CSVFileData;
 
                 if (!String.IsNullOrEmpty(csvData))
                 {
@@ -376,17 +381,27 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 var datasource = DataSourceString;
                 if (File.Exists(datasource))
                 {
+                    StreamReader streamreader=null;
                     try
                     {
-                        var filepath = HttpContext.Current.Server.MapPath(datasource);
-                        var streamreader = new StreamReader(filepath);
+                        streamreader = new StreamReader(datasource,true);
                         var fileStream = streamreader.ReadToEnd();
                         return fileStream;
                     }
                     catch (Exception ex)
                     {
-                        LogBuilder.Log("Error",
-                                       String.Format("Reading the file failed with an exception. Exception: {0}.", ex));
+                        LogBuilder.Log("Error",String.Format("Reading the file failed with an exception. Exception: {0}.", ex));
+                        if (streamreader != null)
+                        {
+                            streamreader.Close();
+                        }
+                    }
+                    finally
+                    {
+                        if (streamreader != null)
+                        {
+                            streamreader.Close();
+                        }
                     }
                 }
                 else
