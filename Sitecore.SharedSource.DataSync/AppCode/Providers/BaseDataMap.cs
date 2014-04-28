@@ -1826,7 +1826,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
         }
 
-        private bool IsItemNameUnique(Item parentItem, Item item)
+        public virtual bool IsItemNameUnique(Item parentItem, Item item)
         {
             if (parentItem != null)
             {
