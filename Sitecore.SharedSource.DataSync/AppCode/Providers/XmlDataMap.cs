@@ -43,7 +43,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
         
         public override IList<object> GetImportData()
 	    {
-            var csvData = Data;
+            var csvData = !String.IsNullOrEmpty(Data)
+                                  ? Data
+                                  : XMLFileData;
             if (!String.IsNullOrEmpty(csvData))
             {
                 var textReader = new StringReader(csvData);
@@ -292,7 +294,46 @@ namespace Sitecore.SharedSource.DataSync.Providers
 	    #endregion Override Methods
 
         #region Methods
-
+        protected string XMLFileData
+        {
+            get
+            {
+                var datasource = DataSourceString;
+                if (File.Exists(datasource))
+                {
+                    StreamReader streamreader = null;
+                    try
+                    {
+                        streamreader = new StreamReader(datasource, true);
+                        var fileStream = streamreader.ReadToEnd();
+                        return fileStream;
+                    }
+                    catch (Exception ex)
+                    {
+                        LogBuilder.Log("Error", String.Format("Reading the file failed with an exception. Exception: {0}.", ex));
+                        if (streamreader != null)
+                        {
+                            streamreader.Close();
+                        }
+                    }
+                    finally
+                    {
+                        if (streamreader != null)
+                        {
+                            streamreader.Close();
+                        }
+                    }
+                }
+                else
+                {
+                    LogBuilder.Log("Error",
+                                   String.Format(
+                                       "The DataSource filepath points to a file that doesnt exist. DataSource: '{0}'",
+                                       DataSourceString));
+                }
+                return string.Empty;
+            }
+        }
         #endregion Methods
     }
 }
