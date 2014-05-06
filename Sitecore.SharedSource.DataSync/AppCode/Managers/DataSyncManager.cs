@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.SharedSource.DataSync.Log;
@@ -13,25 +9,26 @@ namespace Sitecore.SharedSource.DataSync.Managers
 {
     public class DataSyncManager
     {
-        public Logging RunDataSyncJob(Item dataSyncItem, ref Logging LogBuilder)
+        public Logging RunDataSyncJob(Item dataSyncItem, ref Logging logBuilder)
         {
             string errorMessage = String.Empty;
 
             var map = InstantiateDataMap(dataSyncItem, ref errorMessage);
             if (!String.IsNullOrEmpty(errorMessage))
             {
-                LogBuilder.Log("Error", errorMessage);
+                logBuilder.Log("Error", errorMessage);
+                return logBuilder;
             }
             if (map != null)
             {
-                map.Process();
+                logBuilder = map.Process();
             }
-            return LogBuilder;
+            return logBuilder;
         }
 
         public BaseDataMap InstantiateDataMap(Item dataSyncItem, ref string errorMessage)
         {
-            Database currentDB = Configuration.Factory.GetDatabase("master");
+            var currentDB = Configuration.Factory.GetDatabase("master");
 
             string handlerAssembly = dataSyncItem["Handler Assembly"];
             string handlerClass = dataSyncItem["Handler Class"];
