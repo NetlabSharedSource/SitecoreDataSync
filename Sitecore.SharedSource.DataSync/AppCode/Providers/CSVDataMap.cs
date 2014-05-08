@@ -15,14 +15,14 @@ namespace Sitecore.SharedSource.DataSync.Providers
 {
     public class CSVDataMap : BaseDataMap
     {
-        private const char DefaultColumnDelimiterCharacter = ';';
-        private const char DefaultQueryDelimiterCharacter = '=';
+        protected const char DefaultColumnDelimiterCharacter = ';';
+        protected const char DefaultQueryDelimiterCharacter = '=';
         #region Properties
 
-        public Dictionary<string, int> HeaderColumns { get; set; }
-        public IList<object> ImportData { get; set; }
-        private bool RemovedTrailingCharacter = false;
-        private char ColumnDelimiterCharacter { get; set; }
+        protected Dictionary<string, int> HeaderColumns { get; set; }
+        protected IList<object> ImportData { get; set; }
+        protected bool RemovedTrailingCharacter = false;
+        protected char ColumnDelimiterCharacter { get; set; }
 
 
         #endregion Properties
@@ -205,7 +205,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return ImportData;
         }
 
-        private static string ReplaceWithUniversalNewLineCharacters(string csvData)
+        protected static string ReplaceWithUniversalNewLineCharacters(string csvData)
         {
             if (!String.IsNullOrEmpty(csvData))
             {
