@@ -19,8 +19,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
         private const char DefaultQueryDelimiterCharacter = '=';
         #region Properties
 
-        internal Dictionary<string, int> HeaderColumns { get; set; }
-        internal IList<object> ImportData { get; set; }
+        public Dictionary<string, int> HeaderColumns { get; set; }
+        public IList<object> ImportData { get; set; }
         private bool RemovedTrailingCharacter = false;
         private char ColumnDelimiterCharacter { get; set; }
 
@@ -161,6 +161,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                 if (!String.IsNullOrEmpty(line) && !String.IsNullOrEmpty(line.Trim()))
                                 {
                                     string errorMessage = String.Empty;
+                                    
                                     bool isVerified = VerifyConditionFromQuery(line, ref errorMessage);
                                     if (!String.IsNullOrEmpty(errorMessage))
                                     {
