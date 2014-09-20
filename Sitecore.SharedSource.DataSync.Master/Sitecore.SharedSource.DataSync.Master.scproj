@@ -103,10 +103,6 @@ Have fun!</PackageReadme>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\system\Dictionary\Modules\DataSync\Test.item">
-      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
-    </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules.item">
       <Icon>/temp/IconCache/Software/16x16/jar.png</Icon>
       <ItemDeployment>DeployOnce</ItemDeployment>
