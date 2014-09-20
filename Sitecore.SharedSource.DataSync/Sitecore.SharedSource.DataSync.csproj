@@ -111,6 +111,13 @@
       <DependentUpon>DataSyncEditor.aspx</DependentUpon>
     </Compile>
     <Compile Include="AppCode\Utility\StringUtility.cs" />
+    <Compile Include="sitecore modules\DataSync\Shell\MYTEST.aspx.cs">
+      <DependentUpon>MYTEST.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="sitecore modules\DataSync\Shell\MYTEST.aspx.designer.cs">
+      <DependentUpon>MYTEST.aspx</DependentUpon>
+    </Compile>
     <Compile Include="sitecore modules\DataSync\Shell\Wizards\FileUpload\UploadFile.aspx.cs">
       <DependentUpon>UploadFile.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -124,6 +131,7 @@
     <Content Include="images\Modules\DataSync\refresh.png" />
     <Content Include="sitecore modules\DataSync\Shell\css\global.css" />
     <Content Include="sitecore modules\DataSync\Shell\DataSyncEditor.aspx" />
+    <Content Include="sitecore modules\DataSync\Shell\MYTEST.aspx" />
     <Content Include="sitecore modules\DataSync\Shell\Wizards\FileUpload\UploadFile.aspx" />
     <Content Include="sitecore modules\DataSync\Shell\Wizards\FromFileDataSyncWizard.xml" />
     <Content Include="sitecore modules\DataSync\Shell\Wizards\DataSyncWizard.xml" />
