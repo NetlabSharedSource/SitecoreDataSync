@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="MYTEST.aspx.cs" Inherits="Sitecore.SharedSource.DataSync.sitecore_modules.DataSync.Shell.MYTEST" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="MYTE22ST.aspx.cs" Inherits="Sitecore.SharedSource.DataSync.sitecore_modules.DataSync.Shell.MYTEST" %>
 
 <!DOCTYPE html>
 
