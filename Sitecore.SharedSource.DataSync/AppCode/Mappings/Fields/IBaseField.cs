@@ -32,6 +32,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
         /// <returns></returns>
         IEnumerable<string> GetExistingFieldNames();
 
+        // This is a test comment.
 	    /// <summary>
         /// returns a delimiter to use between the fields being imported
         /// </summary>
