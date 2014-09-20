@@ -473,6 +473,10 @@ Have fun!</PackageReadme>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnDisplayName\Lookup Mapping\t.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ListValueToGuidMatchOnField.item">
       <Icon>/temp/IconCache/Software/32x32/element_down.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
