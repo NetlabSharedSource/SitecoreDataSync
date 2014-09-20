@@ -24,6 +24,8 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
     <SitecoreDatabase>master</SitecoreDatabase>
+    <EnableCodeGeneration>false</EnableCodeGeneration>
+    <AssemblyStatus>Exclude</AssemblyStatus>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +51,8 @@ Have fun!</PackageReadme>
     <GeneratePackage>True</GeneratePackage>
     <SeperateFilesAndItems>False</SeperateFilesAndItems>
     <AddDateTimeToPackageName>False</AddDateTimeToPackageName>
+    <EnableValidations>False</EnableValidations>
+    <ValidationSettingsFilePath>.\Sitecore.SharedSource.DataSync.Master_Debug.xml</ValidationSettingsFilePath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -98,6 +102,10 @@ Have fun!</PackageReadme>
       <ItemDeployment>DeployOnce</ItemDeployment>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Dictionary\Modules\DataSync\Test.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>DeployOnce</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules.item">
       <Icon>/temp/IconCache/Software/16x16/jar.png</Icon>
@@ -1166,6 +1174,12 @@ Have fun!</PackageReadme>
     </SitecoreItem>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sitecore.SharedSource.DataSync\Sitecore.SharedSource.DataSync.csproj">
+      <Project>{9a1bae6c-3ce3-4bd6-bb65-0f6dc6da8f2d}</Project>
+      <Name>Sitecore.SharedSource.DataSync</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ExcludedAssemblies Include="ComponentArt.%2a.dll" />
     <ExcludedAssemblies Include="Elmah.dll" />
     <ExcludedAssemblies Include="HedgehogDevelopment.%2a.dll" />
@@ -1179,6 +1193,7 @@ Have fun!</PackageReadme>
     <ExcludedAssemblies Include="Newtonsoft.%2a.dll" />
     <ExcludedAssemblies Include="RadEditor.%2a.dll" />
     <ExcludedAssemblies Include="scSearchContrib.%2a.dll" />
+    <ExcludedAssemblies Include="Sitecore.%2a.dll" />
     <ExcludedAssemblies Include="Sitecore.Kernel.dll" />
     <ExcludedAssemblies Include="Sitecore.Kernel.xml" />
     <ExcludedAssemblies Include="Sitecore.Logging.dll" />
@@ -1187,12 +1202,6 @@ Have fun!</PackageReadme>
     <ExcludedAssemblies Include="Stimulsoft.%2a.dll" />
     <ExcludedAssemblies Include="Telerik.%2a.dll" />
     <ExcludedAssemblies Include="Telerik.Web.UI.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Sitecore.SharedSource.DataSync\Sitecore.SharedSource.DataSync.csproj">
-      <Project>{9a1bae6c-3ce3-4bd6-bb65-0f6dc6da8f2d}</Project>
-      <Name>Sitecore.SharedSource.DataSync</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\HedgehogDevelopment\SitecoreProject\v9.0\HedgehogDevelopment.SitecoreProject.targets" />
 </Project>
