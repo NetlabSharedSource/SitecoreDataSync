@@ -127,11 +127,13 @@
     <Content Include="sitecore modules\DataSync\Shell\Wizards\FileUpload\UploadFile.aspx" />
     <Content Include="sitecore modules\DataSync\Shell\Wizards\FromFileDataSyncWizard.xml" />
     <Content Include="sitecore modules\DataSync\Shell\Wizards\DataSyncWizard.xml" />
+    <Content Include="sitecore\NuGet\Sitecore.NuGet.Sample\about.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\include\Sitecore.SharedSource.DataSync.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <None Include="web.config" />
   </ItemGroup>
   <PropertyGroup>
