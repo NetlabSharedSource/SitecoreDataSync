@@ -13,9 +13,9 @@ templatekey: Command
 field: {752579A7-EF2F-45B7-B9D1-9B682308B7A5}
 name: Type
 key: type
-content-length: 66
+content-length: 58
 
-Sitecore.SharedSource.DataSync.AppCode.ScheduledTasks.DataSyncTask
+Sitecore.SharedSource.DataSync.ScheduledTasks.DataSyncTask
 ----field----
 field: {4BC75539-D5C4-487B-AF35-FF13D62BD286}
 name: Method
@@ -26,7 +26,7 @@ RunJob
 ----version----
 language: en
 version: 1
-revision: 45a7adb1-7a66-4b06-98b0-abab57ab89d6
+revision: a148c3fb-dcef-4b12-bece-590f6fa4b509
 
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
@@ -55,21 +55,21 @@ name: __Revision
 key: __revision
 content-length: 36
 
-45a7adb1-7a66-4b06-98b0-abab57ab89d6
+a148c3fb-dcef-4b12-bece-590f6fa4b509
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20131115T145438:635201240787439895
+20141030T134222:635502733422011906
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
 key: __updated by
-content-length: 20
+content-length: 14
 
-sitecore\netlabadmin
+sitecore\admin
 ----version----
 language: nb-NO
 version: 1
