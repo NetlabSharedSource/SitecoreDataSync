@@ -193,11 +193,26 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 var elements = xElements as IList<XElement> ?? xElements.ToList();
                 if (elements.Count() > 1)
                 {
-                    errorMessage +=
-                        String.Format(
-                            "The GetFieldValue method failed because the helper method TryParseElement found more than one element with the same name ExecuteXPathQueryOnXElement method.");
+                    string pipeseperatedValues = String.Empty;
+                    foreach (var element in elements)
+                    {
+                        if (element != null)
+                        {
+                            var value = element.Value;
+                            if (!String.IsNullOrEmpty(value))
+                            {
+                                pipeseperatedValues += value + "|";
+                            }
+                        }
+                    }
+                    if (pipeseperatedValues.EndsWith("|"))
+                    {
+                        pipeseperatedValues = pipeseperatedValues.TrimEnd('|');
+                    }
+                    fieldValue = pipeseperatedValues;
+                    return true;
                 }
-                else if (elements.Count() == 1)
+                if (elements.Count() == 1)
                 {
                     var xElement = elements.First();
                     if (xElement != null)

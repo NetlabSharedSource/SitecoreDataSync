@@ -53,6 +53,7 @@ Have fun!</PackageReadme>
     <AddDateTimeToPackageName>False</AddDateTimeToPackageName>
     <EnableValidations>False</EnableValidations>
     <ValidationSettingsFilePath>.\Sitecore.SharedSource.DataSync.Master_Debug.xml</ValidationSettingsFilePath>
+    <PackageName>Sitecore.SharedSource.DataSync</PackageName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -1202,6 +1203,11 @@ Have fun!</PackageReadme>
     <ExcludedAssemblies Include="Stimulsoft.%2a.dll" />
     <ExcludedAssemblies Include="Telerik.%2a.dll" />
     <ExcludedAssemblies Include="Telerik.Web.UI.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundledProject Include="..\Sitecore.SharedSource.DataSync.Core\Sitecore.SharedSource.DataSync.Core.scproj">
+      <ProjectId>{5db5c53a-1844-469b-a951-77cc54512f16}</ProjectId>
+    </BundledProject>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\HedgehogDevelopment\SitecoreProject\v9.0\HedgehogDevelopment.SitecoreProject.targets" />
 </Project>

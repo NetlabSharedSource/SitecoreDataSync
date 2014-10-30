@@ -148,6 +148,10 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                 }
                 fileName = StringUtility.GetNewItemName(fileName, map.ItemNameMaxLength);
 
+                if (!IsRequired && String.IsNullOrEmpty(importValue))
+                {
+                    return String.Empty;
+                }
                 var imageBytes = GetImageAsBytes(map, importRow, ref newItem, importValue, ref errorMessage);
                 if (!String.IsNullOrEmpty(errorMessage))
                 {

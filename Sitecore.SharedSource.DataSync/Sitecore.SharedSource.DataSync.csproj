@@ -71,6 +71,7 @@
     <Compile Include="AppCode\Mail\SendMail.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToEmail.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToExternalLink.cs" />
+    <Compile Include="AppCode\Mappings\Fields\ToGuidListMatchOnField.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToImageFromFile.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToImageFromImgTag.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToImageFromUrl.cs" />

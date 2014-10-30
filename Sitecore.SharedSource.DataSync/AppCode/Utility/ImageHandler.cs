@@ -138,8 +138,7 @@ namespace Sitecore.SharedSource.DataSync.Utility
         /// </summary>
         /// <param name="imageItem"></param>
         /// <param name="filename"></param>
-        /// <param name="importDataRow"></param>
-        /// <param name="imageField"></param>
+        /// <param name="imageBytes"></param>
         /// <param name="altText"></param>
         /// <param name="destPath"></param>
         /// <param name="errorMessage"></param>

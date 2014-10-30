@@ -33,6 +33,10 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                             map.GetImportRowDebugInfo(importRow));
                     return null;
                 }
+                if (!IsRequired && String.IsNullOrEmpty(importValue))
+                {
+                    return null;
+                }
                 if (String.IsNullOrEmpty(ImageFilesToImportAbsolutePath))
                 {
                     errorMessage +=

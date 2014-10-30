@@ -48,7 +48,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
             {
                 return null;
             }
-            if (String.IsNullOrEmpty(src))
+            if (String.IsNullOrEmpty(src) && IsRequired)
             {
                 errorMessage += String.Format("The src for the image was null or empty after return of the GetAbsoluteImageUrl method in the ToImageFromIamgeHtmlTag field class. An src must be provided. ImportRow: {0}.",
                                      map.GetImportRowDebugInfo(importRow));
