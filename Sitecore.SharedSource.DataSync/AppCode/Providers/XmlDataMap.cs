@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
+using System.Net;
+using System.Xml;
 using System.Xml.XPath;
 using BackPack.Modules.AppCode.Import.Utility;
 using Sitecore.Data.Items;
@@ -14,10 +15,12 @@ using System.Data;
 using System.Data.SqlClient;
 using Sitecore.SharedSource.DataSync.Log;
 
+
 namespace Sitecore.SharedSource.DataSync.Providers
 {
 	public class XmlDataMap : BaseDataMap {
 	    private const string Dot = ".";
+	    private const string UrlPrefix = "http";
 
 	    #region Properties
 
@@ -309,11 +312,38 @@ namespace Sitecore.SharedSource.DataSync.Providers
 	    #endregion Override Methods
 
         #region Methods
+
         protected string XMLFileData
         {
             get
             {
                 var datasource = DataSourceString;
+                if (!String.IsNullOrEmpty(datasource) && datasource.StartsWith(UrlPrefix))
+                {
+                    var myUri = new Uri(datasource);
+                    var myHttpWebRequest = (HttpWebRequest) WebRequest.Create(myUri);
+
+                    try
+                    {
+                        var myHttpWebResponse = (HttpWebResponse) myHttpWebRequest.GetResponse();
+                        using (var streamResponse = myHttpWebResponse.GetResponseStream())
+                        {
+                            if (streamResponse != null)
+                            {
+                                using (var xmlResponse = XmlReader.Create(streamResponse))
+                                {
+                                    var xDoc = XDocument.Load(xmlResponse);
+                                    return xDoc.ToString();
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogBuilder.Log("Error", String.Format("Reading the Url in XmlFileData failed with an exception. Exception: {0}.", ex));
+                    }
+                }
+                
                 if (File.Exists(datasource))
                 {
                     StreamReader streamreader = null;

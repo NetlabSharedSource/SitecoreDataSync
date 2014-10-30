@@ -113,14 +113,9 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
 
         private List<String> ParseImportValues(string importValue)
         {
-            var delimiter = !string.IsNullOrEmpty(GetFieldValueDelimiter())
-                                ? GetFieldValueDelimiter()[0]
-                                : ';';
+            var delimiter = !string.IsNullOrEmpty(MultiListDelimiter)
+                                ? MultiListDelimiter[0]: ';';
             var values = importValue.Split(delimiter).ToList();
-            foreach (var value in values)
-            {
-
-            }
             return values;
         }
 

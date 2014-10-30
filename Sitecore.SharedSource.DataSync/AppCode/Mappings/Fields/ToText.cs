@@ -118,7 +118,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
         /// return the delimiter to separate imported values with
         /// </summary>
         /// <returns></returns>
-        public string GetFieldValueDelimiter()
+        public virtual string GetFieldValueDelimiter()
         {
             return Delimiter;
         }

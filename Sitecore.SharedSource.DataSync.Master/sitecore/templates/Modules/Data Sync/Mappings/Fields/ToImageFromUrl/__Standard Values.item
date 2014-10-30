@@ -13,9 +13,9 @@ templatekey: ToImageFromUrl
 field: {A60FFA21-D63F-4BCF-83A8-F484BF8A9715}
 name: Handler Class
 key: handler class
-content-length: 70
+content-length: 61
 
-Sitecore.SharedSource.DataSync.Mappings.Fields.ToImageFromImageHtmlTag
+Sitecore.SharedSource.DataSync.Mappings.Fields.ToImageFromUrl
 ----field----
 field: {7F4DF09B-961B-46F4-9E05-5423841D1F6A}
 name: Handler Assembly
@@ -26,7 +26,7 @@ Sitecore.SharedSource.DataSync
 ----version----
 language: en
 version: 1
-revision: 14a64c5b-e744-44b5-ae88-bbaba8532532
+revision: 4061eda2-b49a-45e5-a690-e7db37601521
 
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
@@ -41,14 +41,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-14a64c5b-e744-44b5-ae88-bbaba8532532
+4061eda2-b49a-45e5-a690-e7db37601521
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20140309T234834:635300057147205128
+20141030T125910:635502707503969479
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

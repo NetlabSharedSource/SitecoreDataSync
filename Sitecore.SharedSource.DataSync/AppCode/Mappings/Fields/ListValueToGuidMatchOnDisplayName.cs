@@ -69,7 +69,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
 		#endregion Properties
 
 		#region Constructor
-
+        
         public ListValueToGuidMatchOnDisplayName(Item i)
             : base(i)
         {
