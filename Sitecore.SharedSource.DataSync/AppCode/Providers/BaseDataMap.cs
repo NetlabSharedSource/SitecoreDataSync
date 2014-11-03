@@ -995,7 +995,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 var replacedKey = key.Replace("'", "_");
                 string pattern = "{0}//*[@{1}='{2}']";
                 pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern; 
-                var query = string.Format(pattern, parent.Paths.FullPath, keyFieldName, replacedKey);
+                var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), keyFieldName, replacedKey);
                 try
                 {
                     List<Item> list;
@@ -1031,6 +1031,29 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 return new List<Item>();
             }
+        }
+
+        private static string DoFastQuerySafe(string fastQuery)
+        {
+            if (!String.IsNullOrEmpty(fastQuery))
+            {
+                var terms = fastQuery.Split('/');
+                if (terms.Any())
+                {
+                    string safeFastQuery = String.Empty;
+                    foreach (var term in terms)
+                    {
+                        var tempTerm = term;
+                        if (term != null && (term.Contains(" and ") || term.Contains(" or ") || term.Contains("-")))
+                        {
+                            tempTerm = "#" + term + "#";
+                        }
+                        safeFastQuery += "/" + tempTerm;
+                    }
+                    return safeFastQuery;
+                }
+            }
+            return fastQuery;
         }
 
         private bool QueryItemsAndVerifyUniqueness(Item parent, string keyFieldName, string key, string query, out List<Item> list)
@@ -1083,7 +1106,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 if (i != templates.Count - 1)
                     tempPattern += " or ";
             }
-            var query = string.Format(pattern, parent.Paths.FullPath, tempPattern);
+            var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), tempPattern);
             try
             {
                 using (new LanguageSwitcher(ImportToLanguageVersion))
@@ -1116,8 +1139,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
 
                 string pattern = "{0}//*[@@key='{1}' and ({2})]";
-                pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern; 
-                var query = string.Format(pattern, parent.Paths.FullPath, itemKey, tempPattern);
+                pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern;
+                var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), itemKey, tempPattern);
                 try
                 {
                     return SitecoreDB.SelectItems(query).ToList();
