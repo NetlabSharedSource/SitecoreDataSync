@@ -59,6 +59,22 @@ Have fun!</PackageReadme>
     <DebugSymbols>false</DebugSymbols>
     <OutputPath>.\Release\</OutputPath>
     <RecursiveDeployAction>Ignore</RecursiveDeployAction>
+    <PackageName>Sitecore.SharedSource.DataSync</PackageName>
+    <GeneratePackage>True</GeneratePackage>
+    <SeperateFilesAndItems>False</SeperateFilesAndItems>
+    <AddDateTimeToPackageName>False</AddDateTimeToPackageName>
+    <PackageAuthor>Netlab AS</PackageAuthor>
+    <PackagePublisher>Netlab AS</PackagePublisher>
+    <PackageReadme>Before installating the package:
+1. Backup your databases
+2. The package will install: an assembly, a config file, some shell commands, wizards and editor, a few icons in images.
+
+Post installation instructions:
+1. Make sure your Sitecore installation has SMTP server settings configured. If not go to App_Config/include/Sitecore.SharedSource.DataSync.config file and enable the settings.
+2. Log in to Sitecore, go to system/Modules/DataSync and start creating your sync job.
+</PackageReadme>
+    <PackageVersion>1.4.0</PackageVersion>
+    <SitecoreAssemblyPath>../../../Website/bin</SitecoreAssemblyPath>
   </PropertyGroup>
   <ItemGroup>
     <AssemblyAttributes Include="AssemblyFileVersion">
