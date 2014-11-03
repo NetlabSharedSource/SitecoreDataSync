@@ -46,12 +46,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
         
         public override IList<object> GetImportData()
 	    {
-            var csvData = !String.IsNullOrEmpty(Data)
+            var textData = !String.IsNullOrEmpty(Data)
                                   ? Data
                                   : XMLFileData;
-            if (!String.IsNullOrEmpty(csvData))
+            if (!String.IsNullOrEmpty(textData))
             {
-                var textReader = new StringReader(csvData);
+                var textReader = new StringReader(textData);
                 var xDocument = XDocument.Load(textReader);
                 return ExecuteXPathQuery(xDocument);
             }
@@ -342,6 +342,11 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     {
                         LogBuilder.Log("Error", String.Format("Reading the Url in XmlFileData failed with an exception. Exception: {0}.", ex));
                     }
+                    LogBuilder.Log("Error",
+                                   String.Format(
+                                       "The ULR provided failed loading any xml data. DataSource: '{0}'",
+                                       DataSourceString));
+                    return string.Empty;
                 }
                 
                 if (File.Exists(datasource))
