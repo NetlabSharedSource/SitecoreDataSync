@@ -20,7 +20,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
 {
 	public class XmlDataMap : BaseDataMap {
 	    private const string Dot = ".";
-	    private const string UrlPrefix = "http";
+        private const string UrlPrefix = "http";
+	    public string RawData { get; set; }
 
 	    #region Properties
 
@@ -33,7 +34,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
         public XmlDataMap(Database db, Item importItem, Logging logging)
             : base(db, importItem, logging)
         {
-            Data = importItem["Data"];
+            Data = importItem[FieldNameData];
             if (string.IsNullOrEmpty(Query))
             {
                 LogBuilder.Log("Error", "the 'Query' field was not set");
@@ -45,13 +46,22 @@ namespace Sitecore.SharedSource.DataSync.Providers
         #region Override Methods
         
         public override IList<object> GetImportData()
-	    {
-            var textData = !String.IsNullOrEmpty(Data)
+        {
+            var xmlData = String.Empty;
+            if (!String.IsNullOrEmpty(RawData))
+            {
+                xmlData = RawData;
+            }
+            else
+            {
+                RawData = !String.IsNullOrEmpty(Data)
                                   ? Data
                                   : XMLFileData;
-            if (!String.IsNullOrEmpty(textData))
+                xmlData = RawData;
+            }
+            if (!String.IsNullOrEmpty(xmlData))
             {
-                var textReader = new StringReader(textData);
+                var textReader = new StringReader(xmlData);
                 var xDocument = XDocument.Load(textReader);
                 return ExecuteXPathQuery(xDocument);
             }
@@ -318,37 +328,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
             get
             {
                 var datasource = DataSourceString;
-                if (!String.IsNullOrEmpty(datasource) && datasource.StartsWith(UrlPrefix))
+                var xmlData = GetXmlDataFromUrl(datasource);
+                if (xmlData != null)
                 {
-                    var myUri = new Uri(datasource);
-                    var myHttpWebRequest = (HttpWebRequest) WebRequest.Create(myUri);
-
-                    try
-                    {
-                        var myHttpWebResponse = (HttpWebResponse) myHttpWebRequest.GetResponse();
-                        using (var streamResponse = myHttpWebResponse.GetResponseStream())
-                        {
-                            if (streamResponse != null)
-                            {
-                                using (var xmlResponse = XmlReader.Create(streamResponse))
-                                {
-                                    var xDoc = XDocument.Load(xmlResponse);
-                                    return xDoc.ToString();
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        LogBuilder.Log("Error", String.Format("Reading the Url in XmlFileData failed with an exception. Exception: {0}.", ex));
-                    }
-                    LogBuilder.Log("Error",
-                                   String.Format(
-                                       "The ULR provided failed loading any xml data. DataSource: '{0}'",
-                                       DataSourceString));
-                    return string.Empty;
+                    return xmlData;
                 }
-                
+
                 if (File.Exists(datasource))
                 {
                     StreamReader streamreader = null;
@@ -384,6 +369,43 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 return string.Empty;
             }
         }
-        #endregion Methods
+
+	    protected virtual string GetXmlDataFromUrl(string datasource)
+	    {
+	        if (!String.IsNullOrEmpty(datasource) && datasource.StartsWith(UrlPrefix))
+	        {
+	            var myUri = new Uri(datasource);
+	            var myHttpWebRequest = (HttpWebRequest) WebRequest.Create(myUri);
+
+	            try
+	            {
+	                var myHttpWebResponse = (HttpWebResponse) myHttpWebRequest.GetResponse();
+	                using (var streamResponse = myHttpWebResponse.GetResponseStream())
+	                {
+	                    if (streamResponse != null)
+	                    {
+	                        using (var xmlResponse = XmlReader.Create(streamResponse))
+	                        {
+	                            var xDoc = XDocument.Load(xmlResponse);
+	                            return xDoc.ToString();
+	                        }
+	                    }
+	                }
+	            }
+	            catch (Exception ex)
+	            {
+	                LogBuilder.Log("Error",
+	                               String.Format("Reading the Url in XmlFileData failed with an exception. Exception: {0}.", ex));
+	            }
+	            LogBuilder.Log("Error",
+	                           String.Format(
+	                               "The URL provided failed loading any xml data. DataSource: '{0}'",
+	                               DataSourceString));
+	            return String.Empty;
+	        }
+            return String.Empty;
+	    }
+
+	    #endregion Methods
     }
 }

@@ -17,6 +17,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
     {
         protected const char DefaultColumnDelimiterCharacter = ';';
         protected const char DefaultQueryDelimiterCharacter = '=';
+
         #region Properties
 
         protected Dictionary<string, int> HeaderColumns { get; set; }
@@ -33,7 +34,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
             : base(db, importItem, logging)
         {
             
-            Data = importItem["Data"];
+            Data = importItem[FieldNameData];
             
             HeaderColumns = new Dictionary<string, int>();
             ImportData = new List<object>();

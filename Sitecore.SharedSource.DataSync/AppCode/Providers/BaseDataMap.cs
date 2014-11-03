@@ -29,6 +29,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
         private const int DefaultNumberOfRowsToProcessBeforeLogStatus = 10;
         private const int DefaultSleepPeriodToRerunSqlExceptionInGetItemsByKey = 2000;
         private bool useFastQuery = true;
+        protected const string FieldNameData = "Data";
 
 		#region Properties
 
