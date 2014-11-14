@@ -10,20 +10,28 @@ using Sitecore.Data;
 using Sitecore.Data.Fields;
 using Sitecore.Data.Items;
 using Sitecore.Resources.Media;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 using Sitecore.SharedSource.DataSync.Providers;
 
 namespace Sitecore.SharedSource.DataSync.Utility
 {
     public class ImageHandler
     {
+        public const string NewItemFieldIsNotDefinedForMediaitem = "NewItemField is not defined for mediaitem";
+        public const string CreateMediaItemMissingDataToStream = "CreateMediaItem missing data to stream";
+        public const string CreateMediaItemFailed = "CreateMediaItem failed";
+        public const string ExceptionTryingToAttachNewImageToExistingMediaitem = "Exception trying to attach new image to existing mediaitem";
         public static readonly Database Database = Database.GetDatabase("master");
 
-        public static MediaItem ImageHelper(string filename, string imageAltText, ID mediaItemParentId, bool isToReplaceExistingImage, byte[] imageBytes, ref string errorMessage)
+        public static MediaItem ImageHelper(string filename, string originalFileNameWithExtension, string imageAltText, ID mediaItemParentId, bool isToReplaceExistingImage, byte[] imageBytes, ref LevelLogger logger)
         {
+            var imageHelperLogger = logger.CreateLevelLogger();
+
             var filepath = Helper.GetSitecoreMediaItemPath(mediaItemParentId);
             if (string.IsNullOrEmpty(filepath))
             {
-                errorMessage = string.Format("The image media library path is not set. mediaItemParentId: {0}.", mediaItemParentId);
+                imageHelperLogger.AddError(CategoryConstants.TheImageMediaLibraryPathIsNotSet, String.Format("The image media library path is not set. mediaItemParentId: {0}.", mediaItemParentId));
                 return null;
             }
 
@@ -32,33 +40,62 @@ namespace Sitecore.SharedSource.DataSync.Utility
             {
                 if (isToReplaceExistingImage)
                 {
-                    AttachNewImageToMediaItem(mediaItem, filename, imageBytes, imageAltText, filepath, ref errorMessage);
+                    //AttachNewImageToMediaItem(mediaItem, filename, imageBytes, imageAltText, filepath, ref errorMessage);
                 }
                 else
                 {
                     return mediaItem;
                 }
             }
-            var imageItem = CreateMediaItem(filename, imageAltText, filepath, imageBytes, ref errorMessage);
+            var imageItem = CreateMediaItem(filename, originalFileNameWithExtension, imageAltText, filepath, imageBytes, ref imageHelperLogger);
             return imageItem;
         }
 
-        public static bool AttachImageToItem(BaseDataMap map, object importRow, Item newItem, string newItemField, MediaItem imageItem, ref string errorMessage, string height = null, string width = null)
+        public static MediaItem ImageHelper(string filename, string originalFileNameWithExtension, string imageAltText, ID mediaItemParentId, bool isToReplaceExistingImage, MemoryStream memoryStream, ref LevelLogger logger)
         {
+            var filepath = Helper.GetSitecoreMediaItemPath(mediaItemParentId);
+            if (string.IsNullOrEmpty(filepath))
+            {
+                logger.AddError(CategoryConstants.TheImageMediaLibraryPathIsNotSet, String.Format("The image media library path is not set. mediaItemParentId: {0}.", mediaItemParentId));
+                return null;
+            }
+
+            var mediaItem = Helper.IsImageExisting(mediaItemParentId, filename);
+            if (mediaItem != null)
+            {
+                if (isToReplaceExistingImage)
+                {
+                    //AttachNewImageToMediaItem(mediaItem, filename, imageBytes, imageAltText, filepath, ref errorMessage);
+                }
+                else
+                {
+                    return mediaItem;
+                }
+            }
+            var imageItem = CreateMediaItem(filename, originalFileNameWithExtension, imageAltText, filepath, memoryStream, ref logger);
+            return imageItem;
+        }
+
+        public static bool AttachImageToItem(BaseDataMap map, object importRow, Item newItem, string newItemField, MediaItem imageItem, ref LevelLogger logger, string height = null, string width = null)
+        {
+            var attachImageLogger = logger.CreateLevelLogger();
             if (imageItem != null)
             {
                 if (string.IsNullOrEmpty(newItemField))
                 {
                     {
-                        errorMessage = string.Format("NewItemField is not defined for mediaitem: {0}.",
-                                               map.GetImportRowDebugInfo(importRow));
+                        attachImageLogger.AddError(NewItemFieldIsNotDefinedForMediaitem, String.Format("NewItemField is not defined for mediaitem: {0}.",
+                                               map.GetImportRowDebugInfo(importRow)));
                         return true;
                     }
                 }
                 ImageField imageField = newItem.Fields[newItemField];
                 if (imageField.MediaID != imageItem.ID)
                 {
-                    newItem.Editing.BeginEdit();
+                    if (!newItem.Editing.IsEditing)
+                    {
+                        newItem.Editing.BeginEdit();
+                    }
                     imageField.Clear();
                     imageField.MediaID = imageItem.ID;
                     if (!String.IsNullOrEmpty(height))
@@ -78,7 +115,6 @@ namespace Sitecore.SharedSource.DataSync.Utility
                     {
                         imageField.Alt = imageItem.DisplayName;
                     }
-                    newItem.Editing.EndEdit();
                 }
 
             }
@@ -94,8 +130,9 @@ namespace Sitecore.SharedSource.DataSync.Utility
         /// <param name="fileBytes"></param>
         /// <param name="errorMessage"></param>
         /// <returns></returns>
-        private static Item CreateMediaItem(string filename, string altText, string filepath, byte[] fileBytes, ref string errorMessage)
+        private static Item CreateMediaItem(string filename, string originalFileNameWithExtension, string altText, string filepath, byte[] fileBytes, ref LevelLogger logger)
         {
+            var createMediaItemLogger = logger.CreateLevelLogger();;
             try
             {
                 if (fileBytes != null)
@@ -114,7 +151,7 @@ namespace Sitecore.SharedSource.DataSync.Utility
                             Destination = destPath,
                             Database = Database
                         };
-                        imageItem = MediaManager.Creator.CreateFromStream(ms, "/images/image.png", options);
+                        imageItem = MediaManager.Creator.CreateFromStream(ms, originalFileNameWithExtension, options);
                     }
                     if (imageItem != null)
                     {
@@ -123,12 +160,59 @@ namespace Sitecore.SharedSource.DataSync.Utility
                 }
                 else
                 {
-                    errorMessage = string.Format("CreateMediaItem missing data to stream. Filename: {0}, AltText: {1}", filename, altText);
+                    createMediaItemLogger.AddError(CreateMediaItemMissingDataToStream, String.Format("CreateMediaItem missing data to stream. Filename: {0}, AltText: {1}", filename, altText));
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = string.Format("CreateMediaItem failed. Filename: {0}, AltText: {1}, Errormessage: {2}", filename, altText, ex.InnerException);
+                createMediaItemLogger.AddError(CreateMediaItemFailed, String.Format("CreateMediaItem failed. Filename: {0}, AltText: {1}, Errormessage: {2}", filename, altText, ex.InnerException));
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Create new media item
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="altText"></param>
+        /// <param name="filepath"></param>
+        /// <param name="fileBytes"></param>
+        /// <param name="errorMessage"></param>
+        /// <returns></returns>
+        private static Item CreateMediaItem(string filename, string originalFileNameWithExtension, string altText, string filepath, MemoryStream memoryStream, ref LevelLogger logger)
+        {
+            var createMediaItemLogger = logger.CreateLevelLogger();
+            try
+            {
+                if (memoryStream != null)
+                {
+                    Item imageItem = null;
+                    var destPath = filepath + "/" + filename;
+                    
+                    var options = new MediaCreatorOptions
+                    {
+                        FileBased = false,
+                        IncludeExtensionInItemName = false,
+                        KeepExisting = false,
+                        Versioned = false,
+                        AlternateText = altText,
+                        Destination = destPath,
+                        Database = Database
+                    };
+                    imageItem = MediaManager.Creator.CreateFromStream(memoryStream, originalFileNameWithExtension, options);
+                    if (imageItem != null)
+                    {
+                        return imageItem;
+                    }
+                }
+                else
+                {
+                    createMediaItemLogger.AddError(CreateMediaItemMissingDataToStream, String.Format("CreateMediaItem missing data to stream. Filename: {0}, AltText: {1}", filename, altText));
+                }
+            }
+            catch (Exception ex)
+            {
+                createMediaItemLogger.AddError(CreateMediaItemFailed, String.Format("CreateMediaItem failed. Filename: {0}, AltText: {1}, Errormessage: {2}", filename, altText, ex.Message));
             }
             return null;
         }
@@ -142,7 +226,7 @@ namespace Sitecore.SharedSource.DataSync.Utility
         /// <param name="altText"></param>
         /// <param name="destPath"></param>
         /// <param name="errorMessage"></param>
-        private static void AttachNewImageToMediaItem(MediaItem imageItem, string filename, byte[] imageBytes, string altText, string destPath, ref string errorMessage)
+        private static void AttachNewImageToMediaItem(MediaItem imageItem, string filename, byte[] imageBytes, string altText, string destPath, ref LevelLogger logger)
         {
             try
             {
@@ -167,7 +251,7 @@ namespace Sitecore.SharedSource.DataSync.Utility
             }
             catch (Exception ex)
             {
-                errorMessage = string.Format("Error trying to attach new image to existing mediaitem: InnerException {0}. Message {1}", ex.InnerException, ex.Message);
+                logger.AddError(ExceptionTryingToAttachNewImageToExistingMediaitem, String.Format("Error trying to attach new image to existing mediaitem: InnerException {0}. Message {1}", ex.InnerException, ex.Message));
             }
         }
 
@@ -186,8 +270,15 @@ namespace Sitecore.SharedSource.DataSync.Utility
         public static byte[] ImageToByteArray(Image imageIn)
         {
             var ms = new MemoryStream();
-            imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+            imageIn.Save(ms, imageIn.RawFormat);
             return ms.ToArray();
+        }
+
+        public static MemoryStream ImageToMemoryStream(Image imageIn)
+        {
+            var ms = new MemoryStream();
+            imageIn.Save(ms, imageIn.RawFormat);
+            return ms;
         }
     }
 }
