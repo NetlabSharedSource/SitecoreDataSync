@@ -13,7 +13,8 @@ using Sitecore.Data.Items;
 using Sitecore.Data;
 using System.Data;
 using System.Data.SqlClient;
-using Sitecore.SharedSource.DataSync.Log;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 
 
 namespace Sitecore.SharedSource.DataSync.Providers
@@ -31,13 +32,13 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
 		#region Constructor
 
-        public XmlDataMap(Database db, Item importItem, Logging logging)
-            : base(db, importItem, logging)
+        public XmlDataMap(Database db, Item importItem, LevelLogger logger)
+            : base(db, importItem, logger)
         {
             Data = importItem[FieldNameData];
             if (string.IsNullOrEmpty(Query))
             {
-                LogBuilder.Log("Error", "the 'Query' field was not set");
+                Logger.AddError("Error", "the 'Query' field was not set");
             }
 		}
 		
@@ -65,7 +66,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 var xDocument = XDocument.Load(textReader);
                 return ExecuteXPathQuery(xDocument);
             }
-            LogBuilder.Log("Error", "No Import Data was retrieved from the method GetImportData. Please verify if the field 'Data', or 'Data Source' is filled out.");
+            Logger.AddError("Error", "No Import Data was retrieved from the method GetImportData. Please verify if the field 'Data', or 'Data Source' is filled out.");
             return null;
 	    }
 
@@ -76,8 +77,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
         /// <param name="fieldName"></param>
         /// <param name="errorMessage"></param>
         /// <returns></returns>
-        public override string GetFieldValue(object importRow, string fieldName, ref string errorMessage)
+        public override string GetFieldValue(object importRow, string fieldName, ref LevelLogger logger)
         {
+            var getFieldValueLogger = logger.CreateLevelLogger();
             try
             {
                 var xElement = importRow as XElement;
@@ -105,10 +107,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                 if (elementsList.Count() > 1)
                                 {
                                     // Log eror since document format is wrong. Has two or more elements with same name.
-                                    errorMessage +=
-                                        String.Format(
+                                    getFieldValueLogger.AddError("Found more than one subelement with FieldName", String.Format(
                                             "The GetFieldValue method failed because the fieldName '{0}' resulted in more than one subelement in the Import Row. FieldName: {0}. ImportRow: {1}.",
-                                            fieldName, GetImportRowDebugInfo(importRow));
+                                            fieldName, GetImportRowDebugInfo(importRow)));
                                 }
                                 else if (elementsList.Count() == 1)
                                 {
@@ -130,10 +131,11 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         }
 
                         // Now finally try to retrieve through a xPath query
-                        var result = ExecuteXPathQueryOnXElement(xElement, fieldName, ref errorMessage);
-                        if (!String.IsNullOrEmpty(errorMessage))
+                        var executeXPathLogger = getFieldValueLogger.CreateLevelLogger();
+                        var result = ExecuteXPathQueryOnXElement(xElement, fieldName, ref executeXPathLogger);
+                        if (executeXPathLogger.HasErrors())
                         {
-                            errorMessage += String.Format("The GetFieldValue method failed in executing the ExecuteXPathQueryOnXElement method. ErrorMessage: {0}.", errorMessage);
+                            executeXPathLogger.AddError("Failure in ExecuteXPathQueryOnXElement", String.Format("The GetFieldValue method failed in executing the ExecuteXPathQueryOnXElement method."));
                         }
                         string fieldValue;
                         if (result is string)
@@ -141,33 +143,33 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             return result as string;
                         }
                         var enumerable = result as IList<object> ?? result.Cast<object>().ToList();
-                        if (TryParseAttribute(enumerable, out fieldValue, ref errorMessage))
+                        if (TryParseAttribute(enumerable, out fieldValue, ref getFieldValueLogger))
                         {
                             return fieldValue;
                         }
-                        if (TryParseElement(enumerable, out fieldValue, ref errorMessage))
+                        if (TryParseElement(enumerable, out fieldValue, ref getFieldValueLogger))
                         {
                             return fieldValue;
                         }
                     }
                     else
                     {
-                        errorMessage += String.Format("The GetFieldValue method failed because the 'fieldName' was null or empty. FieldName: {0}. ImportRow: {1}.", fieldName, GetImportRowDebugInfo(importRow));
+                        getFieldValueLogger.AddError(CategoryConstants.TheFieldnameArgumentWasNullOrEmpty, String.Format("The GetFieldValue method failed because the 'fieldName' was null or empty. FieldName: {0}. ImportRow: {1}.", fieldName, GetImportRowDebugInfo(importRow)));
                     }
                 }
                 else
                 {
-                    errorMessage += String.Format("The GetFieldValue method failed because the Import Row was null. FieldName: {0}.", fieldName);
+                    getFieldValueLogger.AddError(CategoryConstants.TheImportRowWasNull, String.Format("The GetFieldValue method failed because the Import Row was null. FieldName: {0}.", fieldName));
                 }
             }
             catch (Exception ex)
             {
-                errorMessage += String.Format("The GetFieldValue method failed with an exception. ImportRow: {0}. FieldName: {1}. Exception: {2}.", GetImportRowDebugInfo(importRow), fieldName, ex);
+                getFieldValueLogger.AddError(CategoryConstants.GetFieldValueFailed, String.Format("The GetFieldValue method failed with an exception. ImportRow: {0}. FieldName: {1}. Exception: {2}.", GetImportRowDebugInfo(importRow), fieldName, ex));
             }
             return String.Empty;
         }
 
-	    private bool TryParseAttribute(IEnumerable result, out string fieldValue, ref string errorMessage)
+	    private bool TryParseAttribute(IEnumerable result, out string fieldValue, ref LevelLogger logger)
         {
             fieldValue = String.Empty;
 	        try
@@ -176,9 +178,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
 	            var attributes = xAttributes as IList<XAttribute> ?? xAttributes.ToList();
 	            if (attributes.Count() > 1)
 	            {
-	                errorMessage +=
-	                    String.Format(
-	                        "The GetFieldValue method failed because the helper method TryParseAttribute found more than one attribute with the same name ExecuteXPathQueryOnXElement method.");
+	                logger.AddError("Found more than one attribute with the same name", String.Format(
+	                        "The GetFieldValue method failed because the helper method TryParseAttribute found more than one attribute with the same name ExecuteXPathQueryOnXElement method."));
 	            }
 	            else if (attributes.Count() == 1)
 	            {
@@ -192,12 +193,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
 	        }
 	        catch (Exception exception)
 	        {
-	            return false;
+                return false;
 	        }
 	        return false;
 	    }
 
-        private bool TryParseElement(IEnumerable result, out string fieldValue, ref string errorMessage)
+        private bool TryParseElement(IEnumerable result, out string fieldValue, ref LevelLogger logger)
         {
             fieldValue = String.Empty;
             try
@@ -242,8 +243,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return false;
         }
 
-	    protected IEnumerable ExecuteXPathQueryOnXElement(XElement xElement, string query, ref string errorMessage)
-        {
+	    protected IEnumerable ExecuteXPathQueryOnXElement(XElement xElement, string query, ref LevelLogger logger)
+	    {
+	        var executeXPathQueryLogger = logger.CreateLevelLogger();
             if (xElement != null)
             {
                 try
@@ -256,10 +258,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 catch (Exception ex)
                 {
-                    errorMessage += String.Format("An exception occured in the ExecuteXPathQueryOnXElement method executing the XPath query. Query: {0}. Exception: {1}.", query, GetExceptionDebugInfo(ex));
+                    executeXPathQueryLogger.AddError("Exception occured ExecuteXPathQueryOnXElement executing the XPath", String.Format("An exception occured in the ExecuteXPathQueryOnXElement method executing the XPath query. Query: {0}. Exception: {1}.", query, GetExceptionDebugInfo(ex)));
                 }
             }
-            errorMessage += "In ExecuteXPathQueryOnXElement method the XDocument was null.";
+            executeXPathQueryLogger.AddError("XDocument was null in ExecuteXPathQueryOnXElement", "In ExecuteXPathQueryOnXElement method the XDocument was null.");
             return null;
         }
 
@@ -281,7 +283,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 return list;
             }
-            LogBuilder.Log("Error", "In ExecuteXPathQuery method the XDocument was null.");
+            Logger.AddError("Error", "In ExecuteXPathQuery method the XDocument was null.");
             return null;
         }
 
@@ -289,11 +291,11 @@ namespace Sitecore.SharedSource.DataSync.Providers
         {
             if (importRow != null)
             {
-                string errorMessage = String.Empty;
-                var keyValue = GetValueFromFieldToIdentifyTheSameItemsBy(importRow, ref errorMessage);
-                if (!String.IsNullOrEmpty(errorMessage))
+                var getValueFromFieldLogger = Logger.CreateLevelLogger();
+                var keyValue = GetValueFromFieldToIdentifyTheSameItemsBy(importRow, ref getValueFromFieldLogger);
+                if (getValueFromFieldLogger.HasErrors())
                 {
-                    LogBuilder.Log("Error", String.Format("In the GetImportRowDebugInfo method failed: {0}.", errorMessage));
+                    getValueFromFieldLogger.AddError("Error", String.Format("In the GetImportRowDebugInfo method failed."));
                     return keyValue;
                 }
 
@@ -345,7 +347,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     }
                     catch (Exception ex)
                     {
-                        LogBuilder.Log("Error", String.Format("Reading the file failed with an exception. Exception: {0}.", ex));
+                        Logger.AddError("Error", String.Format("Reading the file failed with an exception. Exception: {0}.", ex));
                         if (streamreader != null)
                         {
                             streamreader.Close();
@@ -361,7 +363,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 else
                 {
-                    LogBuilder.Log("Error",
+                    Logger.AddError("Error",
                                    String.Format(
                                        "The DataSource filepath points to a file that doesnt exist. DataSource: '{0}'",
                                        DataSourceString));
@@ -394,10 +396,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
 	            }
 	            catch (Exception ex)
 	            {
-	                LogBuilder.Log("Error",
+	                Logger.AddError("Error",
 	                               String.Format("Reading the Url in XmlFileData failed with an exception. Exception: {0}.", ex));
 	            }
-	            LogBuilder.Log("Error",
+	            Logger.AddError("Error",
 	                           String.Format(
 	                               "The URL provided failed loading any xml data. DataSource: '{0}'",
 	                               DataSourceString));

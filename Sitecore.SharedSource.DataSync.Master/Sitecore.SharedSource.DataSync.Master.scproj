@@ -25,7 +25,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SitecoreDatabase>master</SitecoreDatabase>
     <EnableCodeGeneration>false</EnableCodeGeneration>
-    <AssemblyStatus>Exclude</AssemblyStatus>
+    <AssemblyStatus>Include</AssemblyStatus>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,6 +54,7 @@ Have fun!</PackageReadme>
     <EnableValidations>False</EnableValidations>
     <ValidationSettingsFilePath>.\Sitecore.SharedSource.DataSync.Master_Debug.xml</ValidationSettingsFilePath>
     <PackageName>Sitecore.SharedSource.DataSync</PackageName>
+    <DisableFileDeployment>False</DisableFileDeployment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -1201,33 +1202,12 @@ Post installation instructions:
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ExcludedAssemblies Include="ComponentArt.%2a.dll" />
-    <ExcludedAssemblies Include="Elmah.dll" />
-    <ExcludedAssemblies Include="HedgehogDevelopment.%2a.dll" />
-    <ExcludedAssemblies Include="HtmlAgilityPack.dll" />
-    <ExcludedAssemblies Include="ITHit.%2a.dll" />
-    <ExcludedAssemblies Include="Lucene.%2a.dll" />
-    <ExcludedAssemblies Include="MSCaptcha.dll" />
-    <ExcludedAssemblies Include="Mvp.%2a.dll" />
-    <ExcludedAssemblies Include="Netlab.BackPack.dll" />
-    <ExcludedAssemblies Include="Netlab.BackPack.WebSite.dll" />
-    <ExcludedAssemblies Include="Newtonsoft.%2a.dll" />
-    <ExcludedAssemblies Include="RadEditor.%2a.dll" />
-    <ExcludedAssemblies Include="scSearchContrib.%2a.dll" />
-    <ExcludedAssemblies Include="Sitecore.%2a.dll" />
-    <ExcludedAssemblies Include="Sitecore.Kernel.dll" />
-    <ExcludedAssemblies Include="Sitecore.Kernel.xml" />
-    <ExcludedAssemblies Include="Sitecore.Logging.dll" />
-    <ExcludedAssemblies Include="Sitecore.NVelocity.dll" />
-    <ExcludedAssemblies Include="Sitecore.Zip.dll" />
-    <ExcludedAssemblies Include="Stimulsoft.%2a.dll" />
-    <ExcludedAssemblies Include="Telerik.%2a.dll" />
-    <ExcludedAssemblies Include="Telerik.Web.UI.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <BundledProject Include="..\Sitecore.SharedSource.DataSync.Core\Sitecore.SharedSource.DataSync.Core.scproj">
       <ProjectId>{5db5c53a-1844-469b-a951-77cc54512f16}</ProjectId>
     </BundledProject>
+  </ItemGroup>
+  <ItemGroup>
+    <ExcludedAssemblies Include="Sitecore.SharedSource.DataSync.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\HedgehogDevelopment\SitecoreProject\v9.0\HedgehogDevelopment.SitecoreProject.targets" />
 </Project>

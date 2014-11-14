@@ -10,11 +10,15 @@ using System.Collections.Generic;
 using Sitecore.Data;
 using Sitecore.Data.Fields;
 using Sitecore.SharedSource.DataSync.Log;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
+using Sitecore.SharedSource.Logger.Log.Output;
 using Sitecore.SharedSource.DataSync.Managers;
 using Sitecore.SharedSource.DataSync.Utility;
 using Sitecore.SharedSource.DataSync.Providers;
 using System.Text;
 using System.IO;
+using Constants = Sitecore.SharedSource.DataSync.Utility.Constants;
 
 namespace sitecore_modules.Shell.BackPack_Modules.Import
 {
@@ -111,13 +115,21 @@ namespace sitecore_modules.Shell.BackPack_Modules.Import
             Item dataSyncItem = currentDB.Items[ddlImport.SelectedValue];
             if (dataSyncItem != null)
             {
-                Logging logBuilder = new Logging();
-                DataSyncManager dataSyncManager = new DataSyncManager();
-                dataSyncManager.RunDataSyncJob(dataSyncItem, ref logBuilder);
+                LevelLogger logger = Manager.CreateLogger(dataSyncItem);
+                var dataSyncManager = new DataSyncManager();
+                dataSyncManager.RunDataSyncJob(dataSyncItem, ref logger);
 
-                if (logBuilder != null)
+                if (logger != null)
                 {
-                    txtMessage.Text = logBuilder.LogBuilder.Length < 1 ? "The import completed successfully. \r\nStatus: \r\n" + logBuilder.GetStatusText() : logBuilder.LogBuilder + "\r\nStatus: \r\n" + logBuilder.GetStatusText();
+                    var exporter = Manager.CreateOutputHandler(dataSyncItem, logger);
+                    if (exporter != null)
+                    {
+                        txtMessage.Text = exporter.Export();
+                    }
+                    else
+                    {
+                        txtMessage.Text = "The Exporter class was null. Therefor the log was not written out.";
+                    }
                 }
                 else
                 {
@@ -136,7 +148,7 @@ namespace sitecore_modules.Shell.BackPack_Modules.Import
     {
         protected Database currentDB;
         protected string dataSyncItemId = "";
-        public Logging logBuilder = new Logging();
+        public LevelLogger logger;
 
         public DataSyncJob(string dataSyncItemId)
         {
@@ -147,11 +159,12 @@ namespace sitecore_modules.Shell.BackPack_Modules.Import
         public void Work()
         {
             Item dataSyncItem = currentDB.Items[dataSyncItemId];
+            logger = Manager.CreateLogger(dataSyncItem);
 
             if (dataSyncItem != null)
             {
                 var dataSyncManager = new DataSyncManager();
-                dataSyncManager.RunDataSyncJob(dataSyncItem, ref logBuilder);
+                dataSyncManager.RunDataSyncJob(dataSyncItem, ref logger);
 
                 //if (logBuilder != null)
                 //{

@@ -9,6 +9,10 @@ Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.DataS
 EndProject
 Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.DataSync.Examples.Master", "Sitecore.SharedSource.DataSync.Examples.Master\Sitecore.SharedSource.DataSync.Examples.Master.scproj", "{3A6BD25B-165B-415E-9E93-8389B7212FD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.SharedSource.Logger", "Sitecore.SharedSource.Logger\Sitecore.SharedSource.Logger.csproj", "{45011CF6-2E2B-455C-B217-CE8767C9A156}"
+EndProject
+Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.Logger.Master", "Sitecore.SharedSource.Logger.Master\Sitecore.SharedSource.Logger.Master.scproj", "{E93AA90A-4256-4ECF-B793-B01C18F55CB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,16 @@ Global
 		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3A6BD25B-165B-415E-9E93-8389B7212FD3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{45011CF6-2E2B-455C-B217-CE8767C9A156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45011CF6-2E2B-455C-B217-CE8767C9A156}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45011CF6-2E2B-455C-B217-CE8767C9A156}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45011CF6-2E2B-455C-B217-CE8767C9A156}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E93AA90A-4256-4ECF-B793-B01C18F55CB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E93AA90A-4256-4ECF-B793-B01C18F55CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E93AA90A-4256-4ECF-B793-B01C18F55CB4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E93AA90A-4256-4ECF-B793-B01C18F55CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E93AA90A-4256-4ECF-B793-B01C18F55CB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E93AA90A-4256-4ECF-B793-B01C18F55CB4}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,8 @@ using System.Text;
 using Sitecore.Data.Items;
 using System.Data;
 using System.Collections;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 using Sitecore.SharedSource.DataSync.Providers;
 
 namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
@@ -24,7 +26,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
 	    /// <param name="newItem">the newly created item</param>
 	    /// <param name="importValue">the imported value</param>
 	    /// <param name="updatedField">indicates if the field has been updated</param>
-	    string FillField(BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField);
+	    void FillField(BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField, ref LevelLogger fieldLogger);
 
         /// <summary>
         /// returns a list of the field names from the import row that you want to import into this field 

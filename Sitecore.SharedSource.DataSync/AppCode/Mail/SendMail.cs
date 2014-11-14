@@ -11,6 +11,12 @@ namespace Sitecore.SharedSource.DataSync.Mail
 {
     public static class SendMail
     {
+        private const string SettingMailServer = "MailServer";
+        private const string SettingMailServerPassword = "MailServerPassword";
+        private const string SettingMailServerUserName = "MailServerUserName";
+        private const string Failure = "Failure";
+        public const string Success = "Success";
+
         private static string Host
         {
             get;
@@ -33,14 +39,14 @@ namespace Sitecore.SharedSource.DataSync.Mail
         // Methods
         private static void SetupMail()
         {
-            Host = Sitecore.Configuration.Settings.GetSetting("MailServer");
-            Password = Sitecore.Configuration.Settings.GetSetting("MailServerPassword");
-            Login = Sitecore.Configuration.Settings.GetSetting("MailServerUserName");
+            Host = Sitecore.Configuration.Settings.GetSetting(SettingMailServer);
+            Password = Sitecore.Configuration.Settings.GetSetting(SettingMailServerPassword);
+            Login = Sitecore.Configuration.Settings.GetSetting(SettingMailServerUserName);
         }
 
         public static void SendMailWithAttachment(string recipient, string sender, string subject, string text, string filePath)
         {
-            var server = Sitecore.Configuration.Settings.GetSetting("MailServer");
+            var server = Sitecore.Configuration.Settings.GetSetting(SettingMailServer);
             // Specify the file to be attached and sent.
             // This example assumes that a file named Data.xls exists in the
             // current working directory.
@@ -69,7 +75,7 @@ namespace Sitecore.SharedSource.DataSync.Mail
             }
             catch (Exception ex)
             {
-                Sitecore.Diagnostics.Log.Error("SendMailWithAttachment : Error sending mail", ex.InnerException);
+                Diagnostics.Log.Error("SendMailWithAttachment : Error sending mail", ex.InnerException);
             }
 
         }
@@ -82,7 +88,7 @@ namespace Sitecore.SharedSource.DataSync.Mail
 
                 return SendEmailWithSMTP(msg);
             }
-            return "Failure";
+            return Failure;
         }
 
         /// <summary>
@@ -120,10 +126,10 @@ namespace Sitecore.SharedSource.DataSync.Mail
                     smtp.Credentials = host;
                 }
                 smtp.Send(msg);
-                return "Success";
+                return Success;
 
             }
-            return "Failure";
+            return Failure;
         }
     }
 }

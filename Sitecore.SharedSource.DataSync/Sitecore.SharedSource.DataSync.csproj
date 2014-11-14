@@ -49,6 +49,11 @@
       <HintPath>..\Resources\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Sitecore.SharedSource.Logger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Website\bin\Sitecore.SharedSource.Logger.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -68,7 +73,7 @@
     <Compile Include="AppCode\Extensions\ItemExtensions.cs" />
     <Compile Include="AppCode\Extensions\SystemExtensions.cs" />
     <Compile Include="AppCode\Extensions\TemplateExtensions.cs" />
-    <Compile Include="AppCode\Log\Logging.cs" />
+    <Compile Include="AppCode\Log\Manager.cs" />
     <Compile Include="AppCode\Managers\DataSyncManager.cs" />
     <Compile Include="AppCode\Mail\SendMail.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToEmail.cs" />

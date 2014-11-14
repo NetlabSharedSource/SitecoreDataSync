@@ -2,8 +2,11 @@
 using System.Linq;
 using Sitecore.Data;
 using Sitecore.Data.Items;
-using Sitecore.SharedSource.DataSync.Managers;
 using Sitecore.SharedSource.DataSync.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
+using Sitecore.SharedSource.Logger.Log.Output;
+using Sitecore.SharedSource.DataSync.Managers;
+using Sitecore.SharedSource.Logger.Log;
 using Sitecore.Tasks;
 
 namespace Sitecore.SharedSource.DataSync.ScheduledTasks
@@ -11,6 +14,7 @@ namespace Sitecore.SharedSource.DataSync.ScheduledTasks
     public class DataSyncTask
     {
         private const string Identifier = "DataSyncTask.RunJob";
+        private const string ItemsFieldName = "Items";
 
         public void RunJob(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
@@ -18,7 +22,7 @@ namespace Sitecore.SharedSource.DataSync.ScheduledTasks
             {
                 if (scheduledItem != null)
                 {
-                    var itemIds = scheduledItem["Items"];
+                    var itemIds = scheduledItem[ItemsFieldName];
                     if (!String.IsNullOrEmpty(itemIds))
                     {
                         var idList = itemIds.Split('|');
@@ -33,69 +37,54 @@ namespace Sitecore.SharedSource.DataSync.ScheduledTasks
                                     {
                                         if (dataSyncItem != null)
                                         {
-                                            var startedAt = DateTime.Now.ToLongDateString();
-                                            Logging logBuilder = new Logging();
+                                            var startedAt = DateTime.Now;
+                                            LevelLogger logger = Manager.CreateLogger(dataSyncItem);
+                                            logger.AddKey(Utility.Constants.DataSyncItemId, dataSyncItem.ID.ToString());
+                                            logger.AddData(Utility.Constants.DataSyncItem, dataSyncItem);
+                                            logger.AddData(Logger.Log.Constants.Identifier, dataSyncItem.Name);
                                             var dataSyncManager = new DataSyncManager();
-                                            dataSyncManager.RunDataSyncJob(dataSyncItem, ref logBuilder);
-                                            var finishededAt = DateTime.Now.ToLongDateString();
-                                            if (logBuilder != null)
+                                            dataSyncManager.RunDataSyncJob(dataSyncItem, ref logger);
+                                            var finishededAt = DateTime.Now;
+                                            logger.AddData(Logger.Log.Constants.StartTime, startedAt);
+                                            logger.AddData(Logger.Log.Constants.EndTime, finishededAt);
+                                            var exporter = Manager.CreateOutputHandler(dataSyncItem, logger);
+                                            var logText = exporter.Export();
+                                            if (exporter != null)
                                             {
-                                                try
+                                                if (logger != null)
                                                 {
-                                                    MailManager.SendLogReport(ref logBuilder,
-                                                                              GetDataSyncIdentifier(dataSyncItem),
-                                                                              dataSyncItem);
-                                                }
-                                                catch (Exception exception)
-                                                {
-                                                    Diagnostics.Log.Error(
-                                                        GetIdentifierText(dataSyncItem, startedAt, finishededAt) +
-                                                        " failed in sending out the mail. Please see the exception message for more details. Exception:" + exception.Message + ". Status:\r\n" +
-                                                        logBuilder.GetStatusText(), typeof(DataSyncTask));
-                                                }
-                                                if (logBuilder.LogBuilder != null)
-                                                {
-                                                    if (!String.IsNullOrEmpty(logBuilder.LogBuilder.ToString()))
+                                                    try
+                                                    {
+                                                        MailManager.SendLogReport(ref logger, exporter);
+                                                    }
+                                                    catch (Exception exception)
                                                     {
                                                         Diagnostics.Log.Error(
-                                                            GetIdentifierText(dataSyncItem, startedAt, finishededAt) +
-                                                            " failed. " +
-                                                            logBuilder.LogBuilder + "\r\nStatus:\r\n" +
-                                                            logBuilder.GetStatusText(),
-                                                            typeof (DataSyncTask));
+                                                            "Failed in sending out the mail. Please see the exception message for more details. Exception:" +
+                                                            exception.Message + "\r\n\r\n" + logText, typeof(DataSyncTask));
+                                                    }
+                                                    if (logger.HasErrors())
+                                                    {
+                                                        Diagnostics.Log.Error(logText, typeof (DataSyncTask));
                                                     }
                                                     else
                                                     {
-                                                        Diagnostics.Log.Debug(
-                                                            GetIdentifierText(dataSyncItem, startedAt, finishededAt) +
-                                                            " completed with success.\r\nStatus:\r\n" +
-                                                            logBuilder.GetStatusText(),
-                                                            typeof (DataSyncTask));
+                                                        Diagnostics.Log.Debug(logText, typeof(DataSyncTask));
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    Diagnostics.Log.Error(
-                                                           GetIdentifierText(dataSyncItem, startedAt, finishededAt) +
-                                                           " failed. The Logging.LogBuilder object was null. " +
-                                                           logBuilder + "\r\nStatus:\r\n" +
-                                                           logBuilder.GetStatusText(),
-                                                           typeof(DataSyncTask));
+                                                    Diagnostics.Log.Error("The Log object was null. This should not happen." + "\r\n\r\n" + logText, typeof(DataSyncTask));
                                                 }
                                             }
                                             else
                                             {
-                                                Diagnostics.Log.Error(
-                                                    GetIdentifierText(dataSyncItem, startedAt, finishededAt) +
-                                                    " - The Log object was null. This should not happen.",
-                                                    typeof (DataSyncTask));
+                                                Diagnostics.Log.Error("The Exporter class was null. Therefor the log was not written out.\r\n\r\n" + logText, typeof(DataSyncTask));
                                             }
                                         }
                                         else
                                         {
-                                            Diagnostics.Log.Error(
-                                                " - The Task item had Items defined in Items[] that was null. This should not happen.",
-                                                typeof (DataSyncTask));
+                                            Diagnostics.Log.Error("The Task item had Items defined in Items[] that was null. This should not happen.", typeof (DataSyncTask));
                                         }
                                     }
                                     catch (Exception exception)
@@ -143,20 +132,6 @@ namespace Sitecore.SharedSource.DataSync.ScheduledTasks
             {
                 Diagnostics.Log.Error(Identifier + " - An exception occured in the execution of the task.", exception);
             }
-        }
-
-        private string GetIdentifierText(Item dataSyncItem, string startedAt, string finishedAt)
-        {
-            return GetDataSyncIdentifier(dataSyncItem) + " started " + startedAt + " and finished " + finishedAt;
-        }
-
-        private string GetDataSyncIdentifier(Item dataSyncItem)
-        {
-            if (dataSyncItem != null)
-            {
-                return dataSyncItem.Name;
-            }
-            return String.Empty;
         }
     }
 }

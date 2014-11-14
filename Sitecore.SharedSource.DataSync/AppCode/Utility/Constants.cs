@@ -13,5 +13,11 @@ namespace Sitecore.SharedSource.DataSync.Utility
         public static readonly string FieldsFolderID = "{82FFCB7F-36C9-4D41-9A08-A8C73B604BD0}";
         public static readonly string PropertiesFolderID = "{15C0236A-30A9-45B1-B573-318AB581568A}";
         public static readonly string CommonFolderID = "{A87A00B1-E6DB-45AB-8B54-636FEC3B5523}";
+
+        public static readonly string FieldNameDataSyncKey = "__DataSyncKey";
+        public static readonly string FieldNameDataSyncLogging = "__DataSyncLogging";
+        public static readonly string FieldNameDataSyncTimeStamp = "__DataSyncTimeStamp";
+        public static readonly string DataSyncItemId = "DataSyncItemId";
+        public static readonly string DataSyncItem = "DataSyncItem";
     }
 }

@@ -9,6 +9,8 @@ using Sitecore.Data;
 using System.Data;
 using Sitecore.SharedSource.DataSync.Extensions;
 using System.Collections;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 using Sitecore.SharedSource.DataSync.Providers;
 using Sitecore.SharedSource.DataSync.Utility;
 using Sitecore.Data.Fields;
@@ -20,8 +22,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
     /// then stores the GUID of the existing item
     /// </summary>
     public class ListValueToGuidMatchOnDisplayName : ToText {
-
-		#region Properties
+        #region Properties
 
         private bool _DoNotRequireValueMatch;
 
@@ -51,6 +52,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
         }
 
         private string _MultiListDelimiter;
+
         /// <summary>
         /// This is the list that you will compare the imported values against
         /// </summary>
@@ -104,21 +106,23 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
         /// <param name="importRow"></param>
         /// <param name="newItem">newly created item</param>
         /// <param name="importValue">imported value to match</param>
-        public override string FillField(BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField)
+        public override void FillField(BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField, ref LevelLogger logger)
         {
+            var fillFieldLogger = logger.CreateLevelLogger();
             updatedField = false;
             if (IsRequired)
             {
                 if (String.IsNullOrEmpty(importValue))
                 {
-                    return String.Format("The Item '{0}' of template type: '{1}', field '{2}', but the imported value '{3}' was empty. This field must be provided when the field is required. The field was not updated.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue);
+                    fillFieldLogger.AddError(CategoryConstants.ImportedValueToFieldWasEmpty, String.Format("The Item '{0}' of template type: '{1}', field '{2}', but the imported value '{3}' was empty. This field must be provided when the field is required. The field was not updated.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
+                    return;
                 }
             }
             if (!ID.IsID(SourceList))
             {
-                return String.Format(
-                        "The 'Source List' provided was not an valid Sitecore ID. SourceList: {0}. The Fill Field method was aborted and the fieldvalue was not updated.",
-                        SourceList);
+                fillFieldLogger.AddError(CategoryConstants.SourceListNotAnValidSitecoreId, String.Format(
+                        "The 'Source List' provided was not an valid Sitecore ID. SourceList: {0}. The Fill Field method was aborted and the fieldvalue was not updated.", SourceList));
+                return;
             }
             //get parent item of list to search
             Item i = newItem.Database.GetItem(SourceList);
@@ -137,11 +141,12 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                             {
                                 IEnumerable<Item> t = GetMatchingChildItem(map, i, importValue);
                                 string errorMessage = String.Empty;
-                                var id = GetLookupId(map, importRow, ref newItem, keyValue, i, ref errorMessage);
+                                var id = GetLookupId(map, importRow, ref newItem, keyValue, i, ref fillFieldLogger);
                                 if (!String.IsNullOrEmpty(errorMessage))
                                 {
-                                    return String.Format("An error occured in trying to locate the Lookup id in a MultiList attempt. The MultiListDelimiter: {0}. The importValue was '{1}'. Item: {2}. The errormessage was: {3}.",
-                                    MultiListDelimiter, importValue, map.GetItemDebugInfo(newItem), errorMessage);
+                                    fillFieldLogger.AddError(CategoryConstants.ErrorToLocateTheLookupIdInMultiList, String.Format("An error occured in trying to locate the Lookup id in a MultiList attempt. The MultiListDelimiter: {0}. The importValue was '{1}'. Item: {2}. The errormessage was: {3}.",
+                                    MultiListDelimiter, importValue, map.GetItemDebugInfo(newItem), errorMessage));
+                                    return;
                                 }
                                 guidValue += id + "|";
                             }
@@ -153,66 +158,67 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                         else
                         {
                             string errorMessage = String.Empty;
-                            guidValue = GetLookupId(map, importRow, ref newItem, importValue, i, ref errorMessage);
+                            guidValue = GetLookupId(map, importRow, ref newItem, importValue, i, ref fillFieldLogger);
                             if (!String.IsNullOrEmpty(errorMessage))
                             {
-                                return String.Format("An error occured in trying to locate the Lookup id. The importValue was '{0}'. Item: {1}. The errormessage was: {2}.",
-                                    importValue, map.GetItemDebugInfo(newItem), errorMessage);
+                                fillFieldLogger.AddError(CategoryConstants.ErrorToLocateTheLookupId, String.Format("An error occured in trying to locate the Lookup id. The importValue was '{0}'. Item: {1}. The errormessage was: {2}.",
+                                    importValue, map.GetItemDebugInfo(newItem), errorMessage));
+                                return;
                             }
                         }
                         if (String.IsNullOrEmpty(guidValue))
                         {
                             if (!DoNotRequireValueMatch)
                             {
-                                return String.Format(
+                                fillFieldLogger.AddError(CategoryConstants.ImportedValueDidntResultInAIdToStore, String.Format(
                                     "The Item '{0}' of template type: '{1}' has a field '{2}', but the imported value '{3}' didn't result in a ID to store.",
-                                    map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue);
+                                    map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
+                                return;
                             }
                         }
                         if (f.Value != guidValue)
                         {
-                            newItem.Editing.BeginEdit();
                             f.Value = guidValue;
                             updatedField = true;
-                            newItem.Editing.EndEdit();
                         }
                     }
                     if (IsRequired && f == null)
                     {
-                        return String.Format(
+                        fillFieldLogger.AddError(CategoryConstants.RequiredFieldNotFoundOnItem, String.Format(
                                 "The Item '{0}' of template type: '{1}' didn't contain a field with name '{2}'. This field must be present because the 'Is Required Field' is checked.",
-                                map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField);
+                                map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField));
+                        return;
                     }
                 }
 			    else
 			    {
                     if (IsRequired)
                     {
-                        return String.Format("The Item '{0}' of template type: '{1}' had a Guid field '{2}' where the imported value '{3}' didn't result any hit. Because the 'Is Required Field' is checked there must be found a value i Sitecore. The field was not updated.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue);
+                        fillFieldLogger.AddError(CategoryConstants.TheGuidDidntResultInAHitForLookup, String.Format("The Item '{0}' of template type: '{1}' had a Guid field '{2}' where the imported value '{3}' didn't result any hit. Because the 'Is Required Field' is checked there must be found a value i Sitecore. The field was not updated.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
+                        return;
                     }
                     if (newItem[NewItemField] != importValue)
                     {
-                        newItem.Editing.BeginEdit();
                         newItem[NewItemField] = importValue;
-                        newItem.Editing.EndEdit();
                     }
 			    }
 			}
             if (IsRequired && i == null)
             {
-                return String.Format("The Item '{0}' of template type: '{1}' had a Guid field '{2}' for which SourceList was null. This SourceList must be present because the 'Is Required Field' is checked.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField);
+                fillFieldLogger.AddError(CategoryConstants.TheGuidFieldHadASourcelistThatWasNull, String.Format("The Item '{0}' of template type: '{1}' had a Guid field '{2}' for which SourceList was null. This SourceList must be present because the 'Is Required Field' is checked.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField));
+                return;
             }
-            return string.Empty;
 		}
 
-        private string GetLookupId(BaseDataMap map, object importRow, ref Item newItem, string importValue, Item sourceListRootItem, ref string errorMessage)
+        private string GetLookupId(BaseDataMap map, object importRow, ref Item newItem, string importValue, Item sourceListRootItem, ref LevelLogger logger)
         {
+            var getLookupIdLogger = logger.CreateLevelLogger();
             IEnumerable<Item> t = GetMatchingChildItem(map, sourceListRootItem, importValue);
             if (t.Count() > 1)
             {
-                errorMessage += String.Format(
+                getLookupIdLogger.AddError(CategoryConstants.ImportedValueResultInMoreThanOneLookupItem, String.Format(
                         "The Item '{0}' of template type: '{1}' has a field '{2}', but the imported value '{3}' did result in more that one lookup item. The field was not updated.",
-                        map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue);
+                        map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
                 return null;
             }
             if (t.Count() == 1)
@@ -220,9 +226,9 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                 var guid = t.First().ID.ToString();
                 if (String.IsNullOrEmpty(guid))
                 {
-                    errorMessage += String.Format(
+                    getLookupIdLogger.AddError(CategoryConstants.ImportedValueDidntResultInAIdToStore, String.Format(
                                 "The Item '{0}' of template type: '{1}' has a field '{2}', but the imported value '{3}' didn't result in a ID to store.",
-                                map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue);
+                                map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
                     return null;
                 }
                 return guid;
@@ -231,8 +237,8 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
             {
                 if (!DoNotRequireValueMatch)
                 {
-                    errorMessage += String.Format("The Item '{0}' of template type: '{1}' didn't locate a lookup Item with the value '{2}'.",
-                        newItem.ID.ToString(), newItem.TemplateName, importValue);
+                    getLookupIdLogger.AddError(CategoryConstants.DidntLocateALookupItemWithTheValue, String.Format("The Item '{0}' of template type: '{1}' didn't locate a lookup Item with the value '{2}'.",
+                        newItem.ID.ToString(), newItem.TemplateName, importValue));
                     return null;
                 }
             }

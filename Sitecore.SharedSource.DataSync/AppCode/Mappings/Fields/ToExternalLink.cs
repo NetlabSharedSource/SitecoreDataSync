@@ -1,5 +1,7 @@
 ﻿using System;
 using Sitecore.Data.Items;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 
 namespace Sitecore.SharedSource.DataSync.Mappings.Fields
 {
@@ -11,14 +13,14 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
         {
         }
 
-        public override string FillField(Providers.BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField)
+        public override void FillField(Providers.BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField, ref LevelLogger logger)
         {
             var xml = string.Empty;
             if (!String.IsNullOrEmpty(importValue))
             {
                 xml = String.Format(SitecoreExternalLinkXml, importValue);
             }
-            return base.FillField(map, importRow, ref newItem, xml, out updatedField);
+            base.FillField(map, importRow, ref newItem, xml, out updatedField, ref logger);
         }
     }
 }

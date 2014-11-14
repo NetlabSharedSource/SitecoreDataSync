@@ -5,6 +5,8 @@ using System.Text;
 using Sitecore.Data.Items;
 using System.Data;
 using System.Collections;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 using Sitecore.SharedSource.DataSync.Providers;
 using Sitecore.Data.Fields;
 
@@ -47,8 +49,10 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
             return NewItemField;
         }
 
-        public string FillField(BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField)
+        public void FillField(BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField, ref LevelLogger logger)
         {
+            var fillFieldLogger = logger.CreateLevelLogger();
+
             updatedField = false;
             //ignore import value and store value provided
             Field f = newItem.Fields[NewItemField];
@@ -56,17 +60,14 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
             {
                 if (f.Value != Value)
                 {
-                    newItem.Editing.BeginEdit();
                     f.Value = Value;
                     updatedField = true;
-                    newItem.Editing.EndEdit();
                 }
             }
             if (IsRequired && f == null)
             {
-                return String.Format("The Item '{0}' of template type: '{1}' didn't contain a field with name '{2}'. This field must be present because the 'Is Required Field' is checked.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField);
+                fillFieldLogger.AddError(CategoryConstants.RequiredFieldNotFoundOnItem, String.Format("The Item '{0}' of template type: '{1}' didn't contain a field with name '{2}'. This field must be present because the 'Is Required Field' is checked.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField));
             }
-            return String.Empty;
         }
 
 		#endregion Methods

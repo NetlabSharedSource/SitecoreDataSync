@@ -5,7 +5,8 @@ using Sitecore.Data.Items;
 using Sitecore.Data;
 using System.Data;
 using System.Data.SqlClient;
-using Sitecore.SharedSource.DataSync.Log;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 
 namespace Sitecore.SharedSource.DataSync.Providers
 {
@@ -17,12 +18,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
 		#region Constructor
 
-        public SqlDataMap(Database db, Item importItem, Logging logging)
-            : base(db, importItem, logging)
+        public SqlDataMap(Database db, Item importItem, LevelLogger logger)
+            : base(db, importItem, logger)
         {
             if (string.IsNullOrEmpty(Query))
             {
-                LogBuilder.Log("Error", "the 'Query' field was not set");
+                Logger.AddError("Error", "the 'Query' field was not set");
             }
 		}
 		
@@ -38,7 +39,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
         {
             if (string.IsNullOrEmpty(DataSourceString))
             {
-                LogBuilder.Log("Error", "The 'Data Source' field must be set");
+                Logger.AddError("Error", "The 'Data Source' field must be set");
             }
             DataSet ds = new DataSet();
             SqlConnection dbCon = new SqlConnection(this.DataSourceString);
@@ -66,8 +67,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
         /// <param name="importRow"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
-        public override string GetFieldValue(object importRow, string fieldName, ref string errorMessage)
+        public override string GetFieldValue(object importRow, string fieldName, ref LevelLogger logger)
         {
+            var getFieldLogger = logger.CreateLevelLogger();
             try
             {
                 DataRow dataRow = importRow as DataRow;
@@ -80,28 +82,28 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     }
                     else
                     {
-                        errorMessage += String.Format("The GetFieldValue method failed because the the 'fieldName' was null or empty. ImportRow: {0}.", GetImportRowDebugInfo(importRow));
+                        getFieldLogger.AddError(CategoryConstants.TheFieldnameArgumentWasNullOrEmpty, String.Format("The GetFieldValue method failed because the the 'fieldName' was null or empty. ImportRow: {0}.", GetImportRowDebugInfo(importRow)));
                     }
                 }
                 else
                 {
-                    errorMessage += String.Format("The GetFieldValue method failed because the Import Row was null. FieldName: {0}.", fieldName);
+                    getFieldLogger.AddError(CategoryConstants.TheImportRowWasNull, String.Format("The GetFieldValue method failed because the Import Row was null. FieldName: {0}.", fieldName));
                 }
             }
             catch (Exception ex)
             {
-                errorMessage += String.Format("The GetFieldValue method failed with an exception. ImportRow: {0}. FieldName: {1}. Exception: {2}.", GetImportRowDebugInfo(importRow), fieldName, ex);
+                getFieldLogger.AddError(CategoryConstants.GetFieldValueFailed, String.Format("The GetFieldValue method failed with an exception. ImportRow: {0}. FieldName: {1}. Exception: {2}.", GetImportRowDebugInfo(importRow), fieldName, ex));
             }
             return String.Empty;
         }
 
 	    public override string GetImportRowDebugInfo(object importRow)
 	    {
-	        string errorMessage = String.Empty;
-	        string debugInfo = GetValueFromFieldToIdentifyTheSameItemsBy(importRow, ref errorMessage);
-	        if (!String.IsNullOrEmpty(errorMessage))
+	        var getValueFromFieldLogger = Logger.CreateLevelLogger();
+	        string debugInfo = GetValueFromFieldToIdentifyTheSameItemsBy(importRow, ref getValueFromFieldLogger);
+	        if (getValueFromFieldLogger.HasErrors())
 	        {
-                LogBuilder.Log("Error", String.Format("In the GetValueFromFieldToIdentifyTheSameItemsBy method failed: {0}. DebugInfo: {1}", errorMessage, debugInfo));
+                getValueFromFieldLogger.AddError("Error", String.Format("In the GetValueFromFieldToIdentifyTheSameItemsBy method failed. DebugInfo: {0}", debugInfo));
 	            return debugInfo;
 	        }
 	        DataRow dataRow = importRow as DataRow;

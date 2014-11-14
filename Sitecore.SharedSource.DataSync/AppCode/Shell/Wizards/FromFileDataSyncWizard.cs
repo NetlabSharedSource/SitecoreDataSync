@@ -3,6 +3,9 @@ using System.Globalization;
 using System.IO;
 using Sitecore.IO;
 using Sitecore.SharedSource.DataSync.Log;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
+using Sitecore.SharedSource.Logger.Log.Output;
 using Sitecore.SharedSource.DataSync.Managers;
 using Sitecore.SharedSource.DataSync.Providers;
 using Sitecore.SharedSource.DataSync.ScheduledTasks;
@@ -164,44 +167,6 @@ namespace Sitecore.SharedSource.DataSync.Shell.Wizards
             return null;
         }
 
-        private string GetStatusText(Item userSyncItem, Logging logBuilder, string startedAt, string finishedAt)
-        {
-            if (logBuilder != null)
-            {
-                if (logBuilder.LogBuilder != null)
-                {
-                    var logString = logBuilder.LogBuilder.ToString();
-                    if (String.IsNullOrEmpty(logString))
-                    {
-                        logString += "The import completed successfully.\r\n\r\nStatus:\r\n" +
-                                     logBuilder.GetStatusText();
-                    }
-                    else
-                    {
-                        logString = "The import failed.\r\n\r\nStatus:\r\n" + logBuilder.GetStatusText() + "\r\n\r\n" +
-                                    logString;
-                    }
-                    return logString;
-                }
-                return GetIdentifierText(userSyncItem, startedAt, finishedAt) + " failed. The Logging.LogBuilder object was null. " + logBuilder + "\r\nStatus:\r\n" + logBuilder.GetStatusText();
-            }
-            return GetIdentifierText(userSyncItem, startedAt, finishedAt) + " - The Log object was null. This should not happen.";
-        }
-
-        private string GetIdentifierText(Item userSyncItem, string startedAt, string finishedAt)
-        {
-            return GetDataSyncIdentifier(userSyncItem) + " started " + startedAt + " and finished " + finishedAt;
-        }
-
-        private string GetDataSyncIdentifier(Item dataSyncItem)
-        {
-            if (dataSyncItem != null)
-            {
-                return dataSyncItem.Name;
-            }
-            return String.Empty;
-        }
-
         #endregion
 
         protected bool SelectFileCompleted()
@@ -235,17 +200,20 @@ namespace Sitecore.SharedSource.DataSync.Shell.Wizards
             var dataSyncItem = GetDataSyncItem();
 
             var dataSyncManager = new DataSyncManager();
-            string errorMessage = String.Empty;
-            var map = dataSyncManager.InstantiateDataMap(dataSyncItem, ref errorMessage);
+            LevelLogger logger = Manager.CreateLogger(dataSyncItem);
+            OutputHandlerBase exporter = Manager.CreateOutputHandler(dataSyncItem, logger);
+            logger.AddKey(Utility.Constants.DataSyncItemId, dataSyncItem.ID.ToString());
+            logger.AddData(Utility.Constants.DataSyncItem, dataSyncItem);
+            var map = dataSyncManager.InstantiateDataMap(dataSyncItem, ref logger);
             if (map != null)
             {
                 if (!String.IsNullOrEmpty(DataValue))
                 {
                     map.Data = DataValue;
                 }
-                var options = new JobOptions("FromFileDataSyncWizard", "Job category name", Context.Site.Name, new FromFileDataSyncWizard(), "Run", new object[] { map, map.LogBuilder });
+                var options = new JobOptions("FromFileDataSyncWizard", "Job category name", Context.Site.Name, new FromFileDataSyncWizard(), "Run", new object[] { map, map.Logger, exporter });
                 var job = JobManager.Start(options);
-                job.Options.CustomData = map.LogBuilder;
+                job.Options.CustomData = map.Logger;
                 JobHandle = job.Handle.ToString();
                 SheerResponse.Timer("CheckStatus", 5);
             }
@@ -253,41 +221,47 @@ namespace Sitecore.SharedSource.DataSync.Shell.Wizards
             {
                 Active = "LastPage";
                 BackButton.Disabled = true;
-                if (!string.IsNullOrEmpty(errorMessage))
+                if (logger.HasErrorsOrInfos())
                 {
-                    ResultText.Value = errorMessage;
+                    if (exporter != null)
+                    {
+                        ResultText.Value = exporter.Export();
+                    }
+                    else
+                    {
+                        ResultText.Value = "The Exporter class was null. Therefor the log was not written out.";
+                    }
                 }
             }
         }
-        
-        protected void Run(BaseDataMap map, Logging logBuilder)
+
+        protected void Run(BaseDataMap map, LevelLogger logger, OutputHandlerBase exporter)
         {
             Context.Job.Status.State = JobState.Running;
-
-            var startedAt = DateTime.Now.ToLongDateString();
+            logger.AddKey(Utility.Constants.DataSyncItemId, map.ImportItem.ID.ToString());
+            logger.AddData(Utility.Constants.DataSyncItem, map.ImportItem);
+            logger.AddData(Logger.Log.Constants.Identifier, map.ImportItem.Name);
+            var startedAt = DateTime.Now;
             map.Process();
-            var finishededAt = DateTime.Now.ToLongDateString();
+            var finishededAt = DateTime.Now;
+            logger.AddData(Logger.Log.Constants.StartTime, startedAt);
+            logger.AddData(Logger.Log.Constants.EndTime, finishededAt);
             try
             {
-                MailManager.SendLogReport(ref logBuilder, 
-                                          GetDataSyncIdentifier(map.ImportItem),
-                                          map.ImportItem);
+                MailManager.SendLogReport(ref logger, exporter);
             }
             catch (Exception exception)
             {
-                Sitecore.Diagnostics.Log.Error(
-                    GetIdentifierText(map.ImportItem, startedAt, finishededAt) +
-                    " failed in sending out the mail. Please see the exception message for more details. Exception:" + exception.Message + ". Status:\r\n" +
-                    logBuilder.GetStatusText(), typeof(DataSyncTask));
+                Diagnostics.Log.Error(exporter.GetIdentifier() + " failed in sending out the mail. Please see the exception message for more details. Exception:" + exception.Message + ". Status:\r\n" +
+                    exporter.Export(), typeof(DataSyncWizard));
             }
-            var logString = logBuilder.LogBuilder.ToString();
-            if (!String.IsNullOrEmpty(logString))
+            if (logger.HasErrors())
             {
                 Context.Job.Status.Failed = true;
             }
             else
             {
-                Context.Job.Status.State = JobState.Finished;    
+                Context.Job.Status.State = JobState.Finished;
             }   
         }
 
@@ -298,7 +272,8 @@ namespace Sitecore.SharedSource.DataSync.Shell.Wizards
             {
                 var status = job.Status;
                 var state = status.State;
-                var logBuilder = (Logging)job.Options.CustomData;
+                LevelLogger logger = (LevelLogger)job.Options.CustomData;
+                var dataSyncItem = logger.GetData(Utility.Constants.DataSyncItem) as Item;
 
                 if (status == null)
                 {
@@ -309,34 +284,35 @@ namespace Sitecore.SharedSource.DataSync.Shell.Wizards
                     NextButton.Disabled = true;
                     BackButton.Disabled = false;
                     CancelButton.Disabled = false;
-                    if (logBuilder.TotalNumberOfItems > 0)
+                    if (logger.GetCounter(IncrementConstants.TotalNumberOfItems) > 0)
                     {
-                        ImportStatusText.Text = logBuilder.ProcessedItems + " of " + logBuilder.TotalNumberOfItems + " items processed.";
+                        ImportStatusText.Text = logger.GetCounter(IncrementConstants.ProcessedItems) + " of " + logger.GetCounter(IncrementConstants.TotalNumberOfItems) + " items processed.";
                     }
                     else
                     {
                         ImportStatusText.Text = "Retrieving import data...";
                     }
-                    if (logBuilder.ProcessedItems == logBuilder.TotalNumberOfItems && logBuilder.ProcessedItems != 0)
+                    if (logger.GetCounter(IncrementConstants.ProcessedItems) == logger.GetCounter(IncrementConstants.TotalNumberOfItems) && logger.GetCounter(IncrementConstants.ProcessedItems) != 0)
                     {
                         NotPresentStatusText.Text = "Processing items not present in import...";
 
-                        if (logBuilder.TotalNumberOfNotPresentInImportItems > 0)
-                        {
-                            NotPresentStatusText.Text = logBuilder.DisabledItems + " of " +
-                                                        logBuilder.TotalNumberOfNotPresentInImportItems +
-                                                        " items not present in import processed.";
-                        }
+                        //if (logger.TotalNumberOfNotPresentInImportItems > 0)
+                        //{
+                        //    NotPresentStatusText.Text = logger.GetCounter(IncrementConstants.DisabledItems) + " of " +
+                        //                                logger.TotalNumberOfNotPresentInImportItems +
+                        //                                " items not present in import processed.";
+                        //}
                     }
-                    FailedText.Visible = logBuilder.FailureItems > 0;
-                    FailedStatusText.Text = logBuilder.FailureItems + " items failed.";
+                    FailedText.Visible = logger.GetCounter(IncrementConstants.FailureItems) > 0;
+                    FailedStatusText.Text = logger.GetCounter(IncrementConstants.FailureItems) + " items failed.";
                 }
                 else if (state == JobState.Finished)
                 {
-                    Status.Text = String.Format("Items processed: {0}.", logBuilder.ProcessedItems.ToString(CultureInfo.CurrentCulture));
+                    Status.Text = String.Format("Items processed: {0}.", logger.GetCounter(IncrementConstants.ProcessedItems).ToString(CultureInfo.CurrentCulture));
                     Active = "LastPage";
                     BackButton.Disabled = true;
-                    string str2 = GetStatusText(GetDataSyncItem(), logBuilder, String.Empty, string.Empty);
+                    var exporter = Manager.CreateOutputHandler(dataSyncItem, logger);
+                    string str2 = exporter.Export();
                     if (!string.IsNullOrEmpty(str2))
                     {
                         ResultText.Value = str2;

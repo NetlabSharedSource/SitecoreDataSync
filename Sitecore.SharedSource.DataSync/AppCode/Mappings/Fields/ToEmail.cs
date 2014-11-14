@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using Sitecore.Data.Items;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 
 namespace Sitecore.SharedSource.DataSync.Mappings.Fields
 {
@@ -12,8 +14,9 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
         {
         }
 
-        public override string FillField(Providers.BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField)
+        public override void FillField(Providers.BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField, ref LevelLogger logger)
         {
+            var fillFieldLogger = logger.CreateLevelLogger();
             var xml = string.Empty;
             if (!String.IsNullOrEmpty(importValue))
             {
@@ -25,10 +28,11 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                 else
                 {
                     updatedField = false;
-                    return string.Format("The import value '{0}' was not a correct email. The value was not stored on the field. Importrow: {1}. ", importValue, map.GetImportRowDebugInfo(importRow));
+                    fillFieldLogger.AddError(CategoryConstants.EmailWasInWrongFormatOnImportRow, String.Format("The import value '{0}' was not a correct email. The value was not stored on the field. Importrow: {1}. ", importValue, map.GetImportRowDebugInfo(importRow)));
+                    return;
                 }
             }
-            return base.FillField(map, importRow, ref newItem, xml, out updatedField);
+            base.FillField(map, importRow, ref newItem, xml, out updatedField, ref fillFieldLogger);
         }
     }
 }

@@ -9,7 +9,8 @@ using System.Web;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Security.Accounts;
-using Sitecore.SharedSource.DataSync.Log;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 
 namespace Sitecore.SharedSource.DataSync.Providers
 {
@@ -30,8 +31,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
         #region Constructor
 
-        public CSVDataMap(Database db, Item importItem, Logging logging)
-            : base(db, importItem, logging)
+        public CSVDataMap(Database db, Item importItem, LevelLogger logger)
+            : base(db, importItem, logger)
         {
             
             Data = importItem[FieldNameData];
@@ -41,8 +42,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
             InitializeColumnDelimiterCharacter(importItem);
         }
 
-        public CSVDataMap(Database db, Item importItem, Logging logging, string data)
-            : base(db, importItem, logging)
+        public CSVDataMap(Database db, Item importItem, LevelLogger logger, string data)
+            : base(db, importItem, logger)
         {
             Data = data;
             HeaderColumns = new Dictionary<string, int>();
@@ -50,8 +51,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
             InitializeColumnDelimiterCharacter(importItem);
         }
 
-        public override void ValidateImportData(IList<object> importData, ref string errorMessage)
+        public override void ValidateImportData(IList<object> importData, ref LevelLogger logger)
         {
+            var validateImportDataLogger = logger.CreateLevelLogger();
             foreach (var fieldDefinition in FieldDefinitions)
             {
                 var newField = fieldDefinition.GetExistingFieldNames();
@@ -59,13 +61,13 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 {
                     if (!HeaderColumns.ContainsKey(existingFieldName.ToLower()))
                     {
-                        errorMessage += String.Format("--- A column with name {0} was expected.\r\n", existingFieldName);
+                        validateImportDataLogger.AddError("A column was expected but not found", String.Format("--- A column with name {0} was expected.\r\n", existingFieldName));
                     }
                 }
             }
-            if (String.IsNullOrEmpty(errorMessage))
+            if (!validateImportDataLogger.HasErrors())
             {   
-                base.ValidateImportData(importData, ref errorMessage);
+                base.ValidateImportData(importData, ref validateImportDataLogger);
             }
         }
 
@@ -77,7 +79,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 char currentColumnDelimiterCharacter;
                 if (!Char.TryParse(columnDelimiterCharacter, out currentColumnDelimiterCharacter))
                 {
-                    LogBuilder.Log("Error", String.Format(
+                    Logger.AddError("Error", String.Format(
                         "A wrong format was provided in the field '{0}' on the importItem. This field is used to set the Column Delimiter Character. Please correct to a valid char ie ;."
                         , columnDelimiterCharacter));
                     ColumnDelimiterCharacter = DefaultColumnDelimiterCharacter;
@@ -136,20 +138,20 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                     }
                                     else
                                     {
-                                        LogBuilder.Log("Error", String.Format(
+                                        Logger.AddError("Error", String.Format(
                                         "A columnHeader was identical to another columnHeader in the GetImportData in the CSVDataMap. Index: {0}. header: {1}. headerColumnLine: {2}", i, header, headerColumnLine));
                                     }
                                 }
                                 else
                                 {
-                                    LogBuilder.Log("Error", String.Format(
+                                    Logger.AddError("Error", String.Format(
                                     "A columnHeader was null or empty in the GetImportData in the CSVDataMap. Index: {0}. headerColumnLine: {1}", i, headerColumnLine));
                                 }
                             }
                         }
                         else
                         {
-                            LogBuilder.Log("Error", String.Format(
+                            Logger.AddError("Error", String.Format(
                                     "The HeaderColumn in the GetImportData in the CSVDataMap was null or empty. Please make sure that the first line is has the fieldnames for the columns."));
                         }
 
@@ -162,11 +164,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                 if (!String.IsNullOrEmpty(line) && !String.IsNullOrEmpty(line.Trim()))
                                 {
                                     string errorMessage = String.Empty;
-                                    
-                                    bool isVerified = VerifyConditionFromQuery(line, ref errorMessage);
+
+                                    var verifyConditionLogger = Logger.CreateLevelLogger();
+                                    bool isVerified = VerifyConditionFromQuery(line, ref verifyConditionLogger);
                                     if (!String.IsNullOrEmpty(errorMessage))
                                     {
-                                        LogBuilder.Log("Error", String.Format("A failure occured while verifying a line in the GetImportData method. The line was not added and the import was aborted. The method that failed was VerifyConditionFromQuery method. ErrorMessage: {0}.",
+                                        verifyConditionLogger.AddError("Error", String.Format("A failure occured while verifying a line in the GetImportData method. The line was not added and the import was aborted. The method that failed was VerifyConditionFromQuery method. ErrorMessage: {0}.",
                                         errorMessage));
                                         break;
                                     }
@@ -177,7 +180,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                 }
                                 else
                                 {
-                                    LogBuilder.Log("Error", String.Format(
+                                    Logger.AddError("Error", String.Format(
                                         "A row in the GetImportData in the CSVDataMap was null or empty. Line: {0}",
                                         line));
                                 }
@@ -185,23 +188,23 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         }
                         else
                         {
-                            LogBuilder.Log("Error", String.Format("The importRows did only contain one line. The import was aborted."));
+                            Logger.AddError("Error", String.Format("The importRows did only contain one line. The import was aborted."));
                         }
                     }
                     else
                     {
-                        LogBuilder.Log("Error", String.Format(
+                        Logger.AddError("Error", String.Format(
                             "The GetImportData in the CSVDataMap failed because the provided CSVdata didn't contain any rows."));
                     }
                 }
                 else
                 {
-                    LogBuilder.Log("Error", String.Format("The GetImportData in the CSVDataMap failed because the provided data was empty."));
+                    Logger.AddError("Error", String.Format("The GetImportData in the CSVDataMap failed because the provided data was empty."));
                 }
             }
             catch (Exception ex)
             {
-                LogBuilder.Log("Error", String.Format("The GetFieldValue method failed with an exception. Exception: {0}.", ex));
+                Logger.AddError("Error", String.Format("The GetFieldValue method failed with an exception. Exception: {0}.", ex));
             }
             return ImportData;
         }
@@ -229,8 +232,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return csvData;
         }
 
-        public virtual bool VerifyConditionFromQuery(string line, ref string errorMessage)
+        public virtual bool VerifyConditionFromQuery(string line, ref LevelLogger logger)
         {
+            var verifyConditionLogger = logger.CreateLevelLogger();
             if (!String.IsNullOrEmpty(Query))
             {
                 if (Query.Contains(DefaultQueryDelimiterCharacter))
@@ -242,25 +246,25 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         string value = queryValues[1];
                         if (!String.IsNullOrEmpty(key) && !String.IsNullOrEmpty(value))
                         {
-                            var retrievedValue = GetFieldValue(line, key, ref errorMessage);
+                            var retrievedValue = GetFieldValue(line, key, ref verifyConditionLogger);
                             return value.ToLower().Equals(retrievedValue.ToLower());
                         }
                         else
                         {
-                            errorMessage += String.Format("The provided Query '{0}' was in wrong format. Either of the key or value was null or empty. Format should be 'key{1}value' ie 'Category{1}Summer'. " +
-                                                          "Key: {2}. Value: {3}. Line: {4}.", Query, DefaultQueryDelimiterCharacter, key, value, line);
+                            verifyConditionLogger.AddError("The Query was in wrong format. Either Key or value was null or empty", String.Format("The provided Query '{0}' was in wrong format. Either of the key or value was null or empty. Format should be 'key{1}value' ie 'Category{1}Summer'. " +
+                                                          "Key: {2}. Value: {3}. Line: {4}.", Query, DefaultQueryDelimiterCharacter, key, value, line));
                         }
                     }
                     else
                     {
-                        errorMessage += String.Format("The provided Query '{0}' was in wrong format. Format should be 'key{1}value' ie 'Category{1}Summer'. " +
-                                                      "Line: {2}. QueryValues.Length: {3}.", Query, DefaultQueryDelimiterCharacter, line, queryValues.Length);
+                        verifyConditionLogger.AddError("The Query was in wrong format.", String.Format("The provided Query '{0}' was in wrong format. Format should be 'key{1}value' ie 'Category{1}Summer'. " +
+                                                      "Line: {2}. QueryValues.Length: {3}.", Query, DefaultQueryDelimiterCharacter, line, queryValues.Length));
                     }
                 }
                 else
                 {
-                    errorMessage += String.Format("The provided Query '{0}' didn't contain a valid delimiter character. This character must be: '{1}'. Line: {2}.  he VerifyConditionFromQuery method failed because the Query was null or empty.",
-                        Query, DefaultQueryDelimiterCharacter, line);
+                    verifyConditionLogger.AddError("The Query didn't contain a valid delimiter character", String.Format("The provided Query '{0}' didn't contain a valid delimiter character. This character must be: '{1}'. Line: {2}.  he VerifyConditionFromQuery method failed because the Query was null or empty.",
+                        Query, DefaultQueryDelimiterCharacter, line));
                 }
                 return false;
             }
@@ -272,10 +276,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
         /// </summary>
         /// <param name="importRow"></param>
         /// <param name="fieldName"></param>
-        /// <param name="errorMessage"></param>
         /// <returns></returns>
-        public override string GetFieldValue(object importRow, string fieldName, ref string errorMessage)
+        public override string GetFieldValue(object importRow, string fieldName, ref LevelLogger logger)
         {
+            var getFieldValueLogger = logger.CreateLevelLogger();
             try
             {
                 if (importRow != null)
@@ -302,11 +306,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
                             if (count != HeaderColumns.Count())
                             {
-                                errorMessage +=
-                                    String.Format(
+                                getFieldValueLogger.AddError(CategoryConstants.NumberOfFieldsInRowWasDifferentFromNumberOfFieldsInHeader, String.Format(
                                         "The GetFieldValue method failed because the number of fields in row, was different from the number of fields in header. " +
                                         "ImportRow: {0}. fieldname: {1}. count: {2}. HeaderColumns.Count: {3}.",
-                                        GetImportRowDebugInfo(importRow), fieldName, count, HeaderColumns.Count());
+                                        GetImportRowDebugInfo(importRow), fieldName, count, HeaderColumns.Count()));
                                 return String.Empty;
                             }
                             if (HeaderColumns.ContainsKey(fieldName))
@@ -322,47 +325,42 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                 }
                                 else
                                 {
-                                    errorMessage +=
-                                        String.Format(
+                                    getFieldValueLogger.AddError(CategoryConstants.TheRetrievedIndexForTheColumnWasOutOfRange, String.Format(
                                             "The GetFieldValue method failed because the retrieved index for the column was out of range. ImportRow: {0}. fieldname: {1}. count: {2}. index: {3}.",
-                                            GetImportRowDebugInfo(importRow), fieldName, count, index);
+                                            GetImportRowDebugInfo(importRow), fieldName, count, index));
                                 }
                             }
                             else
                             {
-                                errorMessage +=
-                                    String.Format(
+                                getFieldValueLogger.AddError(CategoryConstants.TheFieldDoesNotExistInTheImportrow, String.Format(
                                         "The GetFieldValue method failed because the field does not exist in the importRow. fieldname: {0}. count: {1}.",
-                                        fieldName, count);
+                                        fieldName, count));
                             }
                         }
                         else
                         {
-                            errorMessage +=
-                                String.Format(
+                            getFieldValueLogger.AddError(CategoryConstants.FailedToCastToStringBecauseValueWasNull, String.Format(
                                     "The GetFieldValue method failed because the importRow was cast to a string, but it was null. ImportRow: {0}. fieldname: {1}.",
-                                    GetImportRowDebugInfo(importRow), fieldName);
+                                    GetImportRowDebugInfo(importRow), fieldName));
                         }
                     }
                     else
                     {
-                        errorMessage +=
-                            String.Format(
+                        getFieldValueLogger.AddError(CategoryConstants.TheFieldnameArgumentWasNullOrEmpty, String.Format(
                                 "The GetFieldValue method failed because the 'fieldName' argument was null or empty. FieldName: {0}. ImportRow: {1}.",
-                                fieldName, GetImportRowDebugInfo(importRow));
+                                fieldName, GetImportRowDebugInfo(importRow)));
                     }
                 }
                 else
                 {
-                    errorMessage +=
-                        String.Format(
+                    getFieldValueLogger.AddError(CategoryConstants.TheImportRowWasNull, String.Format(
                             "The GetFieldValue method failed because the Import Row was null. FieldName: {0}.",
-                            fieldName);
+                            fieldName));
                 }
             }
             catch (Exception ex)
             {
-                errorMessage += String.Format("The GetFieldValue method failed with an exception. ImportRow: {0}. FieldName: {1}. Exception: {2}.", GetImportRowDebugInfo(importRow), fieldName, ex);
+                getFieldValueLogger.AddError(CategoryConstants.GetFieldValueFailed, String.Format("The GetFieldValue method failed with an exception. ImportRow: {0}. FieldName: {1}. Exception: {2}.", GetImportRowDebugInfo(importRow), fieldName, ex));
             }
             return String.Empty;
         }
@@ -392,7 +390,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     }
                     catch (Exception ex)
                     {
-                        LogBuilder.Log("Error",String.Format("Reading the file failed with an exception. Exception: {0}.", ex));
+                        Logger.AddError("Error",String.Format("Reading the file failed with an exception. Exception: {0}.", ex));
                         if (streamreader != null)
                         {
                             streamreader.Close();
@@ -408,7 +406,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 else
                 {
-                    LogBuilder.Log("Error",
+                    Logger.AddError("Error",
                                    String.Format(
                                        "The DataSource filepath points to a file that doesnt exist. DataSource: '{0}'",
                                        DataSourceString));

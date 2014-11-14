@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Sitecore.Globalization;
-using Sitecore.SharedSource.DataSync.Log;
+using Sitecore.SharedSource.Logger.Log;
 using Sitecore.SharedSource.DataSync.Extensions;
 using Sitecore.Data.Items;
 using Sitecore.Data;
+using Sitecore.SharedSource.Logger.Log.Builder;
 using Sitecore.SharedSource.DataSync.Mappings.Properties;
 using Sitecore.SharedSource.DataSync.Mappings;
 using Sitecore.SharedSource.DataSync.Utility;
 using Sitecore.Collections;
 using System.IO;
-using Sitecore.Data.Fields;
 
 namespace Sitecore.SharedSource.DataSync.Providers
 {
@@ -37,10 +36,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
 		#region Constructor
 
-        public SitecoreDataMap(Database db, Item importItem, Logging logging)
-            : base(db, importItem, logging)
+        public SitecoreDataMap(Database db, Item importItem, LevelLogger logger)
+            : base(db, importItem, logger)
         {
-
             //deal with sitecore properties if any
             Item Props = GetItemByTemplate(importItem, Utility.Constants.PropertiesFolderID);
             if (Props.IsNotNull()) {
@@ -56,21 +54,21 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                 try {
                                     bp = (IBaseProperty)Sitecore.Reflection.ReflectionUtil.CreateObject(bm.HandlerAssembly, bm.HandlerClass, new object[] { child });
                                 } catch (FileNotFoundException fnfe) {
-                                    LogBuilder.Log("Error", string.Format("the property:{0} binary {1} specified could not be found", child.Name, bm.HandlerAssembly));
+                                    Logger.AddError("Error", string.Format("the property:{0} binary {1} specified could not be found", child.Name, bm.HandlerAssembly));
                                 }
                                 if (bp != null)
                                     PropertyDefinitions.Add(bp);
                                 else
-                                    LogBuilder.Log("Error", string.Format("the property: '{0}' class type {1} could not be instantiated", child.Name, bm.HandlerClass));
+                                    Logger.AddError("Error", string.Format("the property: '{0}' class type {1} could not be instantiated", child.Name, bm.HandlerClass));
                             } else {
-                                LogBuilder.Log("Error", string.Format("the property: '{0}' Handler Class {1} is not defined", child.Name, bm.HandlerClass));
+                                Logger.AddError("Error", string.Format("the property: '{0}' Handler Class {1} is not defined", child.Name, bm.HandlerClass));
                             }
                         } else {
-                            LogBuilder.Log("Error", string.Format("the property: '{0}' Handler Assembly {1} is not defined", child.Name, bm.HandlerAssembly));
+                            Logger.AddError("Error", string.Format("the property: '{0}' Handler Assembly {1} is not defined", child.Name, bm.HandlerAssembly));
                         }
                     }
                 } else {
-                    LogBuilder.Log("Warn", "there are no properties to import");
+                    Logger.AddError("Warn", "there are no properties to import");
                 }
             } 
 		}
@@ -89,13 +87,13 @@ namespace Sitecore.SharedSource.DataSync.Providers
             {
                 if (String.IsNullOrEmpty(DataSourceString))
                 {
-                    LogBuilder.Log("Error", "The DataSourceString was null or empty. Please provide a connectionstring for the Sitecore database.");
+                    Logger.AddError("Error", "The DataSourceString was null or empty. Please provide a connectionstring for the Sitecore database.");
                     return null;
                 }
                 var database = Configuration.Factory.GetDatabase(DataSourceString);
                 if (database == null)
                 {
-                    LogBuilder.Log("Error", string.Format("The retrieved database from connectionstring: '{0}' was not found. Please verify the database connection", DataSourceString));
+                    Logger.AddError("Error", string.Format("The retrieved database from connectionstring: '{0}' was not found. Please verify the database connection", DataSourceString));
                     return null;
                 }
                 return database.SelectItems(StringUtility.CleanXPath(Query));
@@ -122,11 +120,11 @@ namespace Sitecore.SharedSource.DataSync.Providers
 	    /// </summary>
 	    /// <param name="importRow"></param>
 	    /// <param name="fieldName"></param>
-	    /// <param name="errorMessage"></param>
 	    /// <returns></returns>
-	    public override string GetFieldValue(object importRow, string fieldName, ref string errorMessage)
-        {
-            Item importRowItem = importRow as Item;
+	    public override string GetFieldValue(object importRow, string fieldName, ref LevelLogger logger)
+	    {
+	        var getFieldValueLogger = logger.CreateLevelLogger();
+            var importRowItem = importRow as Item;
             if (importRowItem != null)
             {
                 if (!String.IsNullOrEmpty(fieldName))
@@ -151,18 +149,18 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     {
                         return importRowItem[fieldName];
                     }
-                    errorMessage += String.Format("The GetFieldValue method failed because the the 'fieldName' didn't result in any field on the item. ImportRow: {0}.", GetImportRowDebugInfo(importRow));
+                    getFieldValueLogger.AddError("The 'fieldName' didn't result in any field on the item", String.Format("The GetFieldValue method failed because the the 'fieldName' didn't result in any field on the item. ImportRow: {0}.", GetImportRowDebugInfo(importRow)));
                 }
                 else
                 {
-                    errorMessage += String.Format("The GetFieldValue method failed because the the 'fieldName' was null or empty. ImportRow: {0}.", GetImportRowDebugInfo(importRow));
+                    getFieldValueLogger.AddError(CategoryConstants.TheFieldnameArgumentWasNullOrEmpty, String.Format("The GetFieldValue method failed because the the 'fieldName' was null or empty. ImportRow: {0}.", GetImportRowDebugInfo(importRow)));
                 }
             }
             else
             {
-                errorMessage += String.Format(
+                getFieldValueLogger.AddError(CategoryConstants.TheImportRowWasNull, String.Format(
                                    "The GetFieldValue method failed because the Import Row was null. FieldName: {0}.",
-                                   fieldName);
+                                   fieldName));
             }
             return String.Empty;
         }

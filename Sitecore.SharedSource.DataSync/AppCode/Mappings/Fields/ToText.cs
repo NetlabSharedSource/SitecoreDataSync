@@ -8,6 +8,8 @@ using System.Web;
 using Sitecore.Data.Fields;
 using System.Data;
 using System.Collections;
+using Sitecore.SharedSource.Logger.Log;
+using Sitecore.SharedSource.Logger.Log.Builder;
 using Sitecore.SharedSource.DataSync.Providers;
 
 namespace Sitecore.SharedSource.DataSync.Mappings.Fields
@@ -70,35 +72,42 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
             return NewItemField;
         }
 
-        public virtual string FillField(BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField)
+        public virtual void FillField(BaseDataMap map, object importRow, ref Item newItem, string importValue, out bool updatedField, ref LevelLogger logger)
         {
+            var fillFieldLogger = logger.CreateLevelLogger();
             updatedField = false;
             //store the imported value as is
             if (IsRequired)
             {
                 if (String.IsNullOrEmpty(importValue))
                 {
-                    return String.Format("The Item '{0}' of template type: '{1}', field '{2}', but the imported value '{3}' was empty. This field must be provided when the field is required. The field was not updated.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue);
+                    fillFieldLogger.AddError(CategoryConstants.ImportedValueToFieldWasEmpty, String.Format("The Item '{0}' of template type: '{1}', field '{2}', but the imported value '{3}' was empty. This field must be provided when the field is required. The field was not updated.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
+                    return;
                 }
             }
             Field f = newItem.Fields[NewItemField];
             if (f != null)
             {
-// ReSharper disable RedundantCheckBeforeAssignment
                 if (f.Value != importValue)
-// ReSharper restore RedundantCheckBeforeAssignment
                 {
-                    newItem.Editing.BeginEdit();
+                    fillFieldLogger.AddInfo(CategoryConstants.UpdatedField, String.Format("Updated value in field from '{0}' to '{1}'", LimitText(f.Value), LimitText(importValue)));
                     f.Value = importValue;
                     updatedField = true;
-                    newItem.Editing.EndEdit();
                 }
             }
             if (IsRequired && f == null)
             {
-                return String.Format("The Item '{0}' of template type: '{1}' didn't contain a field with name '{2}'. This field must be present because the 'Is Required Field' is checked.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField);
+                fillFieldLogger.AddError(CategoryConstants.RequiredFieldNotFoundOnItem, String.Format("The Item '{0}' of template type: '{1}' didn't contain a field with name '{2}'. This field must be present because the 'Is Required Field' is checked.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField));
             }
-            return String.Empty;
+        }
+
+        private string LimitText(string text)
+        {
+            if(!String.IsNullOrEmpty(text) && text.Length > 200)
+            {
+                return text.Substring(0, 199) + " {...}";
+            }
+            return text;
         }
 
         #endregion Methods
