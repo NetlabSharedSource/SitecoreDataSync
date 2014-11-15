@@ -179,7 +179,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                     {
                         getImageAsMemoryLogger.AddError("GetImageAsStream failed", String.Format("The method GetImageAsStream failed with the following error: {0}. ImportRow: {1}.",
                                 errorMessage, map.GetImportRowDebugInfo(importRow)));
-                        DeleteMediaItemIfEmpty(ref newItem);
+                        DeleteMediaItemIfEmpty(ref newItem, ref getImageAltLogger);
                         return;
                     }
                     if (memoryStream == null && !IsRequired)
@@ -219,7 +219,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
             }
         }
 
-        private static void DeleteMediaItemIfEmpty(ref Item newItem)
+        private static void DeleteMediaItemIfEmpty(ref Item newItem, ref LevelLogger logger)
         {
             var mediaItem = (MediaItem)newItem;
             if (mediaItem != null)
@@ -228,6 +228,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                 {
                     newItem.Delete();
                     newItem = null;
+                    logger.IncrementCounter("DeletedEmptyMediaItem");
                 }
             }
         }
