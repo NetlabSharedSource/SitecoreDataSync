@@ -17,6 +17,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
         private const string OnlyWhenUpdatedTimestampItemId = "{AA659734-8B46-4E56-AD0F-7487A2173B87}";
         private const string OnlyOnceItemId = "{13FA8213-8D81-46EF-9676-1E76BD01D4EE}";
         private const string FieldNameBlog = "Blob";
+        private const string DefaultMediaType = ".jpeg";
 
         public static readonly Database MasterDB = Database.GetDatabase("master");
         public ID MediaItemId { get; set; }
@@ -137,6 +138,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                 {
                     fillFieldLogger.AddError("IsUpdateMediaItem failed with error", String.Format("The method IsUpdateMediaItem failed with the following error: {0}. ImportRow: {1}.",
                             errorMessage, map.GetImportRowDebugInfo(importRow)));
+                    DeleteMediaItemIfEmpty(map, ref newItem, ref fillFieldLogger);
                     return;
                 }
                 if (isUpdateMediaItem)
@@ -148,6 +150,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                         getImageAltLogger.AddError("GetImageAltText failed with error", String.Format(
                                 "The method GetImageAltText failed with the following error: {0}. ImportRow: {1}.",
                                 errorMessage, map.GetImportRowDebugInfo(importRow)));
+                        DeleteMediaItemIfEmpty(map, ref newItem, ref getImageAltLogger);
                         return;
                     }
                     var getOriginalLogger = fillFieldLogger.CreateLevelLogger();
@@ -157,6 +160,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                     {
                         getOriginalLogger.AddError("GetOriginalFileNameWithExtensio failed", String.Format("The method GetOriginalFileNameWithExtension failed with the following error: {0}. ImportRow: {1}.",
                                 errorMessage, map.GetImportRowDebugInfo(importRow)));
+                        DeleteMediaItemIfEmpty(map, ref newItem, ref getOriginalLogger);
                         return;
                     }
                     var getFileNameLogger = fillFieldLogger.CreateLevelLogger();
@@ -165,6 +169,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                     {
                         getFileNameLogger.AddError("GetFileName failed", String.Format("The method GetFileName failed with the following error: {0}. ImportRow: {1}.",
                                 errorMessage, map.GetImportRowDebugInfo(importRow)));
+                        DeleteMediaItemIfEmpty(map, ref newItem, ref getFileNameLogger);
                         return;
                     }
                     fileName = StringUtility.GetNewItemName(fileName, map.ItemNameMaxLength);
@@ -179,7 +184,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                     {
                         getImageAsMemoryLogger.AddError("GetImageAsStream failed", String.Format("The method GetImageAsStream failed with the following error: {0}. ImportRow: {1}.",
                                 errorMessage, map.GetImportRowDebugInfo(importRow)));
-                        DeleteMediaItemIfEmpty(ref newItem, ref getImageAltLogger);
+                        DeleteMediaItemIfEmpty(map, ref newItem, ref getImageAsMemoryLogger);
                         return;
                     }
                     if (memoryStream == null && !IsRequired)
@@ -194,7 +199,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                         }
                         else
                         {
-                            originalFileNameWithExtension = ".jpeg";
+                            originalFileNameWithExtension = DefaultMediaType;
                         }
                     }
 
@@ -219,13 +224,14 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
             }
         }
 
-        private static void DeleteMediaItemIfEmpty(ref Item newItem, ref LevelLogger logger)
+        private static void DeleteMediaItemIfEmpty(BaseDataMap map, ref Item newItem, ref LevelLogger logger)
         {
             var mediaItem = (MediaItem)newItem;
             if (mediaItem != null)
             {
                 if (!mediaItem.HasMediaStream(FieldNameBlog))
                 {
+                    logger.AddInfo("Deleted Empty MediaItem Without Blob", String.Format("The media doesn't contain any Blob value (no image). To prevent an empty Media Item without a blob to remain in the Media Library, the MediaItem was deleted. Item: {0}", map.GetItemDebugInfo(newItem)));
                     newItem.Delete();
                     newItem = null;
                     logger.IncrementCounter("DeletedEmptyMediaItem");
