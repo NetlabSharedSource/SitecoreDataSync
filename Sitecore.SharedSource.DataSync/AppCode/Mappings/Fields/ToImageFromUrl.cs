@@ -133,8 +133,9 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
             }
         }
 
-        public virtual MemoryStream GetImageAsMemoryStream(BaseDataMap map, object importRow, ref Item newItem, string importValue, ref LevelLogger logger)
+        public virtual MemoryStream GetImageAsMemoryStream(BaseDataMap map, object importRow, ref Item newItem, string importValue, ref LevelLogger logger, out string imageType)
         {
+            imageType = String.Empty;
             var getImageAsMemoryStreamLogger = logger.CreateLevelLogger();
             try
             {
@@ -144,6 +145,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                     getImageAsMemoryStreamLogger.AddError(CategoryConstants.TheImageRetrievedFromUrlWasNull, String.Format("The image retrieved from the url was null. Src: '{0}'", importValue));
                     return null;
                 }
+                imageType = ImageHandler.GetImageType(image);
                 
                 var memoryStream = ImageHandler.ImageToMemoryStream(image);
                 if (memoryStream == null)
@@ -214,8 +216,9 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                 {
                     return;
                 }
+                var imageType = "";
                 var getImageAsMemoryStreamLogger = fillFieldLogger.CreateLevelLogger("GetImageAsMemoryStream");
-                var memoryStream = GetImageAsMemoryStream(map, importRow, ref newItem, importValue, ref getImageAsMemoryStreamLogger);
+                var memoryStream = GetImageAsMemoryStream(map, importRow, ref newItem, importValue, ref getImageAsMemoryStreamLogger, out imageType);
                 if (getImageAsMemoryStreamLogger.HasErrors())
                 {
                     getImageAsMemoryStreamLogger.AddError(CategoryConstants.GetImageAsMemoryStreamFailed, String.Format("The method GetImageAsMemoryStream failed. ImportRow: {0}.", map.GetImportRowDebugInfo(importRow)));
@@ -225,6 +228,18 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                 {
                     return;
                 }
+                if (String.IsNullOrEmpty(originalFileNameWithExtension))
+                {
+                    if (!String.IsNullOrEmpty(imageType))
+                    {
+                        originalFileNameWithExtension = imageType;
+                    }
+                    else
+                    {
+                        originalFileNameWithExtension = ".jpeg";
+                    }                    
+                }
+                
                 var getMediaFolderLogger = fillFieldLogger.CreateLevelLogger("GetMediaFolderItem");
                 var mediaItemId = GetMediaFolderItem(map, importRow, ref newItem, ref getMediaFolderLogger);
                 if (mediaItemId == (ID)null)

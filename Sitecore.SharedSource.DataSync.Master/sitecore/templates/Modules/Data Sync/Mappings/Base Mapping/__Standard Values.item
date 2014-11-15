@@ -10,13 +10,6 @@ template: {E77D1202-F816-49A4-A10F-0835E7E8E633}
 templatekey: Base Mapping
 
 ----field----
-field: {A60FFA21-D63F-4BCF-83A8-F484BF8A9715}
-name: Handler Class
-key: handler class
-content-length: 0
-
-
-----field----
 field: {7F4DF09B-961B-46F4-9E05-5423841D1F6A}
 name: Handler Assembly
 key: handler assembly
@@ -40,7 +33,7 @@ content-length: 3
 ----version----
 language: en
 version: 1
-revision: 93396025-c4a2-47a3-9b29-2162630539aa
+revision: 94f15809-8b52-4c81-8a5d-079969a9827a
 
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
@@ -69,21 +62,21 @@ name: __Revision
 key: __revision
 content-length: 36
 
-93396025-c4a2-47a3-9b29-2162630539aa
+94f15809-8b52-4c81-8a5d-079969a9827a
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20130919T122145:635151901059512937
+20141113T090424:635514662649344352
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
 key: __updated by
-content-length: 20
+content-length: 14
 
-sitecore\netlabadmin
+sitecore\admin
 ----field----
 field: {001DD393-96C5-490B-924A-B0F25CD9EFD8}
 name: __Lock

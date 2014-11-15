@@ -10,6 +10,34 @@ template: {8A8CA290-C823-4607-A1A4-FAE16722158B}
 templatekey: Base Import Map
 
 ----field----
+field: {5ED470AC-5E33-4BC1-B1BD-D11FB0ECE10C}
+name: Log Class
+key: log class
+content-length: 47
+
+Sitecore.SharedSource.Logger.Log.Builder.Logger
+----field----
+field: {B5B596EE-E210-4970-AA52-5EF8D6E95B00}
+name: Log Assembly
+key: log assembly
+content-length: 28
+
+Sitecore.SharedSource.Logger
+----field----
+field: {74BF850C-8D07-41C9-95E5-CFB8E044FAE1}
+name: OutputHandler Class
+key: outputhandler class
+content-length: 59
+
+Sitecore.SharedSource.Logger.Log.Output.OutputHandlerToText
+----field----
+field: {4D7E7C3B-7F1D-4CAA-B5F0-7EF8CFEABFC3}
+name: OutputHandler Assembly
+key: outputhandler assembly
+content-length: 28
+
+Sitecore.SharedSource.Logger
+----field----
 field: {80899474-74EB-409C-8C1B-DC0863AC45E4}
 name: Item Name Max Length
 key: item name max length
@@ -40,7 +68,7 @@ content-length: 3
 ----version----
 language: en
 version: 1
-revision: a220ebdb-728d-4639-a471-1a0b23b8a721
+revision: 7a7193bb-9c0b-4575-b44f-096912d1621e
 
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
@@ -69,14 +97,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-a220ebdb-728d-4639-a471-1a0b23b8a721
+7a7193bb-9c0b-4575-b44f-096912d1621e
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20130920T102931:635152697718891665
+20141113T090650:635514664100457351
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
@@ -84,3 +112,10 @@ key: __updated by
 content-length: 14
 
 sitecore\admin
+----field----
+field: {001DD393-96C5-490B-924A-B0F25CD9EFD8}
+name: __Lock
+key: __lock
+content-length: 5
+
+<r />

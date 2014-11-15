@@ -21,7 +21,7 @@
     <RootNamespace>Sitecore.SharedSource.Logger.Master</RootNamespace>
     <EnableCodeGeneration>false</EnableCodeGeneration>
     <SitecoreDatabase>master</SitecoreDatabase>
-    <AssemblyStatus>Exclude</AssemblyStatus>
+    <AssemblyStatus>Include</AssemblyStatus>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,7 +53,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ExcludedAssemblies Include="Sitecore.SharedSource.Logger" />
+    <ExcludedAssemblies Include="Sitecore.SharedSource.Logger.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\HedgehogDevelopment\SitecoreProject\v9.0\HedgehogDevelopment.SitecoreProject.targets" />
 </Project>

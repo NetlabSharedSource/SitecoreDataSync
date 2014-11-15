@@ -22,6 +22,9 @@
     <AssemblyName>Sitecore.SharedSource.DataSync.Examples.Master</AssemblyName>
     <Name>Sitecore.SharedSource.DataSync.Examples.Master</Name>
     <RootNamespace>Sitecore.SharedSource.DataSync.Examples.Master</RootNamespace>
+    <EnableCodeGeneration>false</EnableCodeGeneration>
+    <SitecoreDatabase>master</SitecoreDatabase>
+    <AssemblyStatus>Include</AssemblyStatus>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

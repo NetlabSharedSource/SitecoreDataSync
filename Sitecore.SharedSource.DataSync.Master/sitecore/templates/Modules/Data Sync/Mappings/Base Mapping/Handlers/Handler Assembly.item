@@ -1,10 +1,10 @@
 ----item----
 version: 1
-id: {AE26870B-FD06-4703-AD42-3B18256C1C3F}
+id: {7F4DF09B-961B-46F4-9E05-5423841D1F6A}
 database: master
-path: /sitecore/templates/Modules/Data Sync/Providers/Base Import Map/Notification/Mail Recipients
-parent: {40BEDFB8-AACC-4E07-87BE-C668B40E483C}
-name: Mail Recipients
+path: /sitecore/templates/Modules/Data Sync/Mappings/Base Mapping/Handlers/Handler Assembly
+parent: {92D89175-88F7-47F7-A229-8287EB147908}
+name: Handler Assembly
 master: {00000000-0000-0000-0000-000000000000}
 template: {455A3E98-A627-4B40-8035-E683A0331AC7}
 templatekey: Template field
@@ -29,33 +29,47 @@ name: __Sortorder
 key: __sortorder
 content-length: 3
 
-100
+400
 ----version----
 language: en
 version: 1
-revision: 6ea60961-34b4-4d13-8afa-f8929d985baa
+revision: 8207cf67-686d-406a-aa4f-5d120fd77df4
 
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 14
+
+sitecore\admin
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
 key: __created
 content-length: 15
 
-20130920T102206
+20110704T095619
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
 ----field----
 field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
 name: __Revision
 key: __revision
 content-length: 36
 
-6ea60961-34b4-4d13-8afa-f8929d985baa
+8207cf67-686d-406a-aa4f-5d120fd77df4
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20141113T090603:635514663636320804
+20141113T090709:635514664293248378
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

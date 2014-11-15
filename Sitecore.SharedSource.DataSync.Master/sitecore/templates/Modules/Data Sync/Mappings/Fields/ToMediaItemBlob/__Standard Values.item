@@ -1,75 +1,54 @@
 ----item----
 version: 1
-id: {E294E96A-70BD-4C22-94F8-6FA008FD8BBA}
+id: {7B7C0F23-1071-4F7F-89F5-863BD59BC539}
 database: master
-path: /sitecore/templates/Modules/Data Sync/Providers/CSV Import Map/__Standard Values
-parent: {9FAA5C4F-B9F3-4567-BACE-89C45D58344F}
+path: /sitecore/templates/Modules/Data Sync/Mappings/Fields/ToMediaItemBlob/__Standard Values
+parent: {0761BACB-58A3-4FC2-AAF0-F6261C6656A2}
 name: __Standard Values
 master: {00000000-0000-0000-0000-000000000000}
-template: {9FAA5C4F-B9F3-4567-BACE-89C45D58344F}
-templatekey: CSV Import Map
+template: {0761BACB-58A3-4FC2-AAF0-F6261C6656A2}
+templatekey: ToMediaItemBlob
 
 ----field----
-field: {38A04FA2-9CE9-4F93-8626-0149198F3598}
+field: {A60FFA21-D63F-4BCF-83A8-F484BF8A9715}
 name: Handler Class
 key: handler class
-content-length: 51
+content-length: 62
 
-Sitecore.SharedSource.DataSync.Providers.CSVDataMap
+Sitecore.SharedSource.DataSync.Mappings.Fields.ToMediaItemBlob
 ----field----
-field: {E9B6BCB6-A876-4875-AF42-FDA49D7D9AB3}
+field: {7F4DF09B-961B-46F4-9E05-5423841D1F6A}
 name: Handler Assembly
 key: handler assembly
 content-length: 30
 
 Sitecore.SharedSource.DataSync
-----field----
-field: {0C894AAB-962B-4A84-B923-CB24B05E60D2}
-name: __Ribbon
-key: __ribbon
-content-length: 38
-
-{53AAF982-8BB8-4D1B-B4DF-501BEC93DBFE}
 ----version----
 language: en
 version: 1
-revision: 7ed1ab91-7e2e-45b2-98d2-edf80a456f68
+revision: 29314979-9242-4d51-8359-dc1d37db1d70
 
-----field----
-field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
-name: __Owner
-key: __owner
-content-length: 14
-
-sitecore\admin
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
 key: __created
 content-length: 15
 
-20091007T111330
-----field----
-field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
-name: __Created by
-key: __created by
-content-length: 14
-
-sitecore\admin
+20110704T103557
 ----field----
 field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
 name: __Revision
 key: __revision
 content-length: 36
 
-7ed1ab91-7e2e-45b2-98d2-edf80a456f68
+29314979-9242-4d51-8359-dc1d37db1d70
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20131209T092000:635221776001955024
+20141114T235544:635516061441552882
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
@@ -80,7 +59,7 @@ sitecore\netlabadmin
 ----version----
 language: nb-NO
 version: 1
-revision: b3a4e82d-3330-4693-8f78-015b39c9aa8b
+revision: 60cb7d2a-76a8-4607-bc04-1509829241dc
 
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
@@ -95,7 +74,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20130916T230822
+20130919T122038
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -109,18 +88,18 @@ name: __Revision
 key: __revision
 content-length: 36
 
-b3a4e82d-3330-4693-8f78-015b39c9aa8b
+60cb7d2a-76a8-4607-bc04-1509829241dc
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20130919T121620:635151897804526763
+20140228T142930:635291945700211073
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
 key: __updated by
-content-length: 20
+content-length: 14
 
-sitecore\netlabadmin
+sitecore\admin

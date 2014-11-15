@@ -26,7 +26,7 @@ Sitecore.SharedSource.DataSync
 ----version----
 language: en
 version: 1
-revision: 4061eda2-b49a-45e5-a690-e7db37601521
+revision: 60787149-4a03-4a93-baf3-20f29ff47bc8
 
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
@@ -41,14 +41,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-4061eda2-b49a-45e5-a690-e7db37601521
+60787149-4a03-4a93-baf3-20f29ff47bc8
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20141030T125910:635502707503969479
+20141104T114151:635506981110855811
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

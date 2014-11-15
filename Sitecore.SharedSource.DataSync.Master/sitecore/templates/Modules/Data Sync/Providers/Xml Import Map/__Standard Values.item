@@ -30,13 +30,6 @@ key: __ribbon
 content-length: 38
 
 {53AAF982-8BB8-4D1B-B4DF-501BEC93DBFE}
-----field----
-field: {1172F251-DAD4-4EFB-A329-0C63500E4F1E}
-name: __Masters
-key: __masters
-content-length: 0
-
-
 ----version----
 language: en
 version: 1

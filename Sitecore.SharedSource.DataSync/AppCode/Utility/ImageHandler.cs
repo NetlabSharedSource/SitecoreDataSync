@@ -86,16 +86,16 @@ namespace Sitecore.SharedSource.DataSync.Utility
                     {
                         attachImageLogger.AddError(NewItemFieldIsNotDefinedForMediaitem, String.Format("NewItemField is not defined for mediaitem: {0}.",
                                                map.GetImportRowDebugInfo(importRow)));
-                        return true;
+                        return false;
                     }
+                }
+                if (!newItem.Editing.IsEditing)
+                {
+                    newItem.Editing.BeginEdit();
                 }
                 ImageField imageField = newItem.Fields[newItemField];
                 if (imageField.MediaID != imageItem.ID)
-                {
-                    if (!newItem.Editing.IsEditing)
-                    {
-                        newItem.Editing.BeginEdit();
-                    }
+                {                    
                     imageField.Clear();
                     imageField.MediaID = imageItem.ID;
                     if (!String.IsNullOrEmpty(height))
@@ -115,8 +115,8 @@ namespace Sitecore.SharedSource.DataSync.Utility
                     {
                         imageField.Alt = imageItem.DisplayName;
                     }
+                    return true;
                 }
-
             }
             return false;
         }
@@ -279,6 +279,26 @@ namespace Sitecore.SharedSource.DataSync.Utility
             var ms = new MemoryStream();
             imageIn.Save(ms, imageIn.RawFormat);
             return ms;
+        }
+
+        public static string GetImageType(Image image)
+        {
+            if (System.Drawing.Imaging.ImageFormat.Jpeg.Equals(image.RawFormat))
+            {
+                return ".jpeg";
+            }
+            else if (System.Drawing.Imaging.ImageFormat.Png.Equals(image.RawFormat))
+            {
+                return ".png";
+            }
+            else if (System.Drawing.Imaging.ImageFormat.Gif.Equals(image.RawFormat))
+            {
+                return ".gif";
+            }
+            else
+            {
+                return ".jpeg";
+            }
         }
     }
 }

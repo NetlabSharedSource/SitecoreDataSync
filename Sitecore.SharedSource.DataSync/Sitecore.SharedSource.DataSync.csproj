@@ -49,11 +49,6 @@
       <HintPath>..\Resources\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Sitecore.SharedSource.Logger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Website\bin\Sitecore.SharedSource.Logger.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -81,7 +76,9 @@
     <Compile Include="AppCode\Mappings\Fields\ToGuidListMatchOnField.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToImageFromFile.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToImageFromImgTag.cs" />
+    <Compile Include="AppCode\Mappings\Fields\ToImageFieldFromImageLibrary.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToImageFromUrl.cs" />
+    <Compile Include="AppCode\Mappings\Fields\ToMediaItemBlob.cs" />
     <Compile Include="AppCode\Providers\CSVDataMap.cs" />
     <Compile Include="AppCode\Shell\Commands\FromFileDataSyncWizardCommand.cs" />
     <Compile Include="AppCode\Shell\Commands\DataSyncWizardCommand.cs" />
@@ -143,6 +140,13 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sitecore.SharedSource.Logger\Sitecore.SharedSource.Logger.csproj">
+      <Project>{45011cf6-2e2b-455c-b217-ce8767c9a156}</Project>
+      <Name>Sitecore.SharedSource.Logger</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

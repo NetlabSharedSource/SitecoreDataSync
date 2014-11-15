@@ -1,10 +1,10 @@
 ----item----
 version: 1
-id: {38A04FA2-9CE9-4F93-8626-0149198F3598}
+id: {E9B6BCB6-A876-4875-AF42-FDA49D7D9AB3}
 database: master
-path: /sitecore/templates/Modules/Data Sync/Providers/Base Import Map/Handler/Handler Class
+path: /sitecore/templates/Modules/Data Sync/Providers/Base Import Map/Handlers/Handler Assembly
 parent: {C030CDBD-71B7-4BAE-A05E-398C833EB9F6}
-name: Handler Class
+name: Handler Assembly
 master: {00000000-0000-0000-0000-000000000000}
 template: {455A3E98-A627-4B40-8035-E683A0331AC7}
 templatekey: Template field
@@ -29,11 +29,11 @@ name: __Sortorder
 key: __sortorder
 content-length: 3
 
-100
+200
 ----version----
 language: en
 version: 1
-revision: d6cf27f6-ff67-499e-82ab-ffcc1aed45c5
+revision: 698eaf51-aac3-474b-9490-39627e1ad0d4
 
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
@@ -62,18 +62,18 @@ name: __Revision
 key: __revision
 content-length: 36
 
-d6cf27f6-ff67-499e-82ab-ffcc1aed45c5
+698eaf51-aac3-474b-9490-39627e1ad0d4
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20131003T120224:635163985448240127
+20141113T090601:635514663612229426
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
 key: __updated by
-content-length: 20
+content-length: 14
 
-sitecore\netlabadmin
+sitecore\admin

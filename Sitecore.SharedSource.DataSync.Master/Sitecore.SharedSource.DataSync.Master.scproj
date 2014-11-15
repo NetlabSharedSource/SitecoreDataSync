@@ -37,7 +37,7 @@
     <InstallSitecoreConnector>True</InstallSitecoreConnector>
     <PackageAuthor>Netlab AS</PackageAuthor>
     <PackagePublisher>Netlab AS</PackagePublisher>
-    <PackageVersion>1.4.0</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <PackageReadme>Before installating the package:
 1. Backup your databases
 2. The package will install: an assembly, a config file, some shell commands, wizards and editor, a few icons in images.
@@ -74,7 +74,7 @@ Post installation instructions:
 1. Make sure your Sitecore installation has SMTP server settings configured. If not go to App_Config/include/Sitecore.SharedSource.DataSync.config file and enable the settings.
 2. Log in to Sitecore, go to system/Modules/DataSync and start creating your sync job.
 </PackageReadme>
-    <PackageVersion>1.4.0</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <SitecoreAssemblyPath>../../../Website/bin</SitecoreAssemblyPath>
   </PropertyGroup>
   <ItemGroup>
@@ -134,6 +134,26 @@ Post installation instructions:
       <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings.item">
+      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateMediaItemStrategies.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>DeployOnce</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateMediaItemStrategies\Always Update.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>DeployOnce</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateMediaItemStrategies\Only Once.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>DeployOnce</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateMediaItemStrategies\Only When Updated TimeStamp.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>DeployOnce</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Tasks.item">
       <Icon>/~/icon/People/16x16/alarmclock.png.aspx</Icon>
@@ -429,21 +449,21 @@ Post installation instructions:
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Base Mapping\Handler.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Base Mapping\Handlers.item">
       <Icon>/temp/IconCache/imaging/32x32/circle.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Base Mapping\Handler\Handler Assembly.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Base Mapping\Handlers\Handler Assembly.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Base Mapping\Handler\Handler Class.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Base Mapping\Handlers\Handler Class.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
@@ -529,6 +549,34 @@ Post installation instructions:
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFieldFromMediaLibrary.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFieldFromMediaLibrary\__Standard Values.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFieldFromMediaLibrary\Media Settings.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFieldFromMediaLibrary\Media Settings\GetImageAltTextIfNotProvidedFromWhatField.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFieldFromMediaLibrary\Media Settings\IdentifyMediaItemByWhatFieldName.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFieldFromMediaLibrary\Media Settings\MediaLibraryPath.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFieldFromMediaLibrary\Media Settings\ReplaceIfExist.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromFile.item">
       <Icon>/temp/IconCache/Applications/16x16/photo_scenery.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
@@ -596,6 +644,42 @@ Post installation instructions:
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromUrl\Media Settings\ReplaceIfExist.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\__Standard Values.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings\GetFileNameFromWhatField.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings\GetImageAltTextIfNotProvidedFromWhatField.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings\GetOriginalFileNameWithExtensionFromWhatField.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings\GetTimeStampIdentifierFromWhatField.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings\ReplaceIfExist.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings\UpdateMediaItemStrategy.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
@@ -774,26 +858,42 @@ Post installation instructions:
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handler.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handlers.item">
       <Icon>/temp/IconCache/imaging/32x32/circle.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handler\Handler Assembly.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handlers\Handler Assembly.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handler\Handler Class.item">
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handlers\Handler Class.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handlers\Log Assembly.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handlers\Log Class.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handlers\OutputHandler Assembly.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Handlers\OutputHandler Class.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Import Information.item">
       <Icon>/temp/IconCache/imaging/32x32/circle.png</Icon>
@@ -998,6 +1098,10 @@ Post installation instructions:
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Item Template And Type\Do Not Change Template.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Item Template And Type\Pull Item Type from What Field.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
@@ -1194,6 +1298,46 @@ Post installation instructions:
       <ExcludeItemFrom>
       </ExcludeItemFrom>
     </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Standard Values.item">
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Standard Values\Sections.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Standard Values\Sections\DataSync.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Standard Values\Sections\DataSync\DataSync.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Standard Values\Sections\DataSync\DataSync\__DataSyncKey.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Standard Values\Sections\DataSync\DataSync\__DataSyncLogging.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Standard Values\Sections\DataSync\DataSync\__DataSyncTimeStamp.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\System.item">
+      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\System\Templates.item">
+      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\System\Templates\Standard template.item">
+      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
+    </SitecoreItem>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sitecore.SharedSource.DataSync\Sitecore.SharedSource.DataSync.csproj">
@@ -1202,12 +1346,15 @@ Post installation instructions:
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ExcludedAssemblies Include="Sitecore.SharedSource.DataSync.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <BundledProject Include="..\Sitecore.SharedSource.DataSync.Core\Sitecore.SharedSource.DataSync.Core.scproj">
       <ProjectId>{5db5c53a-1844-469b-a951-77cc54512f16}</ProjectId>
     </BundledProject>
-  </ItemGroup>
-  <ItemGroup>
-    <ExcludedAssemblies Include="Sitecore.SharedSource.DataSync.dll" />
+    <BundledProject Include="..\Sitecore.SharedSource.Logger.Master\Sitecore.SharedSource.Logger.Master.scproj">
+      <ProjectId>{e93aa90a-4256-4ecf-b793-b01c18f55cb4}</ProjectId>
+    </BundledProject>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\HedgehogDevelopment\SitecoreProject\v9.0\HedgehogDevelopment.SitecoreProject.targets" />
 </Project>
