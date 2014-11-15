@@ -1,10 +1,10 @@
 ----item----
 version: 1
-id: {7005565A-4E6E-4062-B362-B2CBE051A85F}
+id: {5ED470AC-5E33-4BC1-B1BD-D11FB0ECE10C}
 database: master
-path: /sitecore/templates/Modules/Data Sync/Mappings/Fields/ToMediaItemBlob/Media Settings/ReplaceIfExist
-parent: {5CB0D5C8-0048-4C5D-84E4-AE18A29E1F46}
-name: ReplaceIfExist
+path: /sitecore/templates/Modules/Data Sync/Providers/Base Import Map/Handlers/Log Class
+parent: {C030CDBD-71B7-4BAE-A05E-398C833EB9F6}
+name: Log Class
 master: {00000000-0000-0000-0000-000000000000}
 template: {455A3E98-A627-4B40-8035-E683A0331AC7}
 templatekey: Template field
@@ -13,9 +13,9 @@ templatekey: Template field
 field: {AB162CC0-DC80-4ABF-8871-998EE5D7BA32}
 name: Type
 key: type
-content-length: 8
+content-length: 16
 
-Checkbox
+Single-Line Text
 ----field----
 field: {BE351A73-FCB0-4213-93FA-C302D8AB4F51}
 name: Shared
@@ -29,11 +29,11 @@ name: __Sortorder
 key: __sortorder
 content-length: 3
 
-200
+300
 ----version----
 language: en
 version: 1
-revision: 2a502c8b-1ff2-41b6-95fa-6fe12a714fe9
+revision: ef6c869c-22d4-489d-a865-002c7f659772
 
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
@@ -41,21 +41,21 @@ name: __Created
 key: __created
 content-length: 15
 
-20140228T143010
+20141113T090548
 ----field----
 field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
 name: __Revision
 key: __revision
 content-length: 36
 
-2a502c8b-1ff2-41b6-95fa-6fe12a714fe9
+ef6c869c-22d4-489d-a865-002c7f659772
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20141106T155225:635508859457221078
+20141113T090601:635514663612839461
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

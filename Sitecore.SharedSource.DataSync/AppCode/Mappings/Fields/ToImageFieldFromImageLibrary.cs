@@ -13,12 +13,10 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
 {
     public class ToImageFieldFromImageLibrary : ToText
     {
-        private const string ReplaceIfExistFieldName = "ReplaceIfExist";
         private const string MediaLibraryPathFieldName = "MediaLibraryPath";
         private const string GetImageAltTextIfNotProvidedFromWhatFieldFieldName = "GetImageAltTextIfNotProvidedFromWhatField";
         private const string IdentifyMediaItemByWhatFieldFieldName = "IdentifyMediaItemByWhatFieldName";
         
-        public bool IsReplaceIfExist{ get; set; }
         private ID MediaItemId { get; set; }
         private string GetImageAltTextIfNotProvidedFromWhatField { get; set; }
         private string IdentifyMediaItemByWhatFieldName { get; set; }
@@ -26,9 +24,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
 
         public ToImageFieldFromImageLibrary(Item i)
             : base(i)
-        {
-            IsReplaceIfExist = i[ReplaceIfExistFieldName] == "1";
-            
+        {            
             MediaItemId = null;
             if (!string.IsNullOrEmpty(i[MediaLibraryPathFieldName]))
             {

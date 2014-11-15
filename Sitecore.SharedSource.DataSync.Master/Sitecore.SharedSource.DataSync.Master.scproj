@@ -573,10 +573,6 @@ Post installation instructions:
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFieldFromMediaLibrary\Media Settings\ReplaceIfExist.item">
-      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>AlwaysUpdate</ItemDeployment>
-    </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToImageFromFile.item">
       <Icon>/temp/IconCache/Applications/16x16/photo_scenery.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
@@ -672,10 +668,6 @@ Post installation instructions:
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings\GetTimeStampIdentifierFromWhatField.item">
-      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>AlwaysUpdate</ItemDeployment>
-    </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Mappings\Fields\ToMediaItemBlob\Media Settings\ReplaceIfExist.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
