@@ -125,12 +125,8 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
             var fillFieldLogger = logger.CreateLevelLogger();
             try
             {
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
-                
                 updatedField = false;
                 string errorMessage = String.Empty;
-
                 string newTimeStamp;
                 var isUpdateMediaItemLogger = fillFieldLogger.CreateLevelLogger();
                 var isUpdateMediaItem = IsUpdateMediaItem(map, importRow, ref newItem, importValue, ref isUpdateMediaItemLogger, out newTimeStamp);

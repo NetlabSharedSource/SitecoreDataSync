@@ -32,6 +32,11 @@ namespace Sitecore.SharedSource.DataSync.Providers
         private const int DefaultSleepPeriodToRerunSqlExceptionInGetItemsByKey = 2000;
         private bool useFastQuery = true;
         protected const string FieldNameData = "Data";
+        public const string AlwaysItemId = "{C10CF05B-7987-435C-A173-841BEA7E57A6}";
+        public const string OnInfosAndErrorsItemId = "{A0DA4521-DB88-4857-93B9-AA18F6648C14}";
+        public const string OnErrorsItemId = "{1F8AF105-FE1A-4A29-9644-11BC3E22676B}";
+        public const string NeverItemId = "{6D970175-2A58-4A48-AA2F-091DC458A899}";
+
 
         #region Properties
 
@@ -496,6 +501,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
         }
 
+        public string ItemLoggingStrategy
+        {
+            get;
+            set;
+        }
+
         public Item ImportItem { get; set; }
 
         #endregion Properties
@@ -655,6 +666,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
             }
             IsDoNotLogProgressStatusMessagesInSitecoreLog = importItem["Do Not Log Progress Status Messages In Sitecore Log"] == "1";
+
+            ItemLoggingStrategy = importItem["Item Logging"];
 
             //start handling fields
             Item fields = GetItemByTemplate(importItem, Utility.Constants.FieldsFolderID);
@@ -1489,11 +1502,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
             catch (Exception ex)
             {
-                //LogBuilder.Log("Error",
-                //               String.Format(
-                //                   "An exception occured in Process method in foreach (object importRow in importItems). The processing of the importRow was aborted. ImportRow: '{0}'. Exception: {1}",
-                //                   GetImportRowDebugInfo(importRow), GetExceptionDebugInfo(ex)));
-                //LogBuilder.FailureItems += 1;
                 importRowLogger.AddError("Exception occured in Process method", String.Format(
                                    "An exception occured in Process method in foreach (object importRow in importItems). The processing of the importRow was aborted. ImportRow: '{0}'. Exception: {1}",
                                    GetImportRowDebugInfo(importRow), GetExceptionDebugInfo(ex)));
@@ -1505,13 +1513,41 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return true;
         }
 
-        private static void UpdateLoggingField(Item item, LevelLogger importRowLogger)
+        private void UpdateLoggingField(Item item, LevelLogger importRowLogger)
         {
-            item.Editing.BeginEdit();
-            var outputHandler = new OutputHandlerToText(importRowLogger);
-            var log = outputHandler.Export();
-            item[Utility.Constants.FieldNameDataSyncLogging] = log;
-            item.Editing.EndEdit();
+            switch (ItemLoggingStrategy)
+            {
+                case AlwaysItemId:
+                    item.Editing.BeginEdit();
+                    var outputHandler = new OutputHandlerToText(importRowLogger);
+                    var log = outputHandler.Export();
+                    item[Utility.Constants.FieldNameDataSyncLogging] = log;
+                    item.Editing.EndEdit();
+                    break;
+                case OnInfosAndErrorsItemId:
+                    if (importRowLogger.HasErrorsOrInfos())
+                    {
+                        item.Editing.BeginEdit();
+                        outputHandler = new OutputHandlerToText(importRowLogger);
+                        log = outputHandler.Export();
+                        item[Utility.Constants.FieldNameDataSyncLogging] = log;
+                        item.Editing.EndEdit();
+                    }
+                    break;
+                case NeverItemId:
+                    break;
+                case OnErrorsItemId:
+                default:
+                    if (importRowLogger.HasErrors())
+                    {
+                        item.Editing.BeginEdit();
+                        outputHandler = new OutputHandlerToText(importRowLogger);
+                        log = outputHandler.Export(new[]{LogLine.LogType.Error});
+                        item[Utility.Constants.FieldNameDataSyncLogging] = log;
+                        item.Editing.EndEdit();
+                    }
+                    break;
+            }
         }
 
         public virtual List<Item> GetExistingItemsToSyncByKey(Item rootItem, Item currentParent, string toWhatField, string keyValue, ref LevelLogger logger)
