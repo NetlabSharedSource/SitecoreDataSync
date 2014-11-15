@@ -15,6 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.SharedSource.Logge
 EndProject
 Project("{CAA73BB0-EF22-4D79-A57E-DF67B3BA9C80}") = "Sitecore.SharedSource.Logger.Master", "Sitecore.SharedSource.Logger.Master\Sitecore.SharedSource.Logger.Master.scproj", "{E93AA90A-4256-4ECF-B793-B01C18F55CB4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5ED63770-F916-4231-928D-BDCB8C7AB0B3}"
+	ProjectSection(SolutionItems) = preProject
+		Release\Sitecore.SharedSource.DataSync.update = Release\Sitecore.SharedSource.DataSync.update
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
