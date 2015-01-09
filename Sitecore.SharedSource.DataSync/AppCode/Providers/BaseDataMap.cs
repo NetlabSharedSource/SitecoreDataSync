@@ -76,9 +76,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
 			}
 		}
 
-        private Dictionary<string, TemplateItem> _toWhatTemplates;
+        private Dictionary<string, CustomItemBase> _toWhatTemplates;
 
-        public Dictionary<string, TemplateItem> ToWhatTemplates
+        public Dictionary<string, CustomItemBase> ToWhatTemplates
         {
             get { return _toWhatTemplates; }
             set { _toWhatTemplates = value; }
@@ -560,7 +560,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
 
             // Initialize the type and template mapping
-            ToWhatTemplates = new Dictionary<string, TemplateItem>();
+            ToWhatTemplates = new Dictionary<string, CustomItemBase>();
             Item templatesFolderItem = importItem.Axes.SelectSingleItem(String.Format("./*[@@tid='{0}']", Utility.Constants.TemplateID));
             if (templatesFolderItem != null)
             {
@@ -601,7 +601,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
             if (FolderByName || FolderByDate) {
 				//setup a default type to an ordinary folder
-                Sitecore.Data.Items.TemplateItem FolderItem = SitecoreDB.Templates[Utility.Constants.CommonFolderID];
+                TemplateItem FolderItem = SitecoreDB.Templates[Utility.Constants.CommonFolderID];
 				//if they specify a type then use that
 				string folderID = importItem.Fields["Folder Template"].Value;
 				if (!string.IsNullOrEmpty(folderID))
@@ -746,10 +746,18 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 else
                 {
-                    Logger.AddError("Error",
-                        String.Format(
-                            "The field 'To What Template' had an correct ID, but the templateItem was null. ID: {0}.",
-                            item.ID));
+                    BranchItem branchItem = SitecoreDB.Branches.GetMaster(new ID(toWhatTemplateId));
+                    if (branchItem != null)
+                    {
+                        ToWhatTemplates.Add(type, branchItem);
+                    }
+                    else
+                    {
+                        Logger.AddError("Error",
+                            String.Format(
+                                "The field 'To What Template' had an correct ID, but the templateItem or branchItem was null. ID: {0}.",
+                                item.ID));
+                    }
                 }
             }
             else
@@ -1143,7 +1151,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
         }
 
-        protected virtual List<Item> GetItemsByTemplate(Item parent, List<TemplateItem> templates, ref LevelLogger logger)
+        protected virtual List<Item> GetItemsByTemplate(Item parent, List<CustomItemBase> templates, ref LevelLogger logger)
         {
             var getItemsByLogger = logger.CreateLevelLogger();
             string pattern = "{0}//*[{1}]";
@@ -1153,7 +1161,25 @@ namespace Sitecore.SharedSource.DataSync.Providers
             for (int i = 0; i < templates.Count; i++)
             {
                 var template = templates[i];
-                tempPattern += String.Format(tidpattern, template.ID);
+                string templateId = String.Empty;
+                var templateItem = template as TemplateItem;
+                if (templateItem != null)
+                {
+                    templateId = template.ID.ToString();
+                }
+                else
+                {
+                    var branchItem = template as BranchItem;
+                    if (branchItem != null)
+                    {
+                        var branchMainItem = branchItem.InnerItem.Children[0];
+                        if (branchMainItem != null)
+                        {
+                            templateId = branchMainItem.TemplateID.ToString();
+                        }
+                    }
+                }
+                tempPattern += String.Format(tidpattern, templateId);
                 if (i != templates.Count - 1)
                     tempPattern += " or ";
             }
@@ -1708,11 +1734,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
             {
                 if (string.IsNullOrEmpty(itemName))
                 {
-                    //LogBuilder.Log("Error",
-                    //    String.Format(
-                    //        "The item name could not be parsed for importRow: {0}. Therefor the item could not be created.",
-                    //        GetImportRowDebugInfo(importRow)));
-                    //LogBuilder.FailureItems += 1;
                     createItemLogger.AddError("Item name could not be parsed", String.Format(
                             "The item name could not be parsed for importRow: {0}. Therefor the item could not be created.",
                             GetImportRowDebugInfo(importRow)));
@@ -1721,11 +1742,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 if (parent == null)
                 {
-                    //LogBuilder.Log("Error",
-                    //    String.Format(
-                    //        "The 'parent' parameter is null. Therefor the item could not be created. ImportRow: {0}.",
-                    //        GetImportRowDebugInfo(importRow)));
-                    //LogBuilder.FailureItems += 1;
                     createItemLogger.AddError("Parent is null", String.Format(
                             "The 'parent' parameter is null. Therefor the item could not be created. ImportRow: {0}.",
                             GetImportRowDebugInfo(importRow)));
@@ -1734,11 +1750,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 if (!ToWhatTemplates.Any())
                 {
-                    //LogBuilder.Log("Error",
-                    //    String.Format(
-                    //        "The 'Import To What Template' item is null. ImportRow: {0}. Therefor the item could not be created.",
-                    //        GetImportRowDebugInfo(importRow)));
-                    //LogBuilder.FailureItems += 1;
                     createItemLogger.AddError("The 'Import To What Template' item is null", String.Format(
                             "The 'Import To What Template' item is null. ImportRow: {0}. Therefor the item could not be created.",
                             GetImportRowDebugInfo(importRow)));
@@ -1747,13 +1758,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 string errorMessage = String.Empty;
                 var getToWhatLogger = createItemLogger.CreateLevelLogger();
-                TemplateItem toWhatTemplate = GetToWhatTemplateItem(importRow, ref getToWhatLogger);
+                CustomItemBase toWhatTemplate = GetToWhatTemplateItem(importRow, ref getToWhatLogger);
                 if (getToWhatLogger.HasErrors())
                 {
-                    //LogBuilder.Log("Error", String.Format(
-                    //        "The 'GetToWhatTemplateItem' method failed with an error. ImportRow: {0}. Therefor the item could not be created. {1}",
-                    //        GetImportRowDebugInfo(importRow), errorMessage));
-                    //LogBuilder.FailureItems += 1;
                     getToWhatLogger.AddError("The 'GetToWhatTemplateItem' failed", String.Format(
                             "The 'GetToWhatTemplateItem' method failed with an error. ImportRow: {0}. Therefor the item could not be created. {1}",
                             GetImportRowDebugInfo(importRow), errorMessage));
@@ -1763,35 +1770,36 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
                 if (toWhatTemplate == null)
                 {
-                    //Logger.FailureItems += 1;
                     logger.IncrementCounter(IncrementConstants.FailureItems);
                     return false;
                 }
 
                 using (new LanguageSwitcher(ImportToLanguageVersion))
                 {
-                    item = parent.Add(itemName, toWhatTemplate);
+                    var template = toWhatTemplate as TemplateItem;
+                    if (template != null)
+                    {
+                        var templateItem = template;
+                        item = parent.Add(itemName, templateItem);
+                    }
+                    var whatTemplate = toWhatTemplate as BranchItem; 
+                    if (whatTemplate != null)
+                    {
+                        var branchItem = whatTemplate;
+                        item = parent.Add(itemName, branchItem);
+                    }
                 }
                 if (item == null)
                 {
-                    //LogBuilder.Log("Error",
-                    //    String.Format("The new item created was null. ImportRow: {0}.", GetImportRowDebugInfo(importRow)));
-                    //LogBuilder.FailureItems += 1;
                     createItemLogger.AddError("Created item was null", String.Format("The new item created was null. ImportRow: {0}.", GetImportRowDebugInfo(importRow)));
                     logger.IncrementCounter(IncrementConstants.FailureItems);
                     return false;
                 }
-                //Logger.CreatedItems += 1;
                 logger.IncrementCounter("Created Items");
                 return true;
             }
             catch (Exception ex)
             {
-                //LogBuilder.Log("Error",
-                //    String.Format(
-                //        "An exception occured in CreateItem. Exception: {0}",
-                //        GetExceptionDebugInfo(ex)));
-                //LogBuilder.FailureItems += 1;
                 createItemLogger.AddError("Exception in CreateItem", String.Format(
                         "An exception occured in CreateItem. Exception: {0}",
                         GetExceptionDebugInfo(ex)));
@@ -1818,10 +1826,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
             return String.Empty;
         }
 
-        protected virtual TemplateItem GetToWhatTemplateItem(object importRow, ref LevelLogger logger)
+        protected virtual CustomItemBase GetToWhatTemplateItem(object importRow, ref LevelLogger logger)
         {
             var getToWhatLogger = logger.CreateLevelLogger();
-            TemplateItem toWhatTemplate = null;
+            CustomItemBase toWhatTemplate = null;
             var getItemTypeLogger = getToWhatLogger.CreateLevelLogger();
             var type = GetItemType(importRow, ItemTypeDataField, ref getItemTypeLogger);
             if (!String.IsNullOrEmpty(type))
@@ -1832,9 +1840,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 else
                 {
-                    //errorMessage += String.Format(
-                    //        "The 'type' field on the importrow was of a type that is not defined in the import. The type was '{0}'. ImportRow: {1}.",
-                    //        type, GetImportRowDebugInfo(importRow));
                     getToWhatLogger.AddError("The 'type' field on the importRow was not defined.", String.Format(
                             "The 'type' field on the importrow was of a type that is not defined in the import. The type was '{0}'. ImportRow: {1}.",
                             type, GetImportRowDebugInfo(importRow)));
@@ -1848,9 +1853,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 else
                 {
-                    //errorMessage += String.Format(
-                    //        "A default import template could not be found in the import. Please check that the field 'To What Template' is provided. ImportRow: {0}. Therefor the item could not be created.",
-                    //        GetImportRowDebugInfo(importRow));
                     getToWhatLogger.AddError("Default import template could not be found", String.Format(
                             "A default import template could not be found in the import. Please check that the field 'To What Template' is provided. ImportRow: {0}. Therefor the item could not be created.",
                             GetImportRowDebugInfo(importRow)));
@@ -1871,7 +1873,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     {
                         if (AddLanguageVersionIfNoneExists(item, ref logger))
                         {
-                            //LogBuilder.LanguageVersionAddedItems += 1;
                             updateItemLogger.IncrementCounter(IncrementConstants.LanguageVersionAdded);
                         }
 
@@ -1946,10 +1947,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             var toWhatTemplate = GetToWhatTemplateItem(importRow, ref getToWhatLogger);
                             if (getToWhatLogger.HasErrors())
                             {
-                                //LogBuilder.Log("Error", String.Format(
-                                //        "The 'GetToWhatTemplateItem' method failed with an error. ImportRow: {0}. Therefor it was not possible to determine wheether the item template should change. The Change template process was aborted as well as the rest of the update item process. {1}",
-                                //        GetImportRowDebugInfo(importRow), errorMessage));
-                                //LogBuilder.FailureItems += 1;
                                 getToWhatLogger.AddError("Failure in 'GetToWhatTemplateItem' method", String.Format(
                                         "The 'GetToWhatTemplateItem' method failed with an error. ImportRow: {0}. Therefor it was not possible to determine wheether the item template should change. The Change template process was aborted as well as the rest of the update item process. {1}",
                                         GetImportRowDebugInfo(importRow), errorMessage));
@@ -1958,20 +1955,24 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             }
                             if (toWhatTemplate != null)
                             {
-                                if (item.TemplateID != toWhatTemplate.ID)
+                                var templateItem = toWhatTemplate as TemplateItem;
+                                if (templateItem != null)
                                 {
-                                    string fromTemplateDebugInfo = GetTemplateDebugInfo(item.Template);
-                                    item.Editing.BeginEdit();
-                                    item.ChangeTemplate(toWhatTemplate);
-                                    updateItemLogger.AddInfo("Change Template", String.Format("Changed template from '{0}' to '{1}'.", fromTemplateDebugInfo, GetTemplateDebugInfo(item.Template)));
-                                    item.Editing.EndEdit();
-                                    //LogBuilder.ChangedTemplateItems += 1;
-                                    updateItemLogger.IncrementCounter(IncrementConstants.ChangedTemplate);
+                                    if (item.TemplateID != toWhatTemplate.ID)
+                                    {
+                                        string fromTemplateDebugInfo = GetTemplateDebugInfo(item.Template);
+                                        item.Editing.BeginEdit();
+                                        item.ChangeTemplate(templateItem);
+                                        updateItemLogger.AddInfo("Change Template",
+                                            String.Format("Changed template from '{0}' to '{1}'.", fromTemplateDebugInfo,
+                                                GetTemplateDebugInfo(item.Template)));
+                                        item.Editing.EndEdit();
+                                        updateItemLogger.IncrementCounter(IncrementConstants.ChangedTemplate);
+                                    }
                                 }
                             }
                             else
                             {
-                                //LogBuilder.FailureItems += 1;
                                 updateItemLogger.IncrementCounter(IncrementConstants.FailureItems);
                                 return false;
                             }
