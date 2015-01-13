@@ -1362,15 +1362,16 @@ Post installation instructions:
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ExcludedAssemblies Include="Sitecore.SharedSource.DataSync.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <BundledProject Include="..\Sitecore.SharedSource.DataSync.Core\Sitecore.SharedSource.DataSync.Core.scproj">
       <ProjectId>{5db5c53a-1844-469b-a951-77cc54512f16}</ProjectId>
     </BundledProject>
     <BundledProject Include="..\Sitecore.SharedSource.Logger.Master\Sitecore.SharedSource.Logger.Master.scproj">
       <ProjectId>{e93aa90a-4256-4ecf-b793-b01c18f55cb4}</ProjectId>
     </BundledProject>
+  </ItemGroup>
+  <ItemGroup>
+    <ExcludedAssemblies Include="Sitecore.SharedSource.DataSync.dll" />
+    <ExcludedAssemblies Include="Sitecore.SharedSource.Logger.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\HedgehogDevelopment\SitecoreProject\v9.0\HedgehogDevelopment.SitecoreProject.targets" />
 </Project>

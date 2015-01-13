@@ -1,0 +1,112 @@
+----item----
+version: 1
+id: {EF81D16A-B0BB-4F7D-A241-67B74775E163}
+database: master
+path: /sitecore/templates/Modules/Data Sync/Mappings/Fields/ToImageFieldFromMediaLibrary/__Standard Values
+parent: {194D8B23-793B-4DB2-8209-3FE49A89886E}
+name: __Standard Values
+master: {00000000-0000-0000-0000-000000000000}
+template: {194D8B23-793B-4DB2-8209-3FE49A89886E}
+templatekey: ToImageFieldFromMediaLibrary
+
+----field----
+field: {A60FFA21-D63F-4BCF-83A8-F484BF8A9715}
+name: Handler Class
+key: handler class
+content-length: 75
+
+Sitecore.SharedSource.DataSync.Mappings.Fields.ToImageFieldFromImageLibrary
+----field----
+field: {7F4DF09B-961B-46F4-9E05-5423841D1F6A}
+name: Handler Assembly
+key: handler assembly
+content-length: 30
+
+Sitecore.SharedSource.DataSync
+----field----
+field: {32F36EA5-0953-4DE5-8C8D-094C84C8FD28}
+name: IdentifyMediaItemByWhatFieldName
+key: identifymediaitembywhatfieldname
+content-length: 13
+
+__DataSyncKey
+----version----
+language: en
+version: 1
+revision: c748748d-4c4e-49ae-9356-18985f25517f
+
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20110704T103557
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+c748748d-4c4e-49ae-9356-18985f25517f
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20141114T231652:635516038128429448
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 20
+
+sitecore\netlabadmin
+----version----
+language: nb-NO
+version: 1
+revision: 60cb7d2a-76a8-4607-bc04-1509829241dc
+
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 20
+
+sitecore\netlabadmin
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20130919T122038
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 20
+
+sitecore\netlabadmin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+60cb7d2a-76a8-4607-bc04-1509829241dc
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20140228T142930:635291945700211073
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin

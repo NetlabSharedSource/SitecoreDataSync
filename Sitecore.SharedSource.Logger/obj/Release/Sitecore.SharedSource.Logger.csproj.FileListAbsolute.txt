@@ -1,0 +1,6 @@
+C:\Git\Netlab.Standalone.Modules\Sitecore.SharedSource.DataSync\Trunk\Sitecore.SharedSource.Logger\bin\Sitecore.SharedSource.Logger.dll.config
+C:\Git\Netlab.Standalone.Modules\Sitecore.SharedSource.DataSync\Trunk\Sitecore.SharedSource.Logger\bin\Sitecore.SharedSource.Logger.dll
+C:\Git\Netlab.Standalone.Modules\Sitecore.SharedSource.DataSync\Trunk\Sitecore.SharedSource.Logger\bin\Sitecore.SharedSource.Logger.pdb
+C:\Git\Netlab.Standalone.Modules\Sitecore.SharedSource.DataSync\Trunk\Sitecore.SharedSource.Logger\bin\Sitecore.Kernel.dll
+C:\Git\Netlab.Standalone.Modules\Sitecore.SharedSource.DataSync\Trunk\Sitecore.SharedSource.Logger\obj\Release\Sitecore.SharedSource.Logger.dll
+C:\Git\Netlab.Standalone.Modules\Sitecore.SharedSource.DataSync\Trunk\Sitecore.SharedSource.Logger\obj\Release\Sitecore.SharedSource.Logger.pdb

@@ -1,0 +1,17 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.svn
+/packages
+/Sitecore.SharedSource.DataSync/bin
+/Sitecore.SharedSource.DataSync/obj
+/Sitecore.SharedSource.DataSync/Sitecore.SharedSource.DataSync.csproj.user
+/Sitecore.SharedSource.DataSync.Core/obj/IconCache
+/Sitecore.SharedSource.DataSync.Master/bin
+/Sitecore.SharedSource.DataSync.Master/Debug
+/Sitecore.SharedSource.DataSync.Master/obj/IconCache
+/Sitecore.SharedSource.DataSync.Master/Package_Debug
+/Sitecore.SharedSource.DataSync.Master/Package_Release
+/Sitecore.SharedSource.DataSync.Master/Release
+/Sitecore.SharedSource.DataSync.Master/sitecore/system/Modules/Data Sync

@@ -1,0 +1,133 @@
+----item----
+version: 1
+id: {9E9D188C-8C0F-4547-8031-F78CDE5659EF}
+database: master
+path: /sitecore/templates/Modules/Data Sync/Standard Values/Sections/DataSync/DataSync
+parent: {3CCCF425-2495-4D98-BC00-B20965202B68}
+name: DataSync
+master: {00000000-0000-0000-0000-000000000000}
+template: {E269FBB5-3750-427A-9149-7AA950B49301}
+templatekey: Template section
+
+----field----
+field: {E2E2B75D-A2F7-4075-BDE2-D13306E9E350}
+name: Collapsed by Default
+key: collapsed by default
+content-length: 1
+
+1
+----field----
+field: {39C4902E-9960-4469-AEEF-E878E9C8218F}
+name: __Hidden
+key: __hidden
+content-length: 0
+
+
+----field----
+field: {06D5295C-ED2F-4A54-9BF2-26228D113318}
+name: __Icon
+key: __icon
+content-length: 31
+
+applications/32x32/exchange.png
+----field----
+field: {BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}
+name: __Sortorder
+key: __sortorder
+content-length: 7
+
+9999999
+----version----
+language: en
+version: 1
+revision: 7ab3ceee-e9a1-45f5-ae95-42a5280be6ce
+
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20141106T144125
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+7ab3ceee-e9a1-45f5-ae95-42a5280be6ce
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20141106T193848:635508995280439722
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {001DD393-96C5-490B-924A-B0F25CD9EFD8}
+name: __Lock
+key: __lock
+content-length: 5
+
+<r />
+----version----
+language: nb-NO
+version: 1
+revision: 9dd1e61f-c07f-4176-b5df-b0d12b09eaab
+
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 20
+
+sitecore\netlabadmin
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20141114T203117
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 20
+
+sitecore\netlabadmin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+9dd1e61f-c07f-4176-b5df-b0d12b09eaab
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20141114T203117:635515938776836862
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 20
+
+sitecore\netlabadmin

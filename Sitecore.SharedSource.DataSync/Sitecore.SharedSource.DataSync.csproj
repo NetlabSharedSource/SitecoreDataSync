@@ -144,7 +144,7 @@
     <ProjectReference Include="..\Sitecore.SharedSource.Logger\Sitecore.SharedSource.Logger.csproj">
       <Project>{45011cf6-2e2b-455c-b217-ce8767c9a156}</Project>
       <Name>Sitecore.SharedSource.Logger</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
