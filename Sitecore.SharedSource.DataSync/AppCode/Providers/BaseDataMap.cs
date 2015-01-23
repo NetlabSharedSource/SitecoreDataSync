@@ -16,8 +16,10 @@ using Sitecore.SharedSource.DataSync.Mappings;
 using Sitecore.SharedSource.DataSync.Utility;
 using Sitecore.Collections;
 using System.IO;
+using Sitecore.Configuration;
 using Sitecore.Globalization;
 using Sitecore.SecurityModel;
+using Sitecore.SharedSource.DataSync.Publishing;
 
 namespace Sitecore.SharedSource.DataSync.Providers
 {
@@ -36,7 +38,14 @@ namespace Sitecore.SharedSource.DataSync.Providers
         public const string OnInfosAndErrorsItemId = "{A0DA4521-DB88-4857-93B9-AA18F6648C14}";
         public const string OnErrorsItemId = "{1F8AF105-FE1A-4A29-9644-11BC3E22676B}";
         public const string NeverItemId = "{6D970175-2A58-4A48-AA2F-091DC458A899}";
-
+        private const string DoPublishFieldName = "Do Publish";
+        private const string PublishRootItemsFieldName = "Publish Root Items";
+        private const string PublishingSourceDatabaseFieldName = "Publishing Source Database";
+        private const string PublishingTargetDatabaseFieldName = "Publishing Target Database";
+        private const string PublishingModeFieldName = "Publishing Mode";
+        private const string PublishingModeSmart = "Smart";
+        private const string SitecoreBooleanTrue = "1";
+        private const char PipeSeparatorChar = '|';
 
         #region Properties
 
@@ -508,6 +517,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
         }
 
         public Item ImportItem { get; set; }
+        
+        public bool IsDoPublish { get; set; }
+        public List<Item> PublishRootItems = new List<Item>();
+        public string PublishingMode { get; set; }
+        public string PublishingSourceDatabase { get; set; }
+        public string PublishingTargetDatabase { get; set; }
 
         #endregion Properties
 
@@ -585,7 +600,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 AddTypeAndTemplate(importItem, "Default");
             }
 
-            DoNotChangeTemplate = importItem.Fields["Do Not Change Template"].Value == "1";
+            DoNotChangeTemplate = importItem.Fields["Do Not Change Template"].Value == SitecoreBooleanTrue;
 
             //more properties
             ItemNameDataField = importItem.Fields["Pull Item Name from What Fields"].Value;
@@ -665,7 +680,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     }
                 }
             }
-            IsDoNotLogProgressStatusMessagesInSitecoreLog = importItem["Do Not Log Progress Status Messages In Sitecore Log"] == "1";
+            IsDoNotLogProgressStatusMessagesInSitecoreLog = importItem["Do Not Log Progress Status Messages In Sitecore Log"] == SitecoreBooleanTrue;
 
             ItemLoggingStrategy = importItem["Item Logging"];
 
@@ -693,6 +708,23 @@ namespace Sitecore.SharedSource.DataSync.Providers
             else
             {
                 logger.AddInfo("Warning", "There is no 'Fields' folder");
+            }
+
+            IsDoPublish = importItem[DoPublishFieldName] == SitecoreBooleanTrue;
+            if (IsDoPublish && !String.IsNullOrEmpty(importItem[PublishRootItemsFieldName]))
+            {
+                PublishingMode = importItem[PublishingModeFieldName];
+                PublishingSourceDatabase = importItem[PublishingSourceDatabaseFieldName];
+                PublishingTargetDatabase = importItem[PublishingTargetDatabaseFieldName];
+
+                var publishRootItemIds = importItem[PublishRootItemsFieldName].Split(PipeSeparatorChar);
+                if (publishRootItemIds.Any())
+                {
+                    foreach (var id in publishRootItemIds)
+                    {
+                        PublishRootItems.Add(SitecoreDB.GetItem(new ID(id)));
+                    }
+                }
             }
         }
 
@@ -1329,8 +1361,85 @@ namespace Sitecore.SharedSource.DataSync.Providers
             {
                 DisableItemsNotPresentInImport(ref processLogger);
             }
+
+            // Starts Publish of Changed Items
+            if (IsDoPublish)
+            {
+                PublishChanges(ref processLogger);
+            }
+
             Diagnostics.Log.Info(String.Format("DataSync job - {0} ended.", importIdentifier), typeof(BaseDataMap));
             return Logger;
+        }
+
+        protected virtual void PublishChanges(ref LevelLogger logger)
+        {
+            var publishAndReIndexChangesLogger = logger.CreateLevelLogger();
+            try
+            {
+                if (String.IsNullOrEmpty(PublishingSourceDatabase))
+                {
+                    publishAndReIndexChangesLogger.AddError("Publishing Source Database missing",
+                        String.Format(
+                            "The Publishing Source Database was not provided. This is needed to publish changes."));
+                }
+                var sourceDb = Factory.GetDatabase(PublishingSourceDatabase);
+                if (sourceDb == null)
+                {
+                    publishAndReIndexChangesLogger.AddError("Publishing Source Database was null",
+                        String.Format(
+                            "The Publishing Source Database was null. The string provided was: '{0}'. This is needed to publish changes.",
+                            PublishingSourceDatabase));
+                }
+                if (String.IsNullOrEmpty(PublishingTargetDatabase))
+                {
+                    publishAndReIndexChangesLogger.AddError("Publishing Target Database missing",
+                        String.Format(
+                            "The Publishing Target Database was not provided. This is needed to publish changes."));
+                }
+                var targetDb = Factory.GetDatabase(PublishingTargetDatabase);
+                if (targetDb == null)
+                {
+                    publishAndReIndexChangesLogger.AddError("Publishing Target Database was null",
+                        String.Format(
+                            "The Publishing Target Database was null. The string provided was: '{0}'. This is needed to publish changes.",
+                            PublishingTargetDatabase));
+                }
+                if (publishAndReIndexChangesLogger.HasErrors())
+                {
+                    return;
+                }
+                if (PublishRootItems != null && PublishRootItems.Any())
+                {
+                    foreach (var rootItem in PublishRootItems)
+                    {
+                        try
+                        {
+                            switch (PublishingMode)
+                            {
+                                case PublishingModeSmart:
+                                    PublishingManager.PublishItemSmart(rootItem, sourceDb, targetDb, ImportToLanguageVersion, this, ref publishAndReIndexChangesLogger);
+                                    break;
+                                default:
+                                    PublishingManager.PublishFull(rootItem, sourceDb, targetDb, ImportToLanguageVersion, this, ref publishAndReIndexChangesLogger);
+                                    break;
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            publishAndReIndexChangesLogger.AddError("Publish exception for RootItem",
+                                String.Format(
+                                    "An exception occured during a publishing task of a rootitem. RootItem: {0}. Exception: {1}.",
+                                    GetItemDebugInfo(rootItem), GetExceptionDebugInfo(exception)));
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                publishAndReIndexChangesLogger.AddError("An exception occured in PublishChanges",
+                                String.Format("An exception occured during the PublishChanges method. Exception: {0}.", GetExceptionDebugInfo(exception)));
+            }
         }
 
         protected virtual bool ProcessImportRow(object importRow, ref LevelLogger logger)

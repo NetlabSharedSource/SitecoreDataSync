@@ -80,6 +80,7 @@
     <Compile Include="AppCode\Mappings\Fields\ToImageFromUrl.cs" />
     <Compile Include="AppCode\Mappings\Fields\ToMediaItemBlob.cs" />
     <Compile Include="AppCode\Providers\CSVDataMap.cs" />
+    <Compile Include="AppCode\Publishing\PublishingManager.cs" />
     <Compile Include="AppCode\Shell\Commands\FromFileDataSyncWizardCommand.cs" />
     <Compile Include="AppCode\Shell\Commands\DataSyncWizardCommand.cs" />
     <Compile Include="AppCode\Shell\Wizards\FromFileDataSyncWizard.cs" />

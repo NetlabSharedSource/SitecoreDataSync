@@ -136,44 +136,56 @@ Post installation instructions:
       </ExcludeItemFrom>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings.item">
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\Publishing Modes.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\Publishing Modes\Full.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\Publishing Modes\Smart.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateItemLoggingStrategies.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateItemLoggingStrategies\Always.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateItemLoggingStrategies\Never.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateItemLoggingStrategies\On Errors.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateItemLoggingStrategies\On Infos and Errors.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateMediaItemStrategies.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateMediaItemStrategies\Always Update.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateMediaItemStrategies\Only Once.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Modules\Data Sync\Settings\UpdateMediaItemStrategies\Only When Updated TimeStamp.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-      <ItemDeployment>DeployOnce</ItemDeployment>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Tasks.item">
       <Icon>/~/icon/People/16x16/alarmclock.png.aspx</Icon>
@@ -1180,6 +1192,30 @@ Post installation instructions:
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ExcludeItemFrom>
       </ExcludeItemFrom>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Publish Changed Items.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Publish Changed Items\Do Publish.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Publish Changed Items\Publish Root Items.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Publish Changed Items\Publishing Mode.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Publish Changed Items\Publishing Source Database.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\Base Import Map\Publish Changed Items\Publishing Target Database.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\Modules\Data Sync\Providers\CSV Import Map.item">
       <Icon>/temp/IconCache/WordProcessing/32x32/align_justify_d.png</Icon>
