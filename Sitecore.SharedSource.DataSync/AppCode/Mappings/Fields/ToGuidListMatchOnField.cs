@@ -96,7 +96,8 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                 }
                 else if (newItem[NewItemField] != importValue)
                 {
-                    newItem[NewItemField] = importValue;
+                    newItem[NewItemField] = importValue; 
+                    updatedField = true;
                 }
             }
             if (IsRequired && listParent == null)
