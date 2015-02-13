@@ -200,6 +200,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                     if (newItem[NewItemField] != importValue)
                     {
                         newItem[NewItemField] = importValue;
+                        updatedField = true;
                     }
 			    }
 			}
