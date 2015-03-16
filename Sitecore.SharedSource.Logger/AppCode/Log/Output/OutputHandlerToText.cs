@@ -28,6 +28,7 @@ namespace Sitecore.SharedSource.Logger.Log.Output
                 sb.AppendLine(countersStatus + "\r\n");
             }
             var logLines = GetLogLines(logTypes);
+
             if (!String.IsNullOrEmpty(logLines))
             {
                 sb.AppendLine(logLines + "\r\n");
