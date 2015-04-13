@@ -159,16 +159,6 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                         DeleteMediaItemIfEmpty(map, ref newItem, ref getOriginalLogger);
                         return;
                     }
-                    var getFileNameLogger = fillFieldLogger.CreateLevelLogger();
-                    var fileName = GetFileName(map, importRow, ref newItem, importValue, ref getFileNameLogger);
-                    if (getFileNameLogger.HasErrors())
-                    {
-                        getFileNameLogger.AddError("GetFileName failed", String.Format("The method GetFileName failed with the following error: {0}. ImportRow: {1}.",
-                                errorMessage, map.GetImportRowDebugInfo(importRow)));
-                        DeleteMediaItemIfEmpty(map, ref newItem, ref getFileNameLogger);
-                        return;
-                    }
-                    fileName = StringUtility.GetNewItemName(fileName, map.ItemNameMaxLength);
                     if (!IsRequired && String.IsNullOrEmpty(importValue))
                     {
                         return;
@@ -200,7 +190,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
                     }
 
                     var imageHelperLogger = fillFieldLogger.CreateLevelLogger();
-                    var imageItem = ImageHandler.ImageHelper(fileName, originalFileNameWithExtension, imageAltText,
+                    var imageItem = ImageHandler.ImageHelper(newItem.Name, originalFileNameWithExtension, imageAltText,
                                                              newItem.Parent.ID, true, memoryStream, ref imageHelperLogger);
                     if (imageItem != null)
                     {
