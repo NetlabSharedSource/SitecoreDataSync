@@ -139,9 +139,9 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                             var keys = importValue.Split(new[] {MultiListDelimiter}, StringSplitOptions.RemoveEmptyEntries);
                             foreach (var keyValue in keys)
                             {
-                                IEnumerable<Item> t = GetMatchingChildItem(map, i, importValue);
+                                var trimmedKeyValue = keyValue.Trim();
                                 string errorMessage = String.Empty;
-                                var id = GetLookupId(map, importRow, ref newItem, keyValue, i, ref fillFieldLogger);
+                                var id = GetLookupId(map, importRow, ref newItem, trimmedKeyValue, i, ref fillFieldLogger);
                                 if (!String.IsNullOrEmpty(errorMessage))
                                 {
                                     fillFieldLogger.AddError(CategoryConstants.ErrorToLocateTheLookupIdInMultiList, String.Format("An error occured in trying to locate the Lookup id in a MultiList attempt. The MultiListDelimiter: {0}. The importValue was '{1}'. Item: {2}. The errormessage was: {3}.",

@@ -58,8 +58,16 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields
 		#region Constructor
 
 		public ToText(Item i) : base(i) {
-            //store fields
-            ExistingDataNames = i.Fields["From What Fields"].Value.Split(comSplitr, StringSplitOptions.RemoveEmptyEntries);
+            var fromWhatField = i.Fields["From What Fields"].Value;
+            // Workaround to allow the use of XPath concat(...) function, that uses comma. If concat is used, then the field is not splitted. 
+		    if (fromWhatField.Contains("concat(") && fromWhatField.Contains(")"))
+		    {
+                ExistingDataNames = new[] { fromWhatField };
+		    }
+		    else
+		    {
+                ExistingDataNames = fromWhatField.Split(comSplitr, StringSplitOptions.RemoveEmptyEntries);
+		    }
 			Delimiter = i.Fields["Delimiter"].Value;
 		}
 

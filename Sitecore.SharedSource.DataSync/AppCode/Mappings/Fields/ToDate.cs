@@ -53,7 +53,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                 DateTime date;
                 if (!DateTime.TryParse(importValue, out date))
                 {
-                    fillFieldLogger.AddError(TheDatetimeParsingFailed, String.Format("The DateTime parsing failed. Therefor the field was not updated on item '{0}' of template type: '{1}' in field the date value could not be par2}'. The date parse string was: {3}.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
+                    fillFieldLogger.AddError(TheDatetimeParsingFailed, String.Format("The DateTime parsing failed. Therefor the field was not updated on item '{0}' of template type: '{1}' in field the date value could not be parsed '{2}'. The date parse string was: {3}.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
                     return;
                 }
                 string value = date.ToDateFieldValue();

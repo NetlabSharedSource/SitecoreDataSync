@@ -1292,11 +1292,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
             var processLogger = Logger.CreateLevelLogger("Process Import Data");
             string importIdentifier = String.Format("{0} - {1}", String.Format(DateTime.Now.ToLongDateString(), "dd-MMM-yyyy") + " " + String.Format(DateTime.Now.ToLongTimeString(), "hh:mm:ss"), ImportItem.Name);
             Diagnostics.Log.Info(String.Format("DataSync job started - {0}.", importIdentifier), typeof(BaseDataMap));
-            //processLogger.AddInfo("Status", String.Format("DataSync job started - {0}.", importIdentifier));
             //if log messages then don't start Process method.
             if (Logger.HasErrors())
             {
-                //Logger.Log("Error", "The import did not run.");
                 processLogger.AddError("Import did not run due to error", "The import did not run due to error");
                 return Logger;
             }
@@ -1307,23 +1305,19 @@ namespace Sitecore.SharedSource.DataSync.Providers
             } 
             catch (Exception ex) 
             {
-                //Logger.Log("Error", String.Format("Connection Error in Process method. Exception: {0}", GetExceptionDebugInfo(ex)));
                 processLogger.AddError("Connection Error", String.Format("Connection Error in Process method. Exception: {0}", GetExceptionDebugInfo(ex)));
                 return Logger;
             }
 
             if (importedRows == null)
             {
-                //Logger.Log("Error", "The GetImportData method returned a null object. Therefor the import was not performed.");
                 processLogger.AddError("No import data", "The GetImportData method returned a null object. Therefor the import was not performed.");
                 return Logger;
             }
             int numberOfRows = importedRows.Count();
-            //Logger.TotalNumberOfItems = numberOfRows;
             processLogger.SetCounter(IncrementConstants.TotalNumberOfItems, numberOfRows);
             if (numberOfRows < GetMinimumNumberOfRowsRequiredToStartImport())
             {
-                //Logger.Log("Error", String.Format("The GetImportData method encounted that the number of rows in import was lower than the minimum number of rows required. Therefor the import wasn't started. This value is defined in the GetMinimumNumberOfRowsRequiredToStartImport method. This value can be changed by the field 'Minimum Number Of Rows Required To Run The Import' on the import item or by overwriting the method in a custom DataMap object. Therefor the import was not performed. MinimumNumberOfRowsRequiredToStartImport: {0}. NumberOfRows: {1}.", GetMinimumNumberOfRowsRequiredToStartImport(), numberOfRows));
                 processLogger.AddError("Number of rows less than minimum required", String.Format("The GetImportData method encounted that the number of rows in import was lower than the minimum number of rows required. Therefor the import wasn't started. This value is defined in the GetMinimumNumberOfRowsRequiredToStartImport method. This value can be changed by the field 'Minimum Number Of Rows Required To Run The Import' on the import item or by overwriting the method in a custom DataMap object. Therefor the import was not performed. MinimumNumberOfRowsRequiredToStartImport: {0}. NumberOfRows: {1}.", GetMinimumNumberOfRowsRequiredToStartImport(), numberOfRows));
                 return Logger;
             }
@@ -1341,18 +1335,16 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     if (processLogger.GetCounter(IncrementConstants.ProcessedItems) % minimumNumberOfRowsRequiredToStartImport == 0)
                     {
                         Diagnostics.Log.Info(
-                            String.Format("DataSync job - {0} - Total {1} rows.", importIdentifier,
-                                          numberOfRows), typeof(BaseDataMap));
+                            String.Format("DataSync job - {0} ({1}) - Processed {2}. Total {3} rows.", importIdentifier, ImportToLanguageVersion.Name,
+                                          processLogger.GetCounter(IncrementConstants.ProcessedItems), numberOfRows), typeof(BaseDataMap));
                     }
                 }
-                //Logger.ProcessedItems += 1;
                 processLogger.IncrementCounter(IncrementConstants.ProcessedItems);
 
                 if (!ProcessImportRow(importRow, ref processLogger))
                 {
                     continue;
                 }
-                //Logger.SucceededItems += 1;
                 processLogger.IncrementCounter(IncrementConstants.SucceededItems);
             }
 
@@ -1452,11 +1444,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 string itemName = GetItemName(importRow, ref getItemNameLogger);
                 if (String.IsNullOrEmpty(itemName) || getItemNameLogger.HasErrors())
                 {
-                    //LogBuilder.Log("Error",
-                    //               String.Format(
-                    //                   "An error occured during generation of a new item name. Therefor the item could not be created. This happened in the Process method in foreach (object importRow in importedRows). Errors: {0}. ImportRow: {1}.",
-                    //                   errorMessage, GetImportRowDebugInfo(importRow)));
-                    //LogBuilder.FailureItems += 1;
                     getItemNameLogger.AddError("Error generating new item name", String.Format(
                                        "An error occured during generation of a new item name. Therefor the item could not be created. This happened in the Process method in foreach (object importRow in importedRows). ImportRow: {0}.",
                                        GetImportRowDebugInfo(importRow)));
@@ -1468,7 +1455,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 Item parent = GetParentNode(importRow, itemName, ref getParentNodeLogger);
                 if (parent.IsNull())
                 {
-                    //Logger.FailureItems += 1;
                     importRowLogger.IncrementCounter(IncrementConstants.FailureItems);
                     importRowLogger.AddData(SharedSource.Logger.Log.Constants.EndTime, DateTime.Now);
                     return false;
@@ -1476,10 +1462,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
                 if (!NameFields.Any())
                 {
-                    //LogBuilder.Log("Error",
-                    //               String.Format("There are no 'Name' fields specified. ImportRow: {0}.",
-                    //                             GetImportRowDebugInfo(importRow)));
-                    //LogBuilder.FailureItems += 1;
                     importRowLogger.AddError("No 'Name' fields specified", String.Format("There are no 'Name' fields specified. ImportRow: {0}.", GetImportRowDebugInfo(importRow)));
                     importRowLogger.IncrementCounter(IncrementConstants.FailureItems);
                     importRowLogger.AddData(SharedSource.Logger.Log.Constants.EndTime, DateTime.Now);
@@ -1496,11 +1478,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     var keyValue = GetValueFromFieldToIdentifyTheSameItemsBy(importRow, ref getValueLogger);
                     if (getValueLogger.HasErrors())
                     {
-                        //LogBuilder.Log("Error", String.Format("An error occured in Process method. {0}. {1}",
-                        //                                      GetImportRowDebugInfo(importRow), errorMessage));
                         getValueLogger.AddError("Error while locating key to synchronize", String.Format("An error occured in ProcessImportRow method. {0}",
                                                               GetImportRowDebugInfo(importRow)));
-                        //LogBuilder.FailureItems += 1;
                         importRowLogger.IncrementCounter(IncrementConstants.FailureItems);
                         importRowLogger.AddData(SharedSource.Logger.Log.Constants.EndTime, DateTime.Now);
                         return false;
@@ -1508,11 +1487,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
                     if (String.IsNullOrEmpty(keyValue))
                     {
-                        //LogBuilder.Log("Error",
-                        //               String.Format(
-                        //                   "The fieldDefinition defined in 'Identify The Same Items By Field' didn't result in any value on the import row. This field is used to identify the item unique. Therefor the following item wasn't imported: {0}.",
-                        //                   GetImportRowDebugInfo(importRow)));
-                        //LogBuilder.FailureItems += 1;
                         importRowLogger.AddError("No value in 'Identify The Same Items By Field'", String.Format(
                                            "The fieldDefinition defined in 'Identify The Same Items By Field' didn't result in any value on the import row. This field is used to identify the item unique. Therefor the following item wasn't imported: {0}.",
                                            GetImportRowDebugInfo(importRow)));
@@ -1526,11 +1500,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     var toWhatField = IdentifyTheSameItemsByFieldDefinition.GetNewItemField();
                     if (String.IsNullOrEmpty(toWhatField))
                     {
-                        //LogBuilder.Log("Error",
-                        //               String.Format(
-                        //                   "The 'To What Field' field on fieldDefinition defined in 'Identify The Same Items By Field' didn't have any value. This field is used to identify which field on the imported item contains the key and identifies it unique. The import was aborted: {0}.",
-                        //                   GetImportRowDebugInfo(importRow)));
-                        //LogBuilder.FailureItems += 1;
                         importRowLogger.AddError("The 'To What Field' didn't have a value", String.Format(
                                            "The 'To What Field' field on fieldDefinition defined in 'Identify The Same Items By Field' didn't have any value. This field is used to identify which field on the imported item contains the key and identifies it unique. The import was aborted: {0}.",
                                            GetImportRowDebugInfo(importRow)));
@@ -1542,11 +1511,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     var items = GetExistingItemsToSyncByKey(Parent, parent, toWhatField, keyValue, ref getExistingLogger);
                     if (getExistingLogger.HasErrors() || items == null)
                     {
-                        //LogBuilder.Log("Error",
-                        //               String.Format(
-                        //                   "An error occured trying to determine if the item with the key: '{0}' exists before. The processing of that item was aborted. The error happend in GetItemsByKey method. ImportRow: {1}. THe errorMessage was: {2}",
-                        //                   keyValue, GetImportRowDebugInfo(importRow), errorMessage));
-                        //LogBuilder.FailureItems += 1;
                         getExistingLogger.AddError("Failed to determine if key is used before", String.Format(
                                            "An error occured trying to determine if the item with the key: '{0}' exists before. The processing of that item was aborted. The error happend in GetItemsByKey method. ImportRow: {1}. THe errorMessage was: {2}",
                                            keyValue, GetImportRowDebugInfo(importRow)));
@@ -1556,11 +1520,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     }
                     if (items.Count() > 1)
                     {
-                        //LogBuilder.Log("Error",
-                        //               String.Format(
-                        //                   "There were more than one items with the same key. The key must be unique. Therefor the following item wasn't imported. Key: {0}. Items: {1}. ImportRow: {2}.",
-                        //                   keyValue, GetItemListDebugInfo(items), GetImportRowDebugInfo(importRow)));
-                        //LogBuilder.FailureItems += 1;
                         importRowLogger.AddError("More than one item with the same key",  String.Format(
                                            "There were more than one items with the same key. The key must be unique. Therefor the following item wasn't imported. Key: {0}. Items: {1}. ImportRow: {2}.",
                                            keyValue, GetItemListDebugInfo(items), GetImportRowDebugInfo(importRow)));
@@ -1585,11 +1544,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             items = GetItemsByKey(DisableItemsFolderItem, toWhatField, keyValue, ref getItemsByKeyLogger);
                             if (getItemsByKeyLogger.HasErrors() || items == null)
                             {
-                                //LogBuilder.Log("Error",
-                                //               String.Format(
-                                //                   "An error occured trying to determine if the item with the key: '{0}' exists before in the DisabledItemsFolder. The processing of that item was aborted. An error occured in GetItemsByKey method used in the IsDisableItemsNotPresentInImport clause. ImportRow: {1}. The errorMessage was: {2}",
-                                //                   keyValue, GetImportRowDebugInfo(importRow), errorMessage));
-                                //LogBuilder.FailureItems += 1;
                                 getItemsByKeyLogger.AddError("Failed to determine if item exists before in DisabledItemsFolder", String.Format(
                                                    "An error occured trying to determine if the item with the key: '{0}' exists before in the DisabledItemsFolder. The processing of that item was aborted. An error occured in GetItemsByKey method used in the IsDisableItemsNotPresentInImport clause. ImportRow: {1}. The errorMessage was: {2}",
                                                    keyValue, GetImportRowDebugInfo(importRow)));
@@ -1605,7 +1559,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                 importRowLogger.AddKey("ItemId", item.ID.ToString());
 
                                 importRowLogger.AddInfo("Moved from Disabled Items", String.Format("The item was found among the disabled items and moved from '{0}'.", GetItemDebugInfo(item)));
-                                //LogBuilder.MovedFromDisabledItems += 1;
                                 importRowLogger.IncrementCounter(IncrementConstants.MovedFromDisabledItems);
                             }
                         }
@@ -1625,7 +1578,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     importRowLogger.AddInfo("Item Created", String.Format("The item was newly created under parent '{0}'.", GetItemDebugInfo(parent)));
                 }
                 // Update the item
-                //var itemLogger = mainLogger.CreateNewItemLogger(item.ID.ToString());
                 var isUpdatedItem = UpdateItem(item, importRow, itemName, parent, ref importRowLogger);
                 importRowLogger.AddData(SharedSource.Logger.Log.Constants.EndTime, DateTime.Now);
                 UpdateLoggingField(item, importRowLogger);
@@ -2243,6 +2195,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     var getFieldValueLogger = logger.CreateLevelLogger();
                     var fieldValue = GetFieldValue(importRow, nameField, ref getFieldValueLogger);
                     strItemName.Append(fieldValue);
+                    strItemName.Append(' ');
                 } 
                 catch (ArgumentException ex) 
                 {
@@ -2450,7 +2403,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
                 string errorMessage = String.Empty;
                 var getFieldValueLogger = getParentNode.CreateLevelLogger();
-                string identifyParentFieldNameOnImportRow = GetFieldValue(importRow, IdentifyParentByWhatFieldOnImportRow, ref getFieldValueLogger);
+                //string identifyParentFieldNameOnImportRow = GetFieldValue(importRow, IdentifyParentByWhatFieldOnImportRow, ref getFieldValueLogger);
+                var identifyParentByWhatFields = IdentifyParentByWhatFieldOnImportRow.Split(',');
+                var values = GetFieldValues(identifyParentByWhatFields, importRow, ref getFieldValueLogger);
+                var identifyParentFieldNameOnImportRow = String.Join(String.Empty, values.ToArray());
                 if (getFieldValueLogger.HasErrors())
                 {
                     getFieldValueLogger.AddError("Error",

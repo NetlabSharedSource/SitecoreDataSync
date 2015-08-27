@@ -63,8 +63,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
             if (!String.IsNullOrEmpty(xmlData))
             {
                 var textReader = new StringReader(xmlData);
-                var xDocument = XDocument.Load(textReader);
-                return ExecuteXPathQuery(xDocument);
+                var settings = new XmlReaderSettings { ProhibitDtd = false, XmlResolver = null};
+                using (XmlReader xmlReader = XmlReader.Create(textReader, settings))
+                {
+                    var xDocument = XDocument.Load(xmlReader);
+                    return ExecuteXPathQuery(xDocument);
+                }
             }
             Logger.AddError("Error", "No Import Data was retrieved from the method GetImportData. Please verify if the field 'Data', or 'Data Source' is filled out.");
             return null;
