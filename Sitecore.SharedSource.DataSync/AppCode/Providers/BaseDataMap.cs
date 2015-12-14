@@ -1359,7 +1359,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
             {
                 PublishChanges(ref processLogger);
             }
-
             Diagnostics.Log.Info(String.Format("DataSync job - {0} ended.", importIdentifier), typeof(BaseDataMap));
             return Logger;
         }
@@ -1958,10 +1957,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             var newItemName = CheckIfItemNameIsUniqueAndGeneratePostFixNumberIfNot(importRow, item, itemName, itemName, parentItem, 1, ref checkIfItemNameLogger);
                             if (checkIfItemNameLogger.HasErrors())
                             {
-                                //LogBuilder.Log("Error", String.Format(
-                                //         "The 'CheckIfItemNameIsUniqueAndGeneratePostFixNumberIfNot' method failed with an error. The itemname was not changed to a postfixnumber since the check failed. But the Update process was continued. ImportRow: {0}. ErrorMessage: {1}",
-                                //         GetImportRowDebugInfo(importRow), errorMessage));
-                                //LogBuilder.FailureItems += 1;
                                 checkIfItemNameLogger.AddError("Error in 'CheckIfItemNameIsUniqueAndGeneratePostFixNumberIfNot'", String.Format(
                                          "The 'CheckIfItemNameIsUniqueAndGeneratePostFixNumberIfNot' method failed with an error. The itemname was not changed to a postfixnumber since the check failed. But the Update process was continued. ImportRow: {0}. ErrorMessage: {1}",
                                          GetImportRowDebugInfo(importRow), errorMessage));
@@ -1971,7 +1966,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             {
                                 updateItemLogger.AddInfo("Item name regenerated", String.Format("The item name '{0}' was regenerated to '{1}' to avoid duplicate item name.", itemName, newItemName));
                                 itemName = newItemName;
-                                //LogBuilder.ItemNameRegeneratedItems += 1;
                                 logger.IncrementCounter(IncrementConstants.ItemNameRegenerated);
                             }
                         }
@@ -1983,7 +1977,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                 updateItemLogger.AddInfo("Item name updated", String.Format("The item name '{0}' was updated to '{1}'.", item.Name, itemName));
                                 item.Name = itemName;
                                 item.Editing.EndEdit();
-                                //LogBuilder.RenamedItems += 1;
                                 logger.IncrementCounter(IncrementConstants.RenamedItems);
                             }
                         }
@@ -1994,7 +1987,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             {
                                 // The validation of the item found that there exists more than one item under the parent with the same item key.
                                 // We logged the error, but continue processing item. The duplicated item names must be corrected manually.
-                                //LogBuilder.FailureItems += 1;
                                 updateItemLogger.IncrementCounter(IncrementConstants.FailureItems);
                                 return false;
                             }
@@ -2058,9 +2050,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
                             if (getFieldLogger.HasErrors())
                             {
-                                //LogBuilder.Log("Error", String.Format("An error occured in extracting the values from a specific field: '{0}' on the item: '{1}'. The processing of the item is aborted and no fields has been updated. ErrorMessage: {2}", 
-                                //    fieldDefinition, GetItemDebugInfo(item), errorMessage));
-                                //LogBuilder.FailureItems += 1;
                                 getFieldLogger.AddError("Error in extracting a value from a field", String.Format("An error occured in extracting the values from a specific field: '{0}' on the item: '{1}'. The processing of the item is aborted and no fields has been updated. ErrorMessage: {2}", 
                                     fieldDefinition, GetItemDebugInfo(item), errorMessage));
                                 updateItemLogger.IncrementCounter(IncrementConstants.FailureItems);
@@ -2073,7 +2062,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                             
                             if (fieldDefinitionLogger.HasErrors())
                             {
-                                //LogBuilder.Log("FieldError", String.Format("An error occured in processing a field on the item: '{0}'. The processing of the item in itself is not aborted and the rest of the fields has been processed. The error was: {1}", GetItemDebugInfo(item), status));
                                 fieldDefinitionLogger.AddError("Error processing a field", String.Format("An error occured in processing a field on the item: '{0}'. The processing of the item in itself is not aborted and the rest of the fields has been processed.", GetItemDebugInfo(item)));
                                 failedItem = true;
                             }
@@ -2087,7 +2075,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         {
                             item.Editing.EndEdit();
                             updateItemLogger.AddInfo("Updated Field on Item", String.Format("The item had fields that were updated."));
-                            //LogBuilder.UpdatedFields += 1;
                             updateItemLogger.IncrementCounter(IncrementConstants.UpdatedFields);
                         }
                         else
@@ -2096,7 +2083,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         }
                         if (failedItem)
                         {
-                            //LogBuilder.FailureItems += 1;
                             updateItemLogger.IncrementCounter(IncrementConstants.FailureItems);
                             return false;
                         }
@@ -2105,14 +2091,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         bool processedCustomData;
                         if (!ProcessCustomData(ref item, importRow, out processedCustomData))
                         {
-                            //LogBuilder.FailureItems += 1;
                             updateItemLogger.IncrementCounter(IncrementConstants.FailureItems);
                             return false;
                         }
                         if (processedCustomData)
                         {
                             updateItemLogger.AddInfo("Custom Data processed", String.Format("Custom data was processed on item."));
-                            //LogBuilder.ProcessedCustomDataItems += 1;
                             updateItemLogger.IncrementCounter(IncrementConstants.ProcessedCustomData);
                         }
                     }
@@ -2120,8 +2104,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
             catch (Exception ex)
             {
-                //LogBuilder.Log("Error", String.Format("An exception occured in UpdateItem. ImportRow: {0}. Item: {1}, ItemName: {2}, Exception: {3}", GetImportRowDebugInfo(importRow), GetItemDebugInfo(item), itemName, GetExceptionDebugInfo(ex)));
-                //LogBuilder.FailureItems += 1;
                 updateItemLogger.AddError("Exception occured in UpdateItem method", String.Format("An exception occured in UpdateItem. ImportRow: {0}. Item: {1}, ItemName: {2}, Exception: {3}", GetImportRowDebugInfo(importRow), GetItemDebugInfo(item), itemName, GetExceptionDebugInfo(ex)));
                 updateItemLogger.IncrementCounter(IncrementConstants.FailureItems);
                 return false;

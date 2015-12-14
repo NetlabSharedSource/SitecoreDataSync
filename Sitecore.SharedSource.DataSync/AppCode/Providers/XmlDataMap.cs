@@ -182,10 +182,26 @@ namespace Sitecore.SharedSource.DataSync.Providers
 	            var attributes = xAttributes as IList<XAttribute> ?? xAttributes.ToList();
 	            if (attributes.Count() > 1)
 	            {
-	                logger.AddError("Found more than one attribute with the same name", String.Format(
-	                        "The GetFieldValue method failed because the helper method TryParseAttribute found more than one attribute with the same name ExecuteXPathQueryOnXElement method."));
+	                string pipeseperatedValues = String.Empty;
+                    foreach (var attribute in attributes)
+                    {
+                        if (attribute != null)
+                        {
+                            var value = attribute.Value;
+                            if (!String.IsNullOrEmpty(value))
+                            {
+                                pipeseperatedValues += value + "|";
+                            }
+                        }
+                    }
+                    if (pipeseperatedValues.EndsWith("|"))
+                    {
+                        pipeseperatedValues = pipeseperatedValues.TrimEnd('|');
+                    }
+                    fieldValue = pipeseperatedValues;
+                    return true;
 	            }
-	            else if (attributes.Count() == 1)
+	            if (attributes.Count() == 1)
 	            {
 	                var xAttribute = attributes.First();
 	                if (xAttribute != null)

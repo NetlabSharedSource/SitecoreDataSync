@@ -220,7 +220,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                 getLookupIdLogger.AddError(CategoryConstants.ImportedValueResultInMoreThanOneLookupItem, String.Format(
                         "The Item '{0}' of template type: '{1}' has a field '{2}', but the imported value '{3}' did result in more that one lookup item. The field was not updated.",
                         map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
-                return null;
+                return String.Empty;
             }
             if (t.Count() == 1)
             {
@@ -230,7 +230,7 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                     getLookupIdLogger.AddError(CategoryConstants.ImportedValueDidntResultInAIdToStore, String.Format(
                                 "The Item '{0}' of template type: '{1}' has a field '{2}', but the imported value '{3}' didn't result in a ID to store.",
                                 map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField, importValue));
-                    return null;
+                    return String.Empty;
                 }
                 return guid;
             }
@@ -240,10 +240,10 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                 {
                     getLookupIdLogger.AddError(CategoryConstants.DidntLocateALookupItemWithTheValue, String.Format("The Item '{0}' of template type: '{1}' didn't locate a lookup Item with the value '{2}'.",
                         newItem.ID.ToString(), newItem.TemplateName, importValue));
-                    return null;
+                    return String.Empty;
                 }
             }
-            return null;
+            return String.Empty;
         }
         #endregion Methods
 	}

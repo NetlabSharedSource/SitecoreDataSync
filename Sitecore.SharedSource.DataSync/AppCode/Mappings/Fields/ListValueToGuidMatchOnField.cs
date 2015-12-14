@@ -61,12 +61,47 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
 
         public override IEnumerable<Item> GetMatchingChildItem(BaseDataMap map, Item listParent, string importValue)
         {
-            IEnumerable<Item> t = (from Item c in listParent.GetChildren()
-                                   where c[MatchOnFieldName].ToLower().Equals(importValue.ToLower())
-                                   select c).ToList();
-            return t;
+            //IEnumerable<Item> t = (from Item c in listParent.GetChildren()
+            //                       where c[MatchOnFieldName].ToLower().Equals(importValue.ToLower())
+            //                       select c).ToList();
+            return GetLookupValues(map, listParent, importValue, importValue.ToLower());
+            //return t;
         }
 
-		#endregion Methods
+        private Dictionary<string, List<Item>> lookupValues = new Dictionary<string, List<Item>>();
+
+        private IEnumerable<Item> GetLookupValues(BaseDataMap map, Item listParent, string importValue, string value)
+        {
+            if (!lookupValues.Any())
+            {
+                var listItems = listParent.GetChildren();
+                foreach (Item item in listItems)
+                {
+                    var lookupValue = item[MatchOnFieldName].ToLower();
+                    if (!lookupValues.ContainsKey(lookupValue))
+                    {
+                        lookupValues.Add(lookupValue, new List<Item> {item});
+                    }
+                    else
+                    {
+                        var itemList = lookupValues[lookupValue];
+                        if (itemList != null)
+                        {
+                            if (!itemList.Contains(item))
+                            {
+                                itemList.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            if (lookupValues.ContainsKey(value))
+            {
+                return lookupValues[value];
+            }
+            return new List<Item>();
+        }
+
+        #endregion Methods
 	}
 }

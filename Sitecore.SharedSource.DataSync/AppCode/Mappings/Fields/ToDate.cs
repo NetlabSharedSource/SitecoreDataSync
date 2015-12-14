@@ -46,8 +46,8 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                     return;
                 }
             }
-			Field f = newItem.Fields[NewItemField];
-            if (f != null)
+			Field field = newItem.Fields[NewItemField];
+            if (field != null)
             {
                 //try to parse date value
                 DateTime date;
@@ -57,13 +57,13 @@ namespace Sitecore.SharedSource.DataSync.Mappings.Fields {
                     return;
                 }
                 string value = date.ToDateFieldValue();
-                if (value != importValue)
+                if (value != field.Value)
                 {
-                    f.Value = value;
+                    field.Value = value;
                     updatedField = true;
                 }
             }
-            if (IsRequired && f == null)
+            if (IsRequired && field == null)
             {
                 fillFieldLogger.AddError(CategoryConstants.RequiredFieldNotFoundOnItem, String.Format("The Item '{0}' of template type: '{1}' didn't contain a field with name '{2}'. This field must be present because the 'Is Required Field' is checked.", map.GetItemDebugInfo(newItem), newItem.TemplateName, NewItemField));
                 return;
