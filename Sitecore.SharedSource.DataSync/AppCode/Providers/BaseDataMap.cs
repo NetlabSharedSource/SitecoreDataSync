@@ -728,6 +728,11 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
         }
 
+        public virtual void InitializeItemsCache()
+        {
+
+        }
+
         private void InitializeImportToLanguageVersion(Item importItem)
         {
             string languageItemId = importItem["Import to Language Version"];
@@ -1090,7 +1095,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     {
                         // TO FIX SQL Exceptions, like "Transaction (Process ID X) was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction." exception.
                         // Sleep for a period and try again one more time. Then fail.
-                        //LogBuilder.Log("Info", String.Format("The GetItemsByKey method met a SqlException. A rerun is initiated. Parent: {0}, Query: {1}. Exception: {2}. KeyFieldName: {3}. Key: {4}", parent.ID, query, GetExceptionDebugInfo(sqlException), keyFieldName, key));
                         getItemsByKeyLogger.AddInfo("Trying rerun after SQLException in GetItemsByKey.", String.Format("The GetItemsByKey method met a SqlException. A rerun is initiated. Parent: {0}, Query: {1}. Exception: {2}. KeyFieldName: {3}. Key: {4}", parent.ID, query, GetExceptionDebugInfo(sqlException), keyFieldName, key));
                         Thread.Sleep(DefaultSleepPeriodToRerunSqlExceptionInGetItemsByKey);
                         List<Item> list;
@@ -1098,10 +1102,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     }
                     catch (Exception ex)
                     {
-                        //errorMessage +=
-                        //String.Format(
-                        //    "The GetItemsByKey method met an Exception twice after being rerun. The processing of the item is aborted. Query: {0}. Exception: {1}",
-                        //    query, GetExceptionDebugInfo(ex));
                         getItemsByKeyLogger.AddError("Exception after rerun in GetItemsByKey", String.Format(
                             "The GetItemsByKey method met an Exception twice after being rerun. The processing of the item is aborted. Query: {0}. Exception: {1}",
                             query, GetExceptionDebugInfo(ex)));
@@ -1110,10 +1110,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 catch (Exception ex)
                 {
-                    //errorMessage +=
-                    //    String.Format(
-                    //        "The GetItemsByKey thrown an exception in trying to query the item. Query: {0}. Exception: {1}",
-                    //        query, GetExceptionDebugInfo(ex));
                     getItemsByKeyLogger.AddError("Exception while querying the item in GetItemsByKey", String.Format(
                             "The GetItemsByKey thrown an exception in trying to query the item. Query: {0}. Exception: {1}",
                             query, GetExceptionDebugInfo(ex)));
