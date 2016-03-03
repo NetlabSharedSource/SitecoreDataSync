@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sitecore.Data;
 using Sitecore.Data.Items;
@@ -6,6 +7,7 @@ using Sitecore.SharedSource.DataSync.Log;
 using Sitecore.SharedSource.Logger.Log.Builder;
 using Sitecore.SharedSource.Logger.Log.Output;
 using Sitecore.SharedSource.DataSync.Managers;
+using Sitecore.SharedSource.DataSync.Providers;
 using Sitecore.SharedSource.Logger.Log;
 using Sitecore.Tasks;
 
@@ -25,6 +27,7 @@ namespace Sitecore.SharedSource.DataSync.ScheduledTasks
                     var itemIds = scheduledItem[ItemsFieldName];
                     if (!String.IsNullOrEmpty(itemIds))
                     {
+                        var dataSourceCache = new Dictionary<string, string>();
                         var idList = itemIds.Split('|');
                         if (idList.Any())
                         {
@@ -43,7 +46,12 @@ namespace Sitecore.SharedSource.DataSync.ScheduledTasks
                                             logger.AddData(Utility.Constants.DataSyncItem, dataSyncItem);
                                             logger.AddData(Logger.Log.Constants.Identifier, dataSyncItem.Name);
                                             var dataSyncManager = new DataSyncManager();
-                                            dataSyncManager.RunDataSyncJob(dataSyncItem, ref logger);
+                                            var dataSyncObject = dataSyncManager.InstantiateDataMap(dataSyncItem, ref logger) as XmlDataMap;
+                                            if (dataSyncObject != null)
+                                            {
+                                                dataSyncObject.DataSourceCache = dataSourceCache;
+                                                dataSyncObject.Process();
+                                            }
                                             var finishededAt = DateTime.Now;
                                             logger.AddData(Logger.Log.Constants.StartTime, startedAt);
                                             logger.AddData(Logger.Log.Constants.EndTime, finishededAt);

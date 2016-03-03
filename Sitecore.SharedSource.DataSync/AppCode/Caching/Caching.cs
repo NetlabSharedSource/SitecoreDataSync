@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Caching;
+using Sitecore.Data.Items;
 
 namespace Sitecore.SharedSource.DataSync.Caching
 {
     public class Caching
     {
-        private Dictionary<string, List<string>> LocalCache = new Dictionary<string, List<string>>();
-        
-        public List<string> Get(string key)
+        private Dictionary<string, List<Item>> LocalCache = new Dictionary<string, List<Item>>();
+
+        public List<Item> Get(string key)
         {
             try
             {
@@ -24,12 +25,12 @@ namespace Sitecore.SharedSource.DataSync.Caching
             }
             catch (HttpException ex)
             {
-                Sitecore.Diagnostics.Log.Error(string.Format("Fetching: {0}", key), ex);
+                Diagnostics.Log.Error(string.Format("Fetching: {0}", key), ex);
             }
             return null;
         }
 
-        public void Set(string key, List<string> value)
+        public void Set(string key, List<Item> value)
         {
             if (String.IsNullOrEmpty(key))
             {

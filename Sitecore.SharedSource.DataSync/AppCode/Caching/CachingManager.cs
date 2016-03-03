@@ -27,7 +27,14 @@ namespace Sitecore.SharedSource.DataSync.Caching
                 InitializeItemsCache(BaseDataMap.DisableItemsFolderItem, BaseDataMap.IdentifyTheSameItemsByFieldDefinition.GetNewItemField(), ref disabledLogger);
             }
             var itemsAndParentLogger = logger.CreateLevelLogger();
-            InitializeItemsCache(BaseDataMap.Parent, BaseDataMap.IdentifyTheSameItemsByFieldDefinition.GetNewItemField() + "|" + BaseDataMap.IdentifyParentByWhatFieldOnParent, ref itemsAndParentLogger);
+            if (BaseDataMap.FolderByParentHierarchy)
+            {
+                InitializeItemsCache(BaseDataMap.Parent, BaseDataMap.IdentifyTheSameItemsByFieldDefinition.GetNewItemField() + "|" + BaseDataMap.IdentifyParentByWhatFieldOnParent, ref itemsAndParentLogger);
+            }
+            else
+            {
+                InitializeItemsCache(BaseDataMap.Parent, BaseDataMap.IdentifyTheSameItemsByFieldDefinition.GetNewItemField(), ref itemsAndParentLogger);
+            }
         }
 
         public virtual void InitializeItemsCache(Item parent, string fieldNameForKeys, ref LevelLogger logger)
@@ -48,8 +55,6 @@ namespace Sitecore.SharedSource.DataSync.Caching
             {
                 var getItemsByKeyLogger = logger.CreateLevelLogger();
                 string pattern = "{0}//*";
-                //pattern = (BaseDataMap.UseFastQuery ? "fast:" : String.Empty) + pattern;
-                //var query = String.Format(pattern, BaseDataMap.DoFastQuerySafe(parent.Paths.FullPath));
                 var query = String.Format(pattern, parent.Paths.FullPath);
                 try
                 {
@@ -105,7 +110,7 @@ namespace Sitecore.SharedSource.DataSync.Caching
             AddToCache(startKey, item, fieldName, key, ref logger);
         }
 
-        public List<string> GetItemsFromCache(Item parent, string fieldName, string key, ref LevelLogger logger)
+        public List<Item> GetItemsFromCache(Item parent, string fieldName, string key, ref LevelLogger logger)
         {
             var startKey = GetBaseCacheKey(parent, ref logger);
             if (startKey == null)
@@ -114,7 +119,7 @@ namespace Sitecore.SharedSource.DataSync.Caching
             }
             var completeKey = startKey + "|" + fieldName + "|" + key;
             completeKey = completeKey.ToLower();
-            return Caching.Get(completeKey) as List<string>;
+            return Caching.Get(completeKey);
         }
 
         private void AddToCache(string startKey, Item item, string fieldName, string key, ref LevelLogger logger)
@@ -141,24 +146,24 @@ namespace Sitecore.SharedSource.DataSync.Caching
             }
             var completeKey = startKey + "|" + fieldName + "|" + key;
             completeKey = completeKey.ToLower();
-            var keyItems = Caching.Get(completeKey) as List<string>;
+            var keyItems = Caching.Get(completeKey) as List<Item>;
             if (keyItems == null)
             {
-                keyItems = new List<string> {item.ID.ToString()};
+                keyItems = new List<Item> { item };
             }
             else
             {
                 bool sameIdAlreadyAdded = false;
                 foreach (var foundItem in keyItems)
                 {
-                    if (foundItem == item.ID.ToString())
+                    if (foundItem == item)
                     {
                         sameIdAlreadyAdded = true;
                     }
                 }
                 if (!sameIdAlreadyAdded)
                 {
-                    keyItems.Add(item.ID.ToString());
+                    keyItems.Add(item);
                 }
             }
             Caching.Set(completeKey, keyItems);

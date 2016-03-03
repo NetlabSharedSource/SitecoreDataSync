@@ -11,6 +11,6 @@ namespace Sitecore.SharedSource.DataSync.Caching
     {
         void Initialize(ref LevelLogger logger);
         void AddItemToCache(Item parent, string fieldName, Item item, string key, ref LevelLogger logger);
-        List<string> GetItemsFromCache(Item parent, string fieldName, string key, ref LevelLogger logger);
+        List<Item> GetItemsFromCache(Item parent, string fieldName, string key, ref LevelLogger logger);
     }
 }

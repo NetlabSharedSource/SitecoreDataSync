@@ -1086,23 +1086,12 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     var itemList = CachingManager.GetItemsFromCache(parent, keyFieldName, key, ref itemsFromCacheLogger);
                     if (itemList != null)
                     {
-                        var list = new List<Item>();
-                        foreach (var id in itemList)
-                        {
-                            var item = SitecoreDB.GetItem(new ID(id), ImportToLanguageVersion);
-                            if (item != null)
-                            {
-                                list.Add(item);
-                            }
-                        }
-                        return list;
+                        return itemList;
                     }
                     return new List<Item>();
                 }
                 var replacedKey = key.Replace("'", "_");
                 string pattern = "{0}//*[@{1}='{2}']";
-                //pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern;
-                //var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), keyFieldName, replacedKey);
                 var query = String.Format(pattern, parent.Paths.FullPath, keyFieldName, replacedKey);
                 try
                 {

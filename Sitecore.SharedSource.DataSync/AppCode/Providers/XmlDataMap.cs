@@ -28,7 +28,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
 	    private readonly int DebugImportRowXmlCharacterLength = 50;
 
-		#endregion Properties
+	    public Dictionary<string, string> DataSourceCache { get; set; }
+
+	    #endregion Properties
 
 		#region Constructor
 
@@ -394,6 +396,16 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
 	    protected virtual string GetXmlDataFromUrl(string datasource)
 	    {
+            if (DataSourceCache != null && DataSourceCache.ContainsKey(datasource))
+            {
+                var xmlString = DataSourceCache[datasource];
+                if (String.IsNullOrEmpty(xmlString))
+                {
+                    Logger.AddError("Xml was null or empty in GetxmlDataFromUrl. Proceed without cache.",
+                        String.Format("The Xml retrieved from cache was null or empty. datasource: {0}.", datasource));
+                }
+                return xmlString;
+            }
 	        if (!String.IsNullOrEmpty(datasource) && datasource.StartsWith(UrlPrefix))
 	        {
 	            var myUri = new Uri(datasource);
@@ -409,7 +421,29 @@ namespace Sitecore.SharedSource.DataSync.Providers
 	                        using (var xmlResponse = XmlReader.Create(streamResponse))
 	                        {
 	                            var xDoc = XDocument.Load(xmlResponse);
-	                            return xDoc.ToString();
+	                            var xmlString = xDoc.ToString();
+                                if (DataSourceCache != null)
+                                {
+                                    if (String.IsNullOrEmpty(xmlString))
+                                    {
+                                        Logger.AddInfo("Xml was null or empty",
+                                            String.Format(
+                                                "Xml retrieved in GetXmlDataFromUrl was null or empty. Datasource: {0}.",
+                                                datasource));
+                                    }
+                                    else
+                                    {
+                                        if (DataSourceCache.ContainsKey(datasource))
+                                        {
+                                            DataSourceCache[datasource] = xmlString;
+                                        }
+                                        else
+                                        {
+                                            DataSourceCache.Add(datasource, xmlString);
+                                        }
+                                    }
+                                }
+	                            return xmlString;
 	                        }
 	                    }
 	                }
