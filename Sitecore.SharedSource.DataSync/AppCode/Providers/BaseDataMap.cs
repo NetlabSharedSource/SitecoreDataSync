@@ -19,6 +19,7 @@ using System.IO;
 using Sitecore.Configuration;
 using Sitecore.Globalization;
 using Sitecore.SecurityModel;
+using Sitecore.SharedSource.DataSync.Caching;
 using Sitecore.SharedSource.DataSync.Publishing;
 
 namespace Sitecore.SharedSource.DataSync.Providers
@@ -524,6 +525,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
         public string PublishingSourceDatabase { get; set; }
         public string PublishingTargetDatabase { get; set; }
 
+        public ICachingManager CachingManager { get; set; }
+
         #endregion Properties
 
 		#region Constructor
@@ -726,13 +729,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     }
                 }
             }
+            CachingManager = new CachingManager(this);
+            CachingManager.Initialize(ref logger);
         }
-
-        public virtual void InitializeItemsCache()
-        {
-
-        }
-
+        
         private void InitializeImportToLanguageVersion(Item importItem)
         {
             string languageItemId = importItem["Import to Language Version"];
@@ -1073,17 +1073,37 @@ namespace Sitecore.SharedSource.DataSync.Providers
                                   select i;
             return (x.Any()) ? x.First() : null;
         }
-        
-        public virtual List<Item> GetItemsByKey(Item parent, string keyFieldName, string key, ref LevelLogger logger)
+
+        public virtual List<Item> GetItemsByKey(Item parent, string keyFieldName, string key, ref LevelLogger logger, bool useCache = false)
         {
             using (new LanguageSwitcher(ImportToLanguageVersion))
             {
                 var getItemsByKeyLogger = logger.CreateLevelLogger();
 
+                if (useCache)
+                {
+                    var itemsFromCacheLogger = getItemsByKeyLogger.CreateLevelLogger();
+                    var itemList = CachingManager.GetItemsFromCache(parent, keyFieldName, key, ref itemsFromCacheLogger);
+                    if (itemList != null)
+                    {
+                        var list = new List<Item>();
+                        foreach (var id in itemList)
+                        {
+                            var item = SitecoreDB.GetItem(new ID(id), ImportToLanguageVersion);
+                            if (item != null)
+                            {
+                                list.Add(item);
+                            }
+                        }
+                        return list;
+                    }
+                    return new List<Item>();
+                }
                 var replacedKey = key.Replace("'", "_");
                 string pattern = "{0}//*[@{1}='{2}']";
-                pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern; 
-                var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), keyFieldName, replacedKey);
+                //pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern;
+                //var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), keyFieldName, replacedKey);
+                var query = String.Format(pattern, parent.Paths.FullPath, keyFieldName, replacedKey);
                 try
                 {
                     List<Item> list;
@@ -1095,7 +1115,10 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     {
                         // TO FIX SQL Exceptions, like "Transaction (Process ID X) was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction." exception.
                         // Sleep for a period and try again one more time. Then fail.
-                        getItemsByKeyLogger.AddInfo("Trying rerun after SQLException in GetItemsByKey.", String.Format("The GetItemsByKey method met a SqlException. A rerun is initiated. Parent: {0}, Query: {1}. Exception: {2}. KeyFieldName: {3}. Key: {4}", parent.ID, query, GetExceptionDebugInfo(sqlException), keyFieldName, key));
+                        getItemsByKeyLogger.AddInfo("Trying rerun after SQLException in GetItemsByKey.",
+                            String.Format(
+                                "The GetItemsByKey method met a SqlException. A rerun is initiated. Parent: {0}, Query: {1}. Exception: {2}. KeyFieldName: {3}. Key: {4}",
+                                parent.ID, query, GetExceptionDebugInfo(sqlException), keyFieldName, key));
                         Thread.Sleep(DefaultSleepPeriodToRerunSqlExceptionInGetItemsByKey);
                         List<Item> list;
                         if (QueryItemsAndVerifyUniqueness(parent, keyFieldName, key, query, out list)) return list;
@@ -1110,7 +1133,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 catch (Exception ex)
                 {
-                    getItemsByKeyLogger.AddError("Exception while querying the item in GetItemsByKey", String.Format(
+                    getItemsByKeyLogger.AddError("Exception while querying the item in GetItemsByKey",
+                        String.Format(
                             "The GetItemsByKey thrown an exception in trying to query the item. Query: {0}. Exception: {1}",
                             query, GetExceptionDebugInfo(ex)));
                     return null;
@@ -1119,28 +1143,28 @@ namespace Sitecore.SharedSource.DataSync.Providers
             }
         }
 
-        private static string DoFastQuerySafe(string fastQuery)
-        {
-            if (!String.IsNullOrEmpty(fastQuery))
-            {
-                var terms = fastQuery.Split('/');
-                if (terms.Any())
-                {
-                    string safeFastQuery = String.Empty;
-                    foreach (var term in terms)
-                    {
-                        var tempTerm = term;
-                        if (term != null && (term.Contains(" and ") || term.Contains(" or ") || term.Contains("-")))
-                        {
-                            tempTerm = "#" + term + "#";
-                        }
-                        safeFastQuery += "/" + tempTerm;
-                    }
-                    return safeFastQuery;
-                }
-            }
-            return fastQuery;
-        }
+        //public static string DoFastQuerySafe(string fastQuery)
+        //{
+        //    if (!String.IsNullOrEmpty(fastQuery))
+        //    {
+        //        var terms = fastQuery.Split('/');
+        //        if (terms.Any())
+        //        {
+        //            string safeFastQuery = String.Empty;
+        //            foreach (var term in terms)
+        //            {
+        //                var tempTerm = term;
+        //                if (term != null && (term.Contains(" and ") || term.Contains(" or ") || term.Contains("-")))
+        //                {
+        //                    tempTerm = "#" + term + "#";
+        //                }
+        //                safeFastQuery += "/" + tempTerm;
+        //            }
+        //            return safeFastQuery;
+        //        }
+        //    }
+        //    return fastQuery;
+        //}
 
         private bool QueryItemsAndVerifyUniqueness(Item parent, string keyFieldName, string key, string query, out List<Item> list)
         {
@@ -1183,7 +1207,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
         {
             var getItemsByLogger = logger.CreateLevelLogger();
             string pattern = "{0}//*[{1}]";
-            pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern; 
+            //pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern; 
             const string tidpattern = "@@templateid='{0}'";
             string tempPattern = string.Empty;
             for (int i = 0; i < templates.Count; i++)
@@ -1211,7 +1235,8 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 if (i != templates.Count - 1)
                     tempPattern += " or ";
             }
-            var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), tempPattern);
+            //var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), tempPattern);
+            var query = String.Format(pattern, parent.Paths.FullPath, tempPattern);
             try
             {
                 using (new LanguageSwitcher(ImportToLanguageVersion))
@@ -1245,8 +1270,9 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
 
                 string pattern = "{0}//*[@@key='{1}' and ({2})]";
-                pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern;
-                var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), itemKey, tempPattern);
+                //pattern = (UseFastQuery ? "fast:" : String.Empty) + pattern;
+                //var query = String.Format(pattern, DoFastQuerySafe(parent.Paths.FullPath), itemKey, tempPattern);
+                var query = String.Format(pattern, parent.Paths.FullPath, itemKey, tempPattern);
                 try
                 {
                     return SitecoreDB.SelectItems(query).ToList();
@@ -1536,7 +1562,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                         if (IsDisableItemsNotPresentInImport)
                         {
                             var getItemsByKeyLogger = importRowLogger.CreateLevelLogger();
-                            items = GetItemsByKey(DisableItemsFolderItem, toWhatField, keyValue, ref getItemsByKeyLogger);
+                            items = GetItemsByKey(DisableItemsFolderItem, toWhatField, keyValue, ref getItemsByKeyLogger, true);
                             if (getItemsByKeyLogger.HasErrors() || items == null)
                             {
                                 getItemsByKeyLogger.AddError("Failed to determine if item exists before in DisabledItemsFolder", String.Format(
@@ -1635,7 +1661,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
         public virtual List<Item> GetExistingItemsToSyncByKey(Item rootItem, Item currentParent, string toWhatField, string keyValue, ref LevelLogger logger)
         {
             var getItemsbyKeyLogger = logger.CreateLevelLogger();
-            var items = GetItemsByKey(rootItem, toWhatField, keyValue, ref getItemsbyKeyLogger);
+            var items = GetItemsByKey(rootItem, toWhatField, keyValue, ref getItemsbyKeyLogger, true);
             return items;
         }
 
@@ -1739,7 +1765,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
         {
             item.Editing.BeginEdit();
             item.MoveTo(DisableItemsFolderItem);
-            //Logger.DisabledItems += 1;
             logger.IncrementCounter(IncrementConstants.DisabledItems);
             item.Editing.EndEdit();
         }
@@ -1852,6 +1877,17 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     return false;
                 }
                 logger.IncrementCounter("Created Items");
+                var addItemToCacheLogger = createItemLogger.CreateLevelLogger();
+                var keyValue = GetValueFromFieldToIdentifyTheSameItemsBy(importRow, ref addItemToCacheLogger);
+                CachingManager.AddItemToCache(Parent, IdentifyTheSameItemsByFieldDefinition.GetNewItemField(), item, keyValue, ref addItemToCacheLogger);
+                if (addItemToCacheLogger.HasErrors())
+                {
+                    addItemToCacheLogger.AddError("The 'AddItemToCache' failed in the CreateItem", String.Format(
+                            "The 'AddItemToCache' method failed with an error. ImportRow: {0}. The item was created, but not added to the cache. {1}",
+                            GetImportRowDebugInfo(importRow), errorMessage));
+                    logger.IncrementCounter(IncrementConstants.FailureItems);
+                    return false;
+                }
                 return true;
             }
             catch (Exception ex)
@@ -2381,7 +2417,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
 
                 string errorMessage = String.Empty;
                 var getFieldValueLogger = getParentNode.CreateLevelLogger();
-                //string identifyParentFieldNameOnImportRow = GetFieldValue(importRow, IdentifyParentByWhatFieldOnImportRow, ref getFieldValueLogger);
                 var identifyParentByWhatFields = IdentifyParentByWhatFieldOnImportRow.Split(',');
                 var values = GetFieldValues(identifyParentByWhatFields, importRow, ref getFieldValueLogger);
                 var identifyParentFieldNameOnImportRow = String.Join(String.Empty, values.ToArray());
@@ -2408,7 +2443,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                     return Parent;
                 }
                 var getItemsByKeyLogger = getParentNode.CreateLevelLogger();
-                var items = GetItemsByKey(Parent, IdentifyParentByWhatFieldOnParent, identifyParentFieldNameOnImportRow, ref getItemsByKeyLogger);
+                var items = GetItemsByKey(Parent, IdentifyParentByWhatFieldOnParent, identifyParentFieldNameOnImportRow, ref getItemsByKeyLogger, true);
                 if (getItemsByKeyLogger.HasErrors() || items == null)
                 {
                     getItemsByKeyLogger.AddError("Error", String.Format("An error occured in locating the parent item of item: '{0}'. The processing of the item was aborted. The error occured in GetItemsByKey method used in the GetParentNode method. ImportRow: {1}. ErrorMessage: {2}",
@@ -2431,7 +2466,7 @@ namespace Sitecore.SharedSource.DataSync.Providers
                 }
                 getParentNode.AddError("Error",
                                string.Format(
-                                   "Could not found the parent node in GetParentNode method. The item was not imported. ItemName: {0}. ImportRow: {1}.",
+                                   "Could not find the parent node in GetParentNode method. The item was not imported. ItemName: {0}. ImportRow: {1}.",
                                    itemName, GetImportRowDebugInfo(importRow)));
                 return null;
             }
@@ -2489,7 +2524,6 @@ namespace Sitecore.SharedSource.DataSync.Providers
             // Return Root folder if none of the other options is selected
             return Parent;
         }
-
         #endregion Methods
 	}
 }

@@ -65,6 +65,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppCode\Caching\Caching.cs" />
+    <Compile Include="AppCode\Caching\CachingManager.cs" />
+    <Compile Include="AppCode\Caching\ICachingManager.cs" />
     <Compile Include="AppCode\Extensions\ItemExtensions.cs" />
     <Compile Include="AppCode\Extensions\SystemExtensions.cs" />
     <Compile Include="AppCode\Extensions\TemplateExtensions.cs" />
