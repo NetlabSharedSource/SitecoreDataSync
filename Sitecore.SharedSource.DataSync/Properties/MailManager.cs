@@ -51,7 +51,7 @@ namespace Sitecore.SharedSource.DataSync.Managers
                     subject = DefaultSubject;
                 }
 
-                var result = !logger.HasErrors() ? Success : Failure;
+                var result = !logger.HasFatalsOrErrors() ? Success : Failure;
                 try
                 {
                     subject = String.Format(subject, exporter.GetIdentifier(), result);

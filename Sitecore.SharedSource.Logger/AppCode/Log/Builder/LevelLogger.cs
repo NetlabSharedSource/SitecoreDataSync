@@ -83,6 +83,11 @@ namespace Sitecore.SharedSource.Logger.Log.Builder
             return HasFatals() || HasErrors() || HasInfos();
         }
 
+        public virtual bool HasFatalsOrErrors()
+        {
+            return HasFatals() || HasErrors();
+        }
+
         public virtual bool HasErrorsOrInfos()
         {
             return HasErrors() || HasInfos();
@@ -95,7 +100,7 @@ namespace Sitecore.SharedSource.Logger.Log.Builder
 
         public virtual bool HasErrors()
         {
-            return IsErrorsAdded;
+            return IsErrorsAdded  || IsFatalsAdded;
         }
 
         public virtual bool HasInfos()
