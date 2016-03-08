@@ -72,7 +72,7 @@ namespace Sitecore.SharedSource.Logger.Log.Output
             var identifier = Logger.GetData(Constants.Identifier) as string;
             
             var startText = GetIdentifierText(identifier, startTime, endTime);
-            if (!Logger.HasErrors())
+            if (!Logger.HasFatalsOrErrors())
             {
                 return startText + " completed with success.";
             }
@@ -136,7 +136,7 @@ namespace Sitecore.SharedSource.Logger.Log.Output
                 var startText = Logger.HasKeys() ? "Import job:\r\n" + GetKeys(Logger) + "\r\n" : "Import job:\r\n";
                 sb.AppendLine(startText);
                 //sb.AppendLine(String.Format("{0}", GetTimeAndTimeSpanInfo()));
-                if (Logger.HasErrorsOrInfos())
+                if (Logger.HasFatalsErrorsOrInfos())
                 {
                     sb.AppendLine(String.Format("Log:"));
                     var logger = Logger as Builder.Logger;
@@ -158,6 +158,7 @@ namespace Sitecore.SharedSource.Logger.Log.Output
 
         protected virtual void OutputGroupedCategories(Builder.Logger logger, LogLine.LogType[] logTypes, ref StringBuilder sb)
         {
+            var fatalSb = new StringBuilder();
             var errorSb = new StringBuilder();
             var infoSb = new StringBuilder();
             foreach (var categoryLogLines in logger.LogLineByCategory)
@@ -171,12 +172,15 @@ namespace Sitecore.SharedSource.Logger.Log.Output
                     var firstLogLine = loglineList.FirstOrDefault();
                     if (firstLogLine != null)
                     {
-                        if (firstLogLine.Type == LogLine.LogType.Error && (logTypes==null || logTypes.Contains(firstLogLine.Type)))
+                        if (firstLogLine.Type == LogLine.LogType.Fatal && (logTypes == null || logTypes.Contains(firstLogLine.Type)))
+                        {
+                            currentSb = fatalSb;
+                        }
+                        else if (firstLogLine.Type == LogLine.LogType.Error && (logTypes == null || logTypes.Contains(firstLogLine.Type)))
                         {
                             currentSb = errorSb;
                         }
-                        else if (firstLogLine.Type == LogLine.LogType.Info &&
-                                 (logTypes == null || logTypes.Contains(firstLogLine.Type)))
+                        else if (firstLogLine.Type == LogLine.LogType.Info && (logTypes == null || logTypes.Contains(firstLogLine.Type)))
                         {
                             currentSb = infoSb;
                         }
@@ -195,8 +199,14 @@ namespace Sitecore.SharedSource.Logger.Log.Output
                     }
                 }
             }
+            var fatal = fatalSb.ToString();
             var error = errorSb.ToString();
             var info = infoSb.ToString();
+            if (!String.IsNullOrEmpty(fatal))
+            {
+                sb.AppendLine("Fatals by type:");
+                sb.AppendLine(fatal + "\r\n\r\n");
+            }
             if (!String.IsNullOrEmpty(error))
             {
                 sb.AppendLine("Errors by type:");
