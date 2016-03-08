@@ -29,7 +29,8 @@ namespace Sitecore.SharedSource.Logger.Log.Builder
         public enum LogType
         {
             Info,
-            Error
+            Error,
+            Fatal
         }
         public LogType Type { get; set; }
     }

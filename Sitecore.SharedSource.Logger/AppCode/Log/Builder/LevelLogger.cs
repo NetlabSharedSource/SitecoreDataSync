@@ -15,6 +15,7 @@ namespace Sitecore.SharedSource.Logger.Log.Builder
 
         private bool IsErrorsAdded = false;
         private bool IsInfosAdded = false;
+        private bool IsFatalsAdded = false;
         
         public Dictionary<string, object> Keys = new Dictionary<string, object>();
         private Dictionary<string, object> Data = new Dictionary<string, object>();
@@ -77,9 +78,19 @@ namespace Sitecore.SharedSource.Logger.Log.Builder
             return Children;
         }
 
+        public virtual bool HasFatalsErrorsOrInfos()
+        {
+            return HasFatals() || HasErrors() || HasInfos();
+        }
+
         public virtual bool HasErrorsOrInfos()
         {
             return HasErrors() || HasInfos();
+        }
+
+        public virtual bool HasFatals()
+        {
+            return IsFatalsAdded;
         }
 
         public virtual bool HasErrors()
@@ -101,6 +112,10 @@ namespace Sitecore.SharedSource.Logger.Log.Builder
             if (!IsErrorsAdded && logLine.Type == LogLine.LogType.Error)
             {
                 IsErrorsAdded = true;
+            }
+            if (!IsFatalsAdded && logLine.Type == LogLine.LogType.Fatal)
+            {
+                IsFatalsAdded = true;
             }
         }
 
@@ -127,6 +142,12 @@ namespace Sitecore.SharedSource.Logger.Log.Builder
         public virtual void AddError(string key, string message)
         {
             var logLine = new LogLine(key, message, LogLine.LogType.Error);
+            AddToLogLines(logLine);
+        }
+        
+        public virtual void AddFatal(string key, string message)
+        {
+            var logLine = new LogLine(key, message, LogLine.LogType.Fatal);
             AddToLogLines(logLine);
         }
 
